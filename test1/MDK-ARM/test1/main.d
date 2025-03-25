@@ -1,0 +1,59 @@
+test1\main.o: ../Core/Src/main.c
+test1\main.o: ../Core/Inc/main.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
+test1\main.o: ../Core/Inc/stm32f4xx_hal_conf.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h
+test1\main.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
+test1\main.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f405xx.h
+test1\main.o: ../Drivers/CMSIS/Include/core_cm4.h
+test1\main.o: D:\Program Files\keil\ARM\ARMCC\Bin\..\include\stdint.h
+test1\main.o: ../Drivers/CMSIS/Include/cmsis_version.h
+test1\main.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
+test1\main.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
+test1\main.o: ../Drivers/CMSIS/Include/mpu_armv7.h
+test1\main.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
+test1\main.o: D:\Program Files\keil\ARM\ARMCC\Bin\..\include\stddef.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
+test1\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
+test1\main.o: D:\Program Files\keil\ARM\ARMCC\Bin\..\include\stdio.h
+test1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
+test1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+test1\main.o: ../Core/Inc/FreeRTOSConfig.h
+test1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+test1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+test1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+test1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+test1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+test1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+test1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+test1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
+test1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
+test1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
+test1\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+test1\main.o: ../Core/Inc/spi.h
+test1\main.o: ../Core/Inc/tim.h
+test1\main.o: ../USB_DEVICE/App/usb_device.h
+test1\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h
+test1\main.o: ../USB_DEVICE/Target/usbd_conf.h
+test1\main.o: D:\Program Files\keil\ARM\ARMCC\Bin\..\include\stdlib.h
+test1\main.o: D:\Program Files\keil\ARM\ARMCC\Bin\..\include\string.h
+test1\main.o: ../Core/Inc/gpio.h
