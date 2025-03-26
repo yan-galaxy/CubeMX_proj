@@ -210,7 +210,7 @@ import pyqtgraph as pg
 ['CET-L17', 'CET-L18', 'CET-L19']  # 来自ColorBrewer的色阶方案
 
 
-color = 'viridis'
+color = 'CET-L18'
 
 
 class MatrixVisualizer(QMainWindow):
@@ -227,6 +227,9 @@ class MatrixVisualizer(QMainWindow):
         self.plot = self.central_widget.addPlot(title="10x10 实时数据矩阵")
         self.plot.addItem(self.image_item)
         
+        # 设置坐标轴标签
+        self.plot.setLabels(left='Y轴', bottom='X轴')
+
         # 设置颜色映射
         self.color_map = pg.colormap.get(color)
         self.image_item.setColorMap(self.color_map)
@@ -260,24 +263,33 @@ class MatrixVisualizer(QMainWindow):
         # 更新图像显示
         self.image_item.setImage(self.data)
         
-        # 自动调整显示范围（可选）
-        self.plot.autoRange(padding=0.1)
+        # # 自动调整显示范围（可选）
+        # self.plot.autoRange(padding=0.1)
+
+        # 固定坐标范围
+        self.plot.setXRange(0, 10)
+        self.plot.setYRange(0, 10)
+
+        # 添加网格线
+        self.plot.showGrid(x=True, y=True, alpha=0.7)
 
     def setup_display(self):
         """增强显示效果"""
-        # 设置坐标轴标签
-        self.plot.setLabels(left='Y轴', bottom='X轴')
+
         
-        # 添加网格线
-        self.plot.showGrid(x=True, y=True, alpha=0.5)
+        # 创建颜色条
+        color_bar = pg.ColorBarItem(
+            values=(0, 1),
+            width=25,
+            colorMap=self.color_map  # 使用与ImageItem相同的颜色映射
+        )
+        # 设置颜色条的高度
+        color_bar.setFixedHeight(700)
+        color_bar.setImageItem(self.image_item)  # 关键：绑定到ImageItem
         
-        # 固定显示范围（防止自动缩放干扰观察）
-        self.plot.setXRange(0, 10)
-        self.plot.setYRange(0, 10)
-        
-        # 添加颜色条
-        color_bar = pg.ColorBarItem(values=(0, 1), width=20)
-        self.central_widget.addItem(color_bar, 1, 0)
+        # 将颜色条放置在主图右侧（同一行的下一列）
+        self.central_widget.addItem(self.plot, 0, 0)  # 主图在0行0列
+        self.central_widget.addItem(color_bar, 0, 1)  # 颜色条在0行1列
 
 
 if __name__ == "__main__":
@@ -285,8 +297,8 @@ if __name__ == "__main__":
     
     # 创建主窗口实例
     main_win = MatrixVisualizer()
-    # main_win.setup_display()  # 可选的高级配置
-    main_win.resize(600, 600)
+    main_win.setup_display()  # 可选的高级配置
+    main_win.resize(800, 800)
     main_win.show()
     
     sys.exit(app.exec_())
