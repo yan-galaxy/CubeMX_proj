@@ -190,3 +190,103 @@
 #     dashboard = SensorDashboard()
 #     dashboard.show()
 #     sys.exit(app.exec())
+
+
+
+
+import sys
+import numpy as np
+from PyQt5.QtWidgets import QApplication, QMainWindow
+import pyqtgraph as pg
+
+
+# 基础色图（适用于大多数场景）
+['viridis', 'plasma', 'inferno', 'magma', 'cividis',  # Matplotlib风格
+ 'hot', 'cool', 'spring', 'summer', 'autumn', 'winter',  # 季节色系
+ 'parula', 'jet', 'hsv', 'rainbow', 'ocean', 'terrain',  # 传统色图
+ 'gray', 'bone', 'pink', 'copper', 'prism']  # 特殊效果
+
+# 高对比度色图（适合科学可视化）
+['CET-L17', 'CET-L18', 'CET-L19']  # 来自ColorBrewer的色阶方案
+
+
+color = 'viridis'
+
+
+class MatrixVisualizer(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("实时矩阵可视化")
+        
+        # 创建主窗口组件
+        self.central_widget = pg.GraphicsLayoutWidget()
+        self.setCentralWidget(self.central_widget)
+        
+        # 初始化图像显示区域
+        self.image_item = pg.ImageItem()
+        self.plot = self.central_widget.addPlot(title="10x10 实时数据矩阵")
+        self.plot.addItem(self.image_item)
+        
+        # 设置颜色映射
+        self.color_map = pg.colormap.get(color)
+        self.image_item.setColorMap(self.color_map)
+        
+        # 初始化定时器
+        self.timer = pg.QtCore.QTimer()
+        self.timer.timeout.connect(self.update_data)
+        self.timer.start(20)  # 100ms更新一次
+        
+        # 初始化数据
+        self.data = np.random.rand(10, 10)
+
+        self.fresh_cnt = 0
+    def update_data(self):
+        """动态生成新数据并更新显示"""
+
+        new_data = (np.random.rand(10) + self.fresh_cnt) * 0.1
+
+        # 生成新数据（示例：随机数据）
+        # new_data = np.random.rand(10)
+        if self.fresh_cnt < 9:
+            self.fresh_cnt += 1
+        else:
+            self.fresh_cnt = 0
+        
+        
+        # 更新数据源（高效更新方式）
+        self.data = np.roll(self.data, 1, axis=0)  # 滚动数据
+        self.data[0] = new_data  # 替换首列 防止每次循环都是一样的数据
+        # print(self.data.shape)
+        # 更新图像显示
+        self.image_item.setImage(self.data)
+        
+        # 自动调整显示范围（可选）
+        self.plot.autoRange(padding=0.1)
+
+    def setup_display(self):
+        """增强显示效果"""
+        # 设置坐标轴标签
+        self.plot.setLabels(left='Y轴', bottom='X轴')
+        
+        # 添加网格线
+        self.plot.showGrid(x=True, y=True, alpha=0.5)
+        
+        # 固定显示范围（防止自动缩放干扰观察）
+        self.plot.setXRange(0, 10)
+        self.plot.setYRange(0, 10)
+        
+        # 添加颜色条
+        color_bar = pg.ColorBarItem(values=(0, 1), width=20)
+        self.central_widget.addItem(color_bar, 1, 0)
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    
+    # 创建主窗口实例
+    main_win = MatrixVisualizer()
+    # main_win.setup_display()  # 可选的高级配置
+    main_win.resize(600, 600)
+    main_win.show()
+    
+    sys.exit(app.exec_())
