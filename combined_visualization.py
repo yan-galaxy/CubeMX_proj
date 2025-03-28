@@ -20,6 +20,8 @@ class SerialWorker(QThread):
         self.buffer = bytearray()  # 接收缓冲区
         self.FRAME_HEADER = b'\x55\xAA\xBB\xCC'
         self.FRAME_TAIL = b'\xAA\x55\x66\x77'
+        self.matrix_init = []
+        self.matrix_flag = 0
 
     def run(self):
         try:
@@ -56,9 +58,24 @@ class SerialWorker(QThread):
                             if len(parsed) == 1000:  # 确保数据完整
                                 # 计算十帧的平均值
                                 frames = np.array(parsed).reshape(10, 100)
-                                average = np.mean(frames, axis=0).tolist()  # 转换为列表
-                                # print('average:\n', average)
-                                self.data_ready.emit(average)
+                                # average = np.mean(frames, axis=0).tolist()  # 转换为列表
+                                average = np.mean(frames, axis=0)  # 保持为NumPy数组  ***这是从单片机接收来的原数据***
+
+                                # print('average:\n', average) # 力越大数值越小
+                                # self.data_ready.emit(average.tolist())
+                                if self.matrix_flag == 0 :# 获得初始帧作为基准帧
+                                    self.matrix_init = average.copy()  # 保存为数组
+                                    self.matrix_flag = 1
+                                else:
+                                    result = self.matrix_init - average  # 数组支持元素级减法  力越大数值越大
+                                    # 限幅到[-50, 500]范围内
+                                    clipped_result = np.clip(result, a_min=-50, a_max=500)
+                                    # 归一化到[0, 1]范围
+                                    normalized_result = (clipped_result - (-50)) / (500 + 50)  # 分母是550（500-(-50)）
+                                    result = normalized_result
+                                    self.data_ready.emit(result.tolist())  # 如果需要转回列表再发射
+                            else:
+                                print('串口数据不完整')
                             self.buffer = self.buffer[end_index + len(self.FRAME_TAIL):]
                             start_index = self.buffer.find(self.FRAME_HEADER)
                         else:
@@ -68,9 +85,12 @@ class SerialWorker(QThread):
         finally:
             if self.ser and self.ser.is_open:
                 self.ser.close()
+                print('串口关闭')
 
     def stop(self):
         self.running = False
+    
+
 
 # 主窗口类
 class MatrixVisualizer(QMainWindow):
@@ -89,8 +109,13 @@ class MatrixVisualizer(QMainWindow):
         self.plot.setLabels(left='Y轴', bottom='X轴')
 
         # 设置颜色映射
-        self.color_map = pg.colormap.get('CET-L18')
+        #'viridis', 'plasma', 'inferno', 'magma', 'cividis'  # Matplotlib风格
+        #'CET-L17', 'CET-L18', 'CET-L19'  # 来自ColorBrewer的色阶方案
+        self.color_map = pg.colormap.get('viridis')
         self.image_item.setColorMap(self.color_map)
+
+        self.fps_label = pg.LabelItem(justify='left')
+        self.central_widget.addItem(self.fps_label, 1, 0)  # 放置在下方
         
         # 初始化数据矩阵
         self.data = np.zeros((10, 10))  # 10x10的初始数据
@@ -104,12 +129,15 @@ class MatrixVisualizer(QMainWindow):
         # 创建定时器定期更新界面
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update_plot)
-        self.timer.start(20)
+        self.timer.start(5)
         
         # 新增：添加控制台打印定时器
         self.print_timer = QtCore.QTimer()
         self.print_timer.timeout.connect(self.print_matrix)
         self.print_timer.start(500)  # 每500ms打印一次
+
+        self.frame_count = 0
+        self.start_time = QtCore.QTime.currentTime()
 
     # 新增方法：定时打印矩阵数据
     def print_matrix(self):
@@ -125,12 +153,23 @@ class MatrixVisualizer(QMainWindow):
 
     def update_plot(self):
         """定时器触发的数据更新函数"""
+        # self.frame_count += 1  
+
         while not self.data_queue.empty():
             full_data = self.data_queue.get()
             if len(full_data) == 100:
                 self.data = np.array(full_data).reshape(10, 10)
-                self.image_item.setImage(self.data)
-        
+
+                self.image_item.setImage(self.data, levels=(0.0, 1.0))
+                self.frame_count += 1  
+                              
+        current_time = QtCore.QTime.currentTime()
+        if self.start_time.msecsTo(current_time) >= 1000:  # 每1秒计算一次
+            fps = self.frame_count
+            self.fps_label.setText(f"FPS: {fps}")
+            self.frame_count = 0
+            self.start_time = current_time
+
         # 固定坐标范围
         self.plot.setXRange(0, 10)
         self.plot.setYRange(0, 10)
@@ -138,7 +177,7 @@ class MatrixVisualizer(QMainWindow):
     def setup_display(self):
         """添加颜色条"""
         color_bar = pg.ColorBarItem(
-            # values=(0, 1),
+            values=(0.0, 1.0),
             width=25,
             colorMap=self.color_map
         )
