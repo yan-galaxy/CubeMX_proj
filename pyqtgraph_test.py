@@ -270,8 +270,8 @@ class MatrixVisualizer(QMainWindow):
         self.plot.setXRange(0, 10)
         self.plot.setYRange(0, 10)
 
-        # 添加网格线
-        self.plot.showGrid(x=True, y=True, alpha=0.7)
+        # # 添加网格线
+        # self.plot.showGrid(x=True, y=True, alpha=0.7)
 
     def setup_display(self):
         """增强显示效果"""
