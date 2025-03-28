@@ -68,7 +68,7 @@ class SerialWorker(QThread):
                                     self.matrix_flag = 1
                                 else:
                                     result = self.matrix_init - average  # 数组支持元素级减法  力越大数值越大
-                                    # 限幅到[-50, 500]范围内
+                                    # 限幅到[-50, 500]范围内    ***每更换一个器件就需要重新设定范围***
                                     clipped_result = np.clip(result, a_min=-50, a_max=500)
                                     # 归一化到[0, 1]范围
                                     normalized_result = (clipped_result - (-50)) / (500 + 50)  # 分母是550（500-(-50)）
