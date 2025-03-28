@@ -99,6 +99,8 @@ class MatrixVisualizer(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("实时传感器矩阵可视化")
+        self.interplotation = True # 插值标志
+        # self.interplotation = False
         
         # 创建主窗口组件
         self.central_widget = pg.GraphicsLayoutWidget()
@@ -162,11 +164,12 @@ class MatrixVisualizer(QMainWindow):
             if len(full_data) == 100:
                 self.data = np.array(full_data).reshape(10, 10)
 
-                # 插值到100x100（10倍放大）
-                interpolated_data = zoom(self.data, (10, 10), order=3)  # 3阶插值
+                if self.interplotation :
+                    # (10, 10)插值到100x100（10倍放大）
+                    interpolated_data = zoom(self.data, (5, 5), order=3)  # 3阶插值
+                    self.data = interpolated_data
 
-                # self.image_item.setImage(self.data, levels=(0.0, 1.0))
-                self.image_item.setImage(interpolated_data, levels=(0.0, 1.0))
+                self.image_item.setImage(self.data, levels=(0.0, 1.0))
                 self.frame_count += 1  
                               
         current_time = QtCore.QTime.currentTime()
@@ -176,9 +179,9 @@ class MatrixVisualizer(QMainWindow):
             self.frame_count = 0
             self.start_time = current_time
 
-        # 固定坐标范围
-        self.plot.setXRange(0, 100)
-        self.plot.setYRange(0, 100)
+        # # 固定坐标范围
+        # self.plot.setXRange(0, 100)
+        # self.plot.setYRange(0, 100)
 
     def setup_display(self):
         """添加颜色条"""
