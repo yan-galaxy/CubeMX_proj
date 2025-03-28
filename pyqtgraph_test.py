@@ -237,7 +237,7 @@ class MatrixVisualizer(QMainWindow):
         # 初始化定时器
         self.timer = pg.QtCore.QTimer()
         self.timer.timeout.connect(self.update_data)
-        self.timer.start(20)  # 100ms更新一次
+        self.timer.start(200)  # 100ms更新一次
         
         # 初始化数据
         self.data = np.random.rand(10, 10)
