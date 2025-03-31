@@ -21,10 +21,16 @@ g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4
 g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h
 g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h
 g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h
+g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h
+g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h
+g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h
 g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h
 g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h
 g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h
 g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h
+g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pcd.h
+g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_usb.h
+g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pcd_ex.h
 g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h
 g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h
 g431_rma_v1_0\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h

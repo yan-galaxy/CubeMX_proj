@@ -105,10 +105,19 @@ void MX_FREERTOS_Init(void) {
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
+	uint8_t usb_TxBuf[128];//小心不要超过任务栈大小
+	uint32_t usb_RxLength=0;
+	uint8_t USBD_Result=0;
   /* Infinite loop */
 	for(;;)
 	{
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+		HAL_GPIO_TogglePin(OUT11_GPIO_Port,OUT11_Pin);
+		
+		sprintf((char *)usb_TxBuf,"USB_FS\r\n");
+		usb_RxLength=strlen((char *)usb_TxBuf);
+		CDC_Transmit_FS(usb_TxBuf, usb_RxLength);//USB CDC测试
+		
 		osDelay(500);
 	}
   /* USER CODE END StartDefaultTask */
