@@ -29,6 +29,18 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32g4xx_hal.h"
 
+#include "stm32g4xx_ll_tim.h"
+#include "stm32g4xx_ll_bus.h"
+#include "stm32g4xx_ll_cortex.h"
+#include "stm32g4xx_ll_rcc.h"
+#include "stm32g4xx_ll_system.h"
+#include "stm32g4xx_ll_utils.h"
+#include "stm32g4xx_ll_pwr.h"
+#include "stm32g4xx_ll_gpio.h"
+#include "stm32g4xx_ll_dma.h"
+
+#include "stm32g4xx_ll_exti.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>          
@@ -38,7 +50,8 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+extern ADC_HandleTypeDef hadc1;
+extern ADC_HandleTypeDef hadc2;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -55,7 +68,7 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void user_delaynus_tim(uint16_t nus);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -63,6 +76,26 @@ void Error_Handler(void);
 #define OUT11_GPIO_Port GPIOB
 #define LED_Pin GPIO_PIN_6
 #define LED_GPIO_Port GPIOC
+#define OUT1_Pin GPIO_PIN_8
+#define OUT1_GPIO_Port GPIOA
+#define OUT10_Pin GPIO_PIN_15
+#define OUT10_GPIO_Port GPIOA
+#define OUT2_Pin GPIO_PIN_10
+#define OUT2_GPIO_Port GPIOC
+#define OUT9_Pin GPIO_PIN_11
+#define OUT9_GPIO_Port GPIOC
+#define OUT3_Pin GPIO_PIN_3
+#define OUT3_GPIO_Port GPIOB
+#define OUT8_Pin GPIO_PIN_4
+#define OUT8_GPIO_Port GPIOB
+#define OUT4_Pin GPIO_PIN_5
+#define OUT4_GPIO_Port GPIOB
+#define OUT7_Pin GPIO_PIN_6
+#define OUT7_GPIO_Port GPIOB
+#define OUT5_Pin GPIO_PIN_7
+#define OUT5_GPIO_Port GPIOB
+#define OUT6_Pin GPIO_PIN_9
+#define OUT6_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

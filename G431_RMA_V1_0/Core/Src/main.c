@@ -20,6 +20,8 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "adc.h"
+#include "dma.h"
+#include "tim.h"
 #include "usb_device.h"
 #include "gpio.h"
 
@@ -88,11 +90,14 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USB_Device_Init();
   MX_ADC1_Init();
   MX_ADC2_Init();
+  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
-
+//	LL_TIM_EnableIT_UPDATE(TIM7);//start TIM7 IRQ
+	LL_TIM_EnableCounter(TIM7);//start TIM7
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
@@ -160,7 +165,26 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void user_delaynus_tim(uint16_t nus)
+{
+    uint16_t differ = 0xFFFF - nus - 5;
 
+    // Set the timer counter value
+    LL_TIM_SetCounter(TIM7, differ);
+
+    // Enable the timer
+    LL_TIM_EnableCounter(TIM7);
+
+    // Wait until the timer reaches the target value
+    while (LL_TIM_GetCounter(TIM7) < 0xFFFF - 5)
+    {
+        // Optionally, add a timeout condition here to avoid an infinite loop
+    }
+
+    // Disable the timer
+    LL_TIM_DisableCounter(TIM7);
+
+}
 /* USER CODE END 4 */
 
 /**
