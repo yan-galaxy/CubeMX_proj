@@ -139,6 +139,7 @@ void StartDefaultTask(void const * argument)
 	
 	
 	static uint32_t index = 0;          // Êý¾ÝÖ¡Ë÷Òý
+	static double res_ref_kOm = 10.0;
   /* Infinite loop */
 	for(;;)
 	{
@@ -162,15 +163,15 @@ void StartDefaultTask(void const * argument)
 						samp_data[i][9]);
 			}
 			sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
-					"value: \r\n");
+					"value: (kOm)\r\n");
 			for (uint8_t i = 0; i < 11; i++) {
 				sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
-					"line:%2d:%05.2f %05.2f %05.2f %05.2f %05.2f %05.2f %05.2f %05.2f %05.2f %05.2f \r\n", 
+					"line:%2d:%02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f \r\n", 
 						i+1,
-						(4095-samp_data[0][0])/(float)(4095-samp_data[i][0])*2000.0, (4095-samp_data[0][1])/(float)(4095-samp_data[i][1])*2000.0, (4095-samp_data[0][2])/(float)(4095-samp_data[i][2])*2000.0, 
-						(4095-samp_data[0][3])/(float)(4095-samp_data[i][3])*2000.0, (4095-samp_data[0][4])/(float)(4095-samp_data[i][4])*2000.0, (4095-samp_data[0][5])/(float)(4095-samp_data[i][5])*2000.0, 
-						(4095-samp_data[0][6])/(float)(4095-samp_data[i][6])*2000.0, (4095-samp_data[0][7])/(float)(4095-samp_data[i][7])*2000.0, (4095-samp_data[0][8])/(float)(4095-samp_data[i][8])*2000.0, 
-						(4095-samp_data[0][9])/(float)(4095-samp_data[i][9])*2000.0);
+						(4095-samp_data[0][0])/(float)(4095-samp_data[i][0])*res_ref_kOm, (4095-samp_data[0][1])/(float)(4095-samp_data[i][1])*res_ref_kOm, (4095-samp_data[0][2])/(float)(4095-samp_data[i][2])*res_ref_kOm, 
+						(4095-samp_data[0][3])/(float)(4095-samp_data[i][3])*res_ref_kOm, (4095-samp_data[0][4])/(float)(4095-samp_data[i][4])*res_ref_kOm, (4095-samp_data[0][5])/(float)(4095-samp_data[i][5])*res_ref_kOm, 
+						(4095-samp_data[0][6])/(float)(4095-samp_data[i][6])*res_ref_kOm, (4095-samp_data[0][7])/(float)(4095-samp_data[i][7])*res_ref_kOm, (4095-samp_data[0][8])/(float)(4095-samp_data[i][8])*res_ref_kOm, 
+						(4095-samp_data[0][9])/(float)(4095-samp_data[i][9])*res_ref_kOm);
 			}
 			
 			

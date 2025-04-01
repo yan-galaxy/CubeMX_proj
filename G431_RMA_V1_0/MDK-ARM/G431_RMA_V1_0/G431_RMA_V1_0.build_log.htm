@@ -27,42 +27,7 @@ Project File Date:  03/31/2025
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin'
 Build target 'G431_RMA_V1_0'
-compiling app_freertos.c...
-../Core/Src/app_freertos.c(170): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  						(4095-samp_data[0][0])/(float)(4095-samp_data[i][0])*2000.0, (4095-samp_data[0][1])/(float)(4095-samp_data[i][1])*2000.0, (4095-samp_data[0][2])/(float)(4095-samp_data[i][2])*2000.0, 
-../Core/Src/app_freertos.c(170): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  						(4095-samp_data[0][0])/(float)(4095-samp_data[i][0])*2000.0, (4095-samp_data[0][1])/(float)(4095-samp_data[i][1])*2000.0, (4095-samp_data[0][2])/(float)(4095-samp_data[i][2])*2000.0, 
-../Core/Src/app_freertos.c(170): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  						(4095-samp_data[0][0])/(float)(4095-samp_data[i][0])*2000.0, (4095-samp_data[0][1])/(float)(4095-samp_data[i][1])*2000.0, (4095-samp_data[0][2])/(float)(4095-samp_data[i][2])*2000.0, 
-../Core/Src/app_freertos.c(171): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  						(4095-samp_data[0][3])/(float)(4095-samp_data[i][3])*2000.0, (4095-samp_data[0][4])/(float)(4095-samp_data[i][4])*2000.0, (4095-samp_data[0][5])/(float)(4095-samp_data[i][5])*2000.0, 
-../Core/Src/app_freertos.c(171): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  						(4095-samp_data[0][3])/(float)(4095-samp_data[i][3])*2000.0, (4095-samp_data[0][4])/(float)(4095-samp_data[i][4])*2000.0, (4095-samp_data[0][5])/(float)(4095-samp_data[i][5])*2000.0, 
-../Core/Src/app_freertos.c(171): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  						(4095-samp_data[0][3])/(float)(4095-samp_data[i][3])*2000.0, (4095-samp_data[0][4])/(float)(4095-samp_data[i][4])*2000.0, (4095-samp_data[0][5])/(float)(4095-samp_data[i][5])*2000.0, 
-../Core/Src/app_freertos.c(172): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  						(4095-samp_data[0][6])/(float)(4095-samp_data[i][6])*2000.0, (4095-samp_data[0][7])/(float)(4095-samp_data[i][7])*2000.0, (4095-samp_data[0][8])/(float)(4095-samp_data[i][8])*2000.0, 
-../Core/Src/app_freertos.c(172): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  						(4095-samp_data[0][6])/(float)(4095-samp_data[i][6])*2000.0, (4095-samp_data[0][7])/(float)(4095-samp_data[i][7])*2000.0, (4095-samp_data[0][8])/(float)(4095-samp_data[i][8])*2000.0, 
-../Core/Src/app_freertos.c(172): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  						(4095-samp_data[0][6])/(float)(4095-samp_data[i][6])*2000.0, (4095-samp_data[0][7])/(float)(4095-samp_data[i][7])*2000.0, (4095-samp_data[0][8])/(float)(4095-samp_data[i][8])*2000.0, 
-../Core/Src/app_freertos.c(173): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  						(4095-samp_data[0][9])/(float)(4095-samp_data[i][9])*2000.0);
-../Core/Src/app_freertos.c(138): warning:  #177-D: variable "USBD_Result"  was declared but never referenced
-  	uint8_t USBD_Result=0;
-../Core/Src/app_freertos.c(288): warning:  #61-D: integer operation result is out of range
-  			OUT11_GPIO_Port->BSRR=(OUT11_Pin << 16);//低电平
-../Core/Src/app_freertos.c(288): warning:  #68-D: integer conversion resulted in a change of sign
-  			OUT11_GPIO_Port->BSRR=(OUT11_Pin << 16);//低电平
-../Core/Src/app_freertos.c(328): warning:  #61-D: integer operation result is out of range
-  			OUT10_GPIO_Port->BSRR=(OUT10_Pin << 16);//低电平
-../Core/Src/app_freertos.c(328): warning:  #68-D: integer conversion resulted in a change of sign
-  			OUT10_GPIO_Port->BSRR=(OUT10_Pin << 16);//低电平
-../Core/Src/app_freertos.c: 15 warnings, 0 errors
-linking...
-Program Size: Code=29748 RO-data=676 RW-data=524 ZI-data=12684  
-FromELF: creating hex file...
-"G431_RMA_V1_0\G431_RMA_V1_0.axf" - 0 Error(s), 15 Warning(s).
+"G431_RMA_V1_0\G431_RMA_V1_0.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -85,7 +50,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>
