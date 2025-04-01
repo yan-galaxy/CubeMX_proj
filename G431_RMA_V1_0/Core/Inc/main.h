@@ -56,7 +56,10 @@ extern ADC_HandleTypeDef hadc2;
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+typedef union  {
+    uint16_t word16;         // 16bit
+		uint8_t byte[2];       // 8bit   byte[0]:low_8bit   byte[1]:high_8bit     example:  word16=0x5678  byte[0]=0x78 byte[1]=0x56
+}Word_union;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -69,6 +72,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 void user_delaynus_tim(uint16_t nus);
+void exchange_res_p(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

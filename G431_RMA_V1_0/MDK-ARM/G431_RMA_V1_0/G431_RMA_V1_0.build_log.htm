@@ -27,7 +27,32 @@ Project File Date:  03/31/2025
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin'
 Build target 'G431_RMA_V1_0'
-"G431_RMA_V1_0\G431_RMA_V1_0.axf" - 0 Error(s), 0 Warning(s).
+compiling app_freertos.c...
+../Core/Src/app_freertos.c(140): warning:  #177-D: variable "usb_TxBuf"  was declared but never referenced
+  	uint8_t usb_TxBuf[2048];//小心不要超过任务栈大小
+../Core/Src/app_freertos.c(141): warning:  #177-D: variable "usb_RxLength"  was declared but never referenced
+  	uint32_t usb_RxLength=0;
+../Core/Src/app_freertos.c(142): warning:  #177-D: variable "USBD_Result"  was declared but never referenced
+  	uint8_t USBD_Result=0;
+../Core/Src/app_freertos.c(145): warning:  #177-D: variable "index"  was declared but never referenced
+  	static uint32_t index = 0;          // 数据帧索引
+../Core/Src/app_freertos.c(146): warning:  #177-D: variable "res_ref_kOm"  was declared but never referenced
+  	static double res_ref_kOm = 10.0;
+../Core/Src/app_freertos.c(341): warning:  #167-D: argument of type "volatile uint8_t *" is incompatible with parameter of type "uint8_t *"
+  		CDC_Transmit_FS(res_send_p->byte, 2008);//2008
+../Core/Src/app_freertos.c(377): warning:  #61-D: integer operation result is out of range
+  			OUT11_GPIO_Port->BSRR=(OUT11_Pin << 16);//低电平
+../Core/Src/app_freertos.c(377): warning:  #68-D: integer conversion resulted in a change of sign
+  			OUT11_GPIO_Port->BSRR=(OUT11_Pin << 16);//低电平
+../Core/Src/app_freertos.c(417): warning:  #61-D: integer operation result is out of range
+  			OUT10_GPIO_Port->BSRR=(OUT10_Pin << 16);//低电平
+../Core/Src/app_freertos.c(417): warning:  #68-D: integer conversion resulted in a change of sign
+  			OUT10_GPIO_Port->BSRR=(OUT10_Pin << 16);//低电平
+../Core/Src/app_freertos.c: 10 warnings, 0 errors
+linking...
+Program Size: Code=25464 RO-data=592 RW-data=532 ZI-data=16700  
+FromELF: creating hex file...
+"G431_RMA_V1_0\G431_RMA_V1_0.axf" - 0 Error(s), 10 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -50,7 +75,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

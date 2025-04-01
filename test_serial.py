@@ -2,7 +2,7 @@ import serial
 import time
 
 # 配置串口参数
-port = 'COM9'  # 根据实际情况修改为你的串口号，例如 '/dev/ttyUSB0' 在Linux或macOS上
+port = 'COM7'  # 根据实际情况修改为你的串口号，例如 '/dev/ttyUSB0' 在Linux或macOS上
 baudrate = 115200  # 根据实际情况修改为你的波特率
 
 # 定义帧头和帧尾

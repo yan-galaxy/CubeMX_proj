@@ -129,6 +129,10 @@ R11:v1 7           adc1_value[7]
 uint16_t samp_data[11][10];
 uint16_t adc1_value[8];
 uint16_t adc2_value[2];
+volatile Word_union res_data_1[1004];
+volatile Word_union res_data_2[1004];
+volatile Word_union* res_send_p=res_data_1;
+volatile Word_union* res_store_p=res_data_2;
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const * argument)
 {
@@ -140,47 +144,59 @@ void StartDefaultTask(void const * argument)
 	
 	static uint32_t index = 0;          // 数据帧索引
 	static double res_ref_kOm = 10.0;
+	
+	
   /* Infinite loop */
 	for(;;)
 	{
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 		
-//		osSemaphoreWait(dataBinarySemHandle, osWaitForever);
-		if(osSemaphoreWait(dataBinarySemHandle, 0) == osOK)
-		{
-			// 格式化数据帧（示例：每行11通道，共10组）
-			sprintf((char *)usb_TxBuf, 
-					"Frame %02d: \r\n", 
-					index++);
+////		osSemaphoreWait(dataBinarySemHandle, osWaitForever);
+//		if(osSemaphoreWait(dataBinarySemHandle, 0) == osOK)
+//		{
+//			// 格式化数据帧（示例：每行11通道，共10组）
+//			sprintf((char *)usb_TxBuf, 
+//					"Frame %02d: \r\n", 
+//					index++);
 
-			for (uint8_t i = 0; i < 11; i++) {
-				sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
-					"line:%2d:%4d %4d %4d %4d %4d %4d %4d %4d %4d %4d \r\n", 
-						i+1,
-						samp_data[i][0], samp_data[i][1], samp_data[i][2], 
-						samp_data[i][3], samp_data[i][4], samp_data[i][5], 
-						samp_data[i][6], samp_data[i][7], samp_data[i][8], 
-						samp_data[i][9]);
-			}
-			sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
-					"value: (kOm)\r\n");
-			for (uint8_t i = 0; i < 11; i++) {
-				sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
-					"line:%2d:%02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f \r\n", 
-						i+1,
-						(4095-samp_data[0][0])/(float)(4095-samp_data[i][0])*res_ref_kOm, (4095-samp_data[0][1])/(float)(4095-samp_data[i][1])*res_ref_kOm, (4095-samp_data[0][2])/(float)(4095-samp_data[i][2])*res_ref_kOm, 
-						(4095-samp_data[0][3])/(float)(4095-samp_data[i][3])*res_ref_kOm, (4095-samp_data[0][4])/(float)(4095-samp_data[i][4])*res_ref_kOm, (4095-samp_data[0][5])/(float)(4095-samp_data[i][5])*res_ref_kOm, 
-						(4095-samp_data[0][6])/(float)(4095-samp_data[i][6])*res_ref_kOm, (4095-samp_data[0][7])/(float)(4095-samp_data[i][7])*res_ref_kOm, (4095-samp_data[0][8])/(float)(4095-samp_data[i][8])*res_ref_kOm, 
-						(4095-samp_data[0][9])/(float)(4095-samp_data[i][9])*res_ref_kOm);
-			}
-			
-			
-			
-			usb_RxLength=strlen((char *)usb_TxBuf);
-			CDC_Transmit_FS(usb_TxBuf, usb_RxLength);//USB CDC测试
-			
-			osSemaphoreRelease(dataBinarySemHandle);
-		}
+//			for (uint8_t i = 0; i < 11; i++) {
+//				sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
+//					"line:%2d:%4d %4d %4d %4d %4d %4d %4d %4d %4d %4d \r\n", 
+//						i+1,
+//						samp_data[i][0], samp_data[i][1], samp_data[i][2], 
+//						samp_data[i][3], samp_data[i][4], samp_data[i][5], 
+//						samp_data[i][6], samp_data[i][7], samp_data[i][8], 
+//						samp_data[i][9]);
+//			}
+//			sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
+//					"value: (kOm)\r\n");
+//			for (uint8_t i = 0; i < 11; i++) {
+//				sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
+//					"line:%2d:%02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f \r\n", 
+//						i+1,
+//						(4095-samp_data[0][0])/(float)(4095-samp_data[i][0])*res_ref_kOm, (4095-samp_data[0][1])/(float)(4095-samp_data[i][1])*res_ref_kOm, (4095-samp_data[0][2])/(float)(4095-samp_data[i][2])*res_ref_kOm, 
+//						(4095-samp_data[0][3])/(float)(4095-samp_data[i][3])*res_ref_kOm, (4095-samp_data[0][4])/(float)(4095-samp_data[i][4])*res_ref_kOm, (4095-samp_data[0][5])/(float)(4095-samp_data[i][5])*res_ref_kOm, 
+//						(4095-samp_data[0][6])/(float)(4095-samp_data[i][6])*res_ref_kOm, (4095-samp_data[0][7])/(float)(4095-samp_data[i][7])*res_ref_kOm, (4095-samp_data[0][8])/(float)(4095-samp_data[i][8])*res_ref_kOm, 
+//						(4095-samp_data[0][9])/(float)(4095-samp_data[i][9])*res_ref_kOm);
+//			}
+//			
+//			
+//			
+//			usb_RxLength=strlen((char *)usb_TxBuf);
+//			CDC_Transmit_FS(usb_TxBuf, usb_RxLength);//USB CDC测试
+//			
+//			osSemaphoreRelease(dataBinarySemHandle);
+//		}
+		osDelay(100);
+
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -213,16 +229,18 @@ void StartDefaultTask(void const * argument)
 //		
 //		user_delaynus_tim(500);
 //		CDC_Transmit_FS(usb_TxBuf, usb_RxLength);//USB CDC测试	
-		
-		
+//		
+//		OUT11_GPIO_Port->BSRR = (OUT11_Pin << 16);//低电平
+//		osDelay(1000);
 		
 		
 		
 //		for(uint16_t i = 0;i<1000;i++)
-//		user_delaynus_tim(1000);
+//		for(uint16_t j = 0;j<50;j++)
+//		user_delaynus_tim(10);
 		
 //		user_delaynus_tim(100);
-		osDelay(100);
+//		osDelay(100);
 	}
   /* USER CODE END StartDefaultTask */
 }
@@ -243,43 +261,113 @@ void SampleTask(void const * argument)
 	
 	TickType_t xLastWakeTime;
     const TickType_t xFrequency = pdMS_TO_TICKS(1);  // 1秒周期[6](@ref)
-    
+   
+	
+	res_data_1[0].byte[0]=0x55;//帧头
+	res_data_1[0].byte[1]=0xAA;
+	res_data_1[1].byte[0]=0xBB;
+	res_data_1[1].byte[1]=0xCC;
+	for(uint16_t i=0;i<1000;i++)
+	{
+//		res_send_p[2+i].word16=i*1+1;
+		res_data_1[2+i].word16=i*1+1;
+	}
+	res_data_1[1002].byte[0]=0xAA;//帧尾
+	res_data_1[1002].byte[1]=0x55;
+	res_data_1[1003].byte[0]=0x66;
+	res_data_1[1003].byte[1]=0x77;
+	
+	res_data_2[0].byte[0]=0x55;//帧头
+	res_data_2[0].byte[1]=0xAA;
+	res_data_2[1].byte[0]=0xBB;
+	res_data_2[1].byte[1]=0xCC;
+	for(uint16_t i=0;i<1000;i++)
+	{
+		res_data_2[2+i].word16=i*2+2;
+	}
+	res_data_2[1002].byte[0]=0xAA;//帧尾
+	res_data_2[1002].byte[1]=0x55;
+	res_data_2[1003].byte[0]=0x66;
+	res_data_2[1003].byte[1]=0x77;
+	
+	
+	
+	
+	
+	
     xLastWakeTime = xTaskGetTickCount();  // 初始化基准时间[2](@ref)
   /* Infinite loop */
 	for(;;)
 	{
-//		osSemaphoreWait(dataBinarySemHandle, osWaitForever);
-		if(osSemaphoreWait(dataBinarySemHandle, 0) == osOK)
+		for(uint8_t j=0;j<10;j++)
 		{
-			for(uint8_t i=0;i<11;i++)
+			if(osSemaphoreWait(dataBinarySemHandle, 0) == osOK)//		osSemaphoreWait(dataBinarySemHandle, osWaitForever);
 			{
-				select_switcher(i);
-				user_delaynus_tim(25);
-				samp_data[i][9]=adc1_value[5];//IN10对应R1
-				samp_data[i][8]=adc1_value[4];//IN9对应R2
-				samp_data[i][7]=adc2_value[0];//IN8对应R3
-				samp_data[i][6]=adc1_value[3];//IN7对应R4
-				samp_data[i][5]=adc1_value[1];//IN6对应R5
-				samp_data[i][4]=adc1_value[0];//IN5对应R7
-				samp_data[i][3]=adc1_value[2];//IN4对应R8
-				samp_data[i][2]=adc2_value[1];//IN3对应R9
-				samp_data[i][1]=adc1_value[6];//IN2对应R10
-				samp_data[i][0]=adc1_value[7];//IN1对应R11
+				for(uint8_t i=0;i<11;i++)
+				{
+					select_switcher(i);
+					user_delaynus_tim(25);
+					samp_data[i][9]=adc1_value[5];//IN10对应R1
+					samp_data[i][8]=adc1_value[4];//IN9 对应R2
+					samp_data[i][7]=adc2_value[0];//IN8 对应R3
+					samp_data[i][6]=adc1_value[3];//IN7 对应R4
+					samp_data[i][5]=adc1_value[1];//IN6 对应R5
+					samp_data[i][4]=adc1_value[0];//IN5 对应R7
+					samp_data[i][3]=adc1_value[2];//IN4 对应R8
+					samp_data[i][2]=adc2_value[1];//IN3 对应R9
+					samp_data[i][1]=adc1_value[6];//IN2 对应R10
+					samp_data[i][0]=adc1_value[7];//IN1 对应R11
+					if( i > 0 )
+					{
+						//+2是为了跳过帧头
+						res_store_p[j*100+(i-1)*10+0+2].word16=samp_data[i][0];
+						res_store_p[j*100+(i-1)*10+1+2].word16=samp_data[i][1];
+						res_store_p[j*100+(i-1)*10+2+2].word16=samp_data[i][2];
+						res_store_p[j*100+(i-1)*10+3+2].word16=samp_data[i][3];
+						res_store_p[j*100+(i-1)*10+4+2].word16=samp_data[i][4];
+						res_store_p[j*100+(i-1)*10+5+2].word16=samp_data[i][5];
+						res_store_p[j*100+(i-1)*10+6+2].word16=samp_data[i][6];
+						res_store_p[j*100+(i-1)*10+7+2].word16=samp_data[i][7];
+						res_store_p[j*100+(i-1)*10+8+2].word16=samp_data[i][8];
+						res_store_p[j*100+(i-1)*10+9+2].word16=samp_data[i][9];
+					}
+				}
+				osSemaphoreRelease(dataBinarySemHandle);
 			}
-			osSemaphoreRelease(dataBinarySemHandle);
+//			user_delaynus_tim(100);
+			vTaskDelayUntil(&xLastWakeTime, xFrequency);//		osDelay(1);  vTaskSuspend(NULL);          // 挂起当前任务（自身）
 		}
+		exchange_res_p();//切换缓存区
+		CDC_Transmit_FS(res_send_p->byte, 2008);//2008
 		
 		
+//		osDelay(1000);
 		
-//		vTaskSuspend(NULL);          // 挂起当前任务（自身）
-//		osDelay(1);
-		vTaskDelayUntil(&xLastWakeTime, xFrequency);
 	}
   /* USER CODE END SampleTask */
 }
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+
+//电压采集完成之后需要进行缓存切换
+void exchange_res_p(void)
+{
+	static uint8_t state=1;//第一次运行该函数前 采集的数据存到res_data_2   第一次运行该函数后状态变为0，发送的指针指向res_data_1  之后循环往复
+	state=!state;
+	
+	if(state)
+	{
+		res_send_p=res_data_1;
+		res_store_p=res_data_2;
+	}
+	else
+	{
+		res_send_p=res_data_2;
+		res_store_p=res_data_1;
+	}
+}
+
 void select_switcher(uint8_t index)
 {
 	switch(index)
