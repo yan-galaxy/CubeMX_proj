@@ -13,9 +13,9 @@ from scipy.ndimage import zoom  # 使用scipy的缩放函数 插值需要
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 数据就绪信号
     
-    def __init__(self):
+    def __init__(self,port='COM7',normalization_low = -70,normalization_high = 500):
         super().__init__()
-        self.port = 'COM9'         # 串口号
+        self.port = port         # 串口号
         self.baudrate = 115200     # 波特率
         self.ser = None            # 串口对象
         self.running = False       # 线程运行标志
@@ -24,6 +24,9 @@ class SerialWorker(QThread):
         self.FRAME_TAIL = b'\xAA\x55\x66\x77'
         self.matrix_init = []
         self.matrix_flag = 0
+
+        self.normalization_low = normalization_low
+        self.normalization_high = normalization_high
 
     def run(self):
         try:
@@ -71,9 +74,9 @@ class SerialWorker(QThread):
                                 else:
                                     result = self.matrix_init - average  # 数组支持元素级减法  力越大数值越大
                                     # 限幅到[-50, 500]范围内    ***每更换一个器件就需要重新设定范围***
-                                    clipped_result = np.clip(result, a_min=-50, a_max=500)
+                                    clipped_result = np.clip(result, a_min=self.normalization_low, a_max=self.normalization_high)
                                     # 归一化到[0, 1]范围
-                                    normalized_result = (clipped_result - (-50)) / (500 + 50)  # 分母是550（500-(-50)）
+                                    normalized_result = (clipped_result - (self.normalization_low)) / (self.normalization_high - self.normalization_low)  # 分母是550（500-(-50)）
                                     result = normalized_result
                                     self.data_ready.emit(result.tolist())  # 如果需要转回列表再发射
                             else:
@@ -96,11 +99,12 @@ class SerialWorker(QThread):
 
 # 主窗口类
 class MatrixVisualizer(QMainWindow):
-    def __init__(self):
+    def __init__(self,interplotation):
         super().__init__()
         self.setWindowTitle("实时传感器矩阵可视化")
-        self.interplotation = True # 插值标志
+        self.interplotation = interplotation # 插值标志
         # self.interplotation = False
+        
         
         # 创建主窗口组件
         self.central_widget = pg.GraphicsLayoutWidget()
@@ -206,7 +210,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     
     # 创建主窗口实例
-    main_win = MatrixVisualizer()
+    main_win = MatrixVisualizer(interplotation = False)
     main_win.setup_display()  # 初始化显示布局
     main_win.resize(800, 800)
     main_win.show()
