@@ -5,11 +5,11 @@
 <h2>Tool Versions:</h2>
 IDE-Version: μVision V5.36.0.0
 Copyright (C) 2021 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: dwa 4124, dawg, LIC=32B1Q-N2A2L-KP3ZY-IRT3J-4AUNX-CIDU3
+License Information: 123 galaxy, 1231, LIC=CZLZX-HD6PP-KPQZY-ILCE5-JNC03-QWAMZ
  
 Tool Versions:
 Toolchain:       MDK-ARM Plus  Version: 5.36.0.0
-Toolchain Path:  C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin
+Toolchain Path:  C:\software\study\keil\ARM\ARMCC\Bin
 C Compiler:      Armcc.exe V5.06 update 7 (build 960)
 Assembler:       Armasm.exe V5.06 update 7 (build 960)
 Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
@@ -21,11 +21,11 @@ Target DLL:      CMSIS_AGDI.dll V1.33.0.0
 Dialog DLL:      TCM.DLL V1.53.0.0
  
 <h2>Project:</h2>
-C:\Users\Admin\Desktop\CubeMX_proj\G431_RMA_V1_0\MDK-ARM\G431_RMA_V1_0.uvprojx
-Project File Date:  03/31/2025
+C:\Users\galaxy\Desktop\CubeMX_proj\G431_RMA_V1_0\MDK-ARM\G431_RMA_V1_0.uvprojx
+Project File Date:  04/02/2025
 
 <h2>Output:</h2>
-*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin'
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\software\study\keil\ARM\ARMCC\Bin'
 Build target 'G431_RMA_V1_0'
 compiling app_freertos.c...
 ../Core/Src/app_freertos.c(140): warning:  #177-D: variable "usb_TxBuf"  was declared but never referenced
@@ -38,19 +38,19 @@ compiling app_freertos.c...
   	static uint32_t index = 0;          // 数据帧索引
 ../Core/Src/app_freertos.c(146): warning:  #177-D: variable "res_ref_kOm"  was declared but never referenced
   	static double res_ref_kOm = 10.0;
-../Core/Src/app_freertos.c(341): warning:  #167-D: argument of type "volatile uint8_t *" is incompatible with parameter of type "uint8_t *"
-  		CDC_Transmit_FS(res_send_p->byte, 2008);//2008
-../Core/Src/app_freertos.c(377): warning:  #61-D: integer operation result is out of range
+../Core/Src/app_freertos.c(353): warning:  #167-D: argument of type "volatile uint8_t *" is incompatible with parameter of type "uint8_t *"
+  		CDC_Transmit_FS(res_send_p->byte, 2208);//2008
+../Core/Src/app_freertos.c(389): warning:  #61-D: integer operation result is out of range
   			OUT11_GPIO_Port->BSRR=(OUT11_Pin << 16);//低电平
-../Core/Src/app_freertos.c(377): warning:  #68-D: integer conversion resulted in a change of sign
+../Core/Src/app_freertos.c(389): warning:  #68-D: integer conversion resulted in a change of sign
   			OUT11_GPIO_Port->BSRR=(OUT11_Pin << 16);//低电平
-../Core/Src/app_freertos.c(417): warning:  #61-D: integer operation result is out of range
+../Core/Src/app_freertos.c(429): warning:  #61-D: integer operation result is out of range
   			OUT10_GPIO_Port->BSRR=(OUT10_Pin << 16);//低电平
-../Core/Src/app_freertos.c(417): warning:  #68-D: integer conversion resulted in a change of sign
+../Core/Src/app_freertos.c(429): warning:  #68-D: integer conversion resulted in a change of sign
   			OUT10_GPIO_Port->BSRR=(OUT10_Pin << 16);//低电平
 ../Core/Src/app_freertos.c: 10 warnings, 0 errors
 linking...
-Program Size: Code=25464 RO-data=592 RW-data=532 ZI-data=16700  
+Program Size: Code=25488 RO-data=592 RW-data=532 ZI-data=17100  
 FromELF: creating hex file...
 "G431_RMA_V1_0\G431_RMA_V1_0.axf" - 0 Error(s), 10 Warning(s).
 
@@ -63,19 +63,20 @@ Package Vendor: ARM
    * Component: CORE Version: 5.5.0
 
 Package Vendor: Keil
-                https://www.keil.com/pack/Keil.STM32G4xx_DFP.2.0.0.pack
-                Keil.STM32G4xx_DFP.2.0.0
-                STMicroelectronics STM32G4 Series Device Support
+                https://www.keil.com/pack/Keil.STM32G4xx_DFP.1.6.0.pack
+                Keil.STM32G4xx_DFP.1.6.0
+                STMicroelectronics STM32G4 Series Device Support, Drivers and Examples
 
 <h2>Collection of Component include folders:</h2>
   .\RTE\_G431_RMA_V1_0
-  C:\Users\Admin\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include
+  C:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include
+  C:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include
 
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:05
 </pre>
 </body>
 </html>

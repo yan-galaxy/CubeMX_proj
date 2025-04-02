@@ -129,8 +129,8 @@ R11:v1 7           adc1_value[7]
 uint16_t samp_data[11][10];
 uint16_t adc1_value[8];
 uint16_t adc2_value[2];
-volatile Word_union res_data_1[1004];
-volatile Word_union res_data_2[1004];
+volatile Word_union res_data_1[1104];
+volatile Word_union res_data_2[1104];
 volatile Word_union* res_send_p=res_data_1;
 volatile Word_union* res_store_p=res_data_2;
 /* USER CODE END Header_StartDefaultTask */
@@ -267,28 +267,28 @@ void SampleTask(void const * argument)
 	res_data_1[0].byte[1]=0xAA;
 	res_data_1[1].byte[0]=0xBB;
 	res_data_1[1].byte[1]=0xCC;
-	for(uint16_t i=0;i<1000;i++)
+	for(uint16_t i=0;i<1100;i++)
 	{
 //		res_send_p[2+i].word16=i*1+1;
 		res_data_1[2+i].word16=i*1+1;
 	}
-	res_data_1[1002].byte[0]=0xAA;//帧尾
-	res_data_1[1002].byte[1]=0x55;
-	res_data_1[1003].byte[0]=0x66;
-	res_data_1[1003].byte[1]=0x77;
+	res_data_1[1102].byte[0]=0xAA;//帧尾
+	res_data_1[1102].byte[1]=0x55;
+	res_data_1[1103].byte[0]=0x66;
+	res_data_1[1103].byte[1]=0x77;
 	
 	res_data_2[0].byte[0]=0x55;//帧头
 	res_data_2[0].byte[1]=0xAA;
 	res_data_2[1].byte[0]=0xBB;
 	res_data_2[1].byte[1]=0xCC;
-	for(uint16_t i=0;i<1000;i++)
+	for(uint16_t i=0;i<1100;i++)
 	{
 		res_data_2[2+i].word16=i*2+2;
 	}
-	res_data_2[1002].byte[0]=0xAA;//帧尾
-	res_data_2[1002].byte[1]=0x55;
-	res_data_2[1003].byte[0]=0x66;
-	res_data_2[1003].byte[1]=0x77;
+	res_data_2[1102].byte[0]=0xAA;//帧尾
+	res_data_2[1102].byte[1]=0x55;
+	res_data_2[1103].byte[0]=0x66;
+	res_data_2[1103].byte[1]=0x77;
 	
 	
 	
@@ -306,7 +306,7 @@ void SampleTask(void const * argument)
 				for(uint8_t i=0;i<11;i++)
 				{
 					select_switcher(i);
-					user_delaynus_tim(25);
+					user_delaynus_tim(30);
 					samp_data[i][9]=adc1_value[5];//IN10对应R1
 					samp_data[i][8]=adc1_value[4];//IN9 对应R2
 					samp_data[i][7]=adc2_value[0];//IN8 对应R3
@@ -317,20 +317,32 @@ void SampleTask(void const * argument)
 					samp_data[i][2]=adc2_value[1];//IN3 对应R9
 					samp_data[i][1]=adc1_value[6];//IN2 对应R10
 					samp_data[i][0]=adc1_value[7];//IN1 对应R11
-					if( i > 0 )
-					{
-						//+2是为了跳过帧头
-						res_store_p[j*100+(i-1)*10+0+2].word16=samp_data[i][0];
-						res_store_p[j*100+(i-1)*10+1+2].word16=samp_data[i][1];
-						res_store_p[j*100+(i-1)*10+2+2].word16=samp_data[i][2];
-						res_store_p[j*100+(i-1)*10+3+2].word16=samp_data[i][3];
-						res_store_p[j*100+(i-1)*10+4+2].word16=samp_data[i][4];
-						res_store_p[j*100+(i-1)*10+5+2].word16=samp_data[i][5];
-						res_store_p[j*100+(i-1)*10+6+2].word16=samp_data[i][6];
-						res_store_p[j*100+(i-1)*10+7+2].word16=samp_data[i][7];
-						res_store_p[j*100+(i-1)*10+8+2].word16=samp_data[i][8];
-						res_store_p[j*100+(i-1)*10+9+2].word16=samp_data[i][9];
-					}
+					
+					//+2是为了跳过帧头
+					res_store_p[j*110+i*10+0+2].word16=samp_data[i][0];
+					res_store_p[j*110+i*10+1+2].word16=samp_data[i][1];
+					res_store_p[j*110+i*10+2+2].word16=samp_data[i][2];
+					res_store_p[j*110+i*10+3+2].word16=samp_data[i][3];
+					res_store_p[j*110+i*10+4+2].word16=samp_data[i][4];
+					res_store_p[j*110+i*10+5+2].word16=samp_data[i][5];
+					res_store_p[j*110+i*10+6+2].word16=samp_data[i][6];
+					res_store_p[j*110+i*10+7+2].word16=samp_data[i][7];
+					res_store_p[j*110+i*10+8+2].word16=samp_data[i][8];
+					res_store_p[j*110+i*10+9+2].word16=samp_data[i][9];
+//					if( i > 0 )//不发送参考电阻的那行数据
+//					{
+//						//+2是为了跳过帧头
+//						res_store_p[j*100+(i-1)*10+0+2].word16=samp_data[i][0];
+//						res_store_p[j*100+(i-1)*10+1+2].word16=samp_data[i][1];
+//						res_store_p[j*100+(i-1)*10+2+2].word16=samp_data[i][2];
+//						res_store_p[j*100+(i-1)*10+3+2].word16=samp_data[i][3];
+//						res_store_p[j*100+(i-1)*10+4+2].word16=samp_data[i][4];
+//						res_store_p[j*100+(i-1)*10+5+2].word16=samp_data[i][5];
+//						res_store_p[j*100+(i-1)*10+6+2].word16=samp_data[i][6];
+//						res_store_p[j*100+(i-1)*10+7+2].word16=samp_data[i][7];
+//						res_store_p[j*100+(i-1)*10+8+2].word16=samp_data[i][8];
+//						res_store_p[j*100+(i-1)*10+9+2].word16=samp_data[i][9];
+//					}
 				}
 				osSemaphoreRelease(dataBinarySemHandle);
 			}
@@ -338,7 +350,7 @@ void SampleTask(void const * argument)
 			vTaskDelayUntil(&xLastWakeTime, xFrequency);//		osDelay(1);  vTaskSuspend(NULL);          // 挂起当前任务（自身）
 		}
 		exchange_res_p();//切换缓存区
-		CDC_Transmit_FS(res_send_p->byte, 2008);//2008
+		CDC_Transmit_FS(res_send_p->byte, 2208);//2008
 		
 		
 //		osDelay(1000);

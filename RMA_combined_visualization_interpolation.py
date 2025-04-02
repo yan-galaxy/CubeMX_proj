@@ -13,7 +13,7 @@ from scipy.ndimage import zoom  # 使用scipy的缩放函数 插值需要
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 数据就绪信号
     
-    def __init__(self,port='COM9',normalization_low = -70,normalization_high = 500):
+    def __init__(self,port='COM7',normalization_low = -20,normalization_high = 110):
         super().__init__()
         self.port = port         # 串口号
         self.baudrate = 115200     # 波特率
@@ -60,7 +60,8 @@ class SerialWorker(QThread):
                             # print('parsed[1]:',parsed[1])
                             # print('parsed[100]:',parsed[100])
 
-                            if len(parsed) == 1000:  # 确保数据完整
+                            if len(parsed) == 1000:  # 原比较器板子接收10x10的数据
+                                # print('len(parsed):',len(parsed))
                                 
                                 frames = np.array(parsed).reshape(10, 100)
                                 # 计算十帧的平均值
@@ -80,6 +81,94 @@ class SerialWorker(QThread):
                                     normalized_result = (clipped_result - (self.normalization_low)) / (self.normalization_high - self.normalization_low)  # 分母是550（500-(-50)）
                                     result = normalized_result
                                     self.data_ready.emit(result.tolist())  # 如果需要转回列表再发射
+                            elif len(parsed) == 1100:# RMA板子接收11x10的数据
+                                frames = np.array(parsed).reshape(10, 11, 10)# 10帧矩阵 矩阵有11行10列
+
+                                # 方法1：手动使用每个循环计算，效率低
+                                # for i in range(0, len(frames), 1):
+                                #     print('frames[',i,']:\n', frames[i])
+                                #     # 归一化处理：每列的后10个数据除以该列的第一个数据
+                                #     normalized_matrix = np.zeros((10, 10))
+                                #     for col in range(10):
+                                #         first_val = frames[i, 0, col]  # 获取列首元素
+                                #         if first_val != 0:  # 避免除以零
+                                #             normalized_matrix[:, col] = (4095-first_val) / (4095-frames[i, 1:, col]) * 10.0  # 从第二行开始归一化
+                                #         else:
+                                #             # 处理分母为0的情况（可选：设为0或保留原始数据）
+                                #             normalized_matrix[:, col] = 0  # 或其他默认值
+
+                                #     # print('normalized_matrix:\n', normalized_matrix)
+                                #     with np.printoptions(precision=3, suppress=True, formatter={'float_kind': lambda x: "%.3f" % x}):
+                                #         print('normalized_matrix:\n', normalized_matrix)
+
+
+
+                                # 方法2：10帧循环，每一帧数据使用numpy的广播机制，效率更高
+                                # frames_list = []  # 存储所有帧的归一化矩阵
+                                # for i in range(len(frames)): # 矩阵整体计算，不是逐行计算，效率高
+                                #     frame_matrix = frames[i]  # 当前帧的11x10矩阵
+                                #     # 提取基准行（第一行）
+                                #     first_row = frame_matrix[0, :]
+                                #     # 提取需要归一化的数据（去除第一行）
+                                #     data_to_normalize = frame_matrix[1:, :]  # 形状 (10行 × 10列)
+                                #     # 计算分子和分母
+                                #     numerator = (4095 - first_row)  # 形状 (10,)
+                                #     denominator = (4095 - data_to_normalize)  # 形状 (10行 × 10列)
+                                #     # 处理分母为0的情况（避免除零错误）
+                                #     denominator = np.where(denominator == 0, 1e-6, denominator)
+                                #     # 归一化计算（利用广播机制）
+                                #     normalized_matrix = (numerator / denominator) * 10.0  # 形状 (10×10)
+                                #     # 打印结果（已保留三位小数）
+                                #     with np.printoptions(precision=3, suppress=True):
+                                #         print('normalized_matrix[',i,']:\n', normalized_matrix)
+                                #     # 存储当前帧的归一化矩阵
+                                #     frames_list.append(normalized_matrix)
+                                #     avg_matrix = np.mean(frames_list, axis=0)
+
+
+                                # 方法3：完全不使用循环，直接在矩阵上计算
+                                # 提取所有帧的基准行（第一行）
+                                first_rows = frames[:, 0, :]  # 形状 (10帧 × 10列)
+                                # 提取需要归一化的数据（去除第一行）
+                                data_to_normalize = frames[:, 1:, :]  # 形状 (10帧 × 10行 × 10列)
+                                # 计算分子和分母
+                                numerator = (4095 - first_rows)  # 形状 (10×10)
+                                denominator = (4095 - data_to_normalize)  # 形状 (10×10×10)
+                                # 处理分母为0的情况（避免除零错误）
+                                denominator = np.where(denominator == 0, 1e-6, denominator)
+                                # 归一化计算（利用广播机制）
+                                # 将分子扩展为 (10×1×10) 以匹配分母的 (10×10×10)
+                                normalized_matrices = (numerator[:, np.newaxis, :] / denominator) * 10.0  # 形状 (10×10×10)
+                                
+                                # 求均值
+                                avg_matrix = np.mean(normalized_matrices, axis=0)
+                                # 打印结果（已保留三位小数）
+                                with np.printoptions(precision=3, suppress=True):
+                                    print('avg_matrix:\n', avg_matrix)
+
+
+
+
+                                if self.matrix_flag == 0 :# 获得初始帧作为基准帧
+                                    self.matrix_init = avg_matrix.copy()  # 保存为数组
+                                    self.matrix_flag = 1
+                                else:
+                                    result = self.matrix_init - avg_matrix  # 数组支持元素级减法  力越大数值越大
+                                    # 限幅到[-50, 500]范围内    ***每更换一个器件就需要重新设定范围***
+                                    clipped_result = np.clip(result, a_min=self.normalization_low, a_max=self.normalization_high)
+                                    # 归一化到[0, 1]范围
+                                    normalized_result = (clipped_result - (self.normalization_low)) / (self.normalization_high - self.normalization_low)  # 分母是550（500-(-50)）
+                                    result = normalized_result
+                                    # with np.printoptions(precision=3, suppress=True):
+                                    #     print('result:\n', result)
+
+                                    result = result.flatten()# 必须转为一维数组
+                                    # print('result.tolist()\n', np.array(result.tolist()).shape)
+                                    self.data_ready.emit(result.tolist())  # 如果需要转回列表再发送
+
+
+                                # self.data_ready.emit(avg_matrix.tolist())
+
                             else:
                                 print('串口数据不完整')
                             self.buffer = self.buffer[end_index + len(self.FRAME_TAIL):]
@@ -230,7 +319,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     
     # 创建主窗口实例
-    main_win = MatrixVisualizer(interplotation = False,rotation_angle = 0,flip_horizontal = False,flip_vertical = False)
+    main_win = MatrixVisualizer(interplotation = False,rotation_angle = 90,flip_horizontal = False,flip_vertical = True)
     main_win.setup_display()  # 初始化显示布局
     main_win.resize(800, 800)
     main_win.show()
