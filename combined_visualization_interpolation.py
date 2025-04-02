@@ -13,7 +13,7 @@ from scipy.ndimage import zoom  # 使用scipy的缩放函数 插值需要
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 数据就绪信号
     
-    def __init__(self,port='COM7',normalization_low = -70,normalization_high = 500):
+    def __init__(self,port='COM9',normalization_low = -70,normalization_high = 500):
         super().__init__()
         self.port = port         # 串口号
         self.baudrate = 115200     # 波特率

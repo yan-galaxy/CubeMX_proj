@@ -333,7 +333,8 @@ void gpiotrigTask(void const * argument)
 
 	osDelay(500);
 	TickType_t xLastWakeTime;
-	xLastWakeTime = xTaskGetTickCount();
+	const TickType_t xFrequency = pdMS_TO_TICKS(1);
+	
 	
 	res_data_1[0].byte[0]=0x55;//Ö¡Í·
 	res_data_1[0].byte[1]=0xAA;
@@ -361,6 +362,9 @@ void gpiotrigTask(void const * argument)
 	res_data_2[1002].byte[1]=0x55;
 	res_data_2[1003].byte[0]=0x66;
 	res_data_2[1003].byte[1]=0x77;
+	
+	
+	xLastWakeTime = xTaskGetTickCount();
   /* Infinite loop */
 	for(;;)
 	{
@@ -412,8 +416,9 @@ void gpiotrigTask(void const * argument)
 //				if( queuestatus.queues.queue9  )	
 //				if( queuestatus.queues.queue10 )	
 					
-//				vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(10));//osDelay(1);
+
 			}
+				vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(1));//osDelay(1);
 		}
 //		osDelay(100);
 		exchange_res_p();//ÇÐ»»»º´æÇø

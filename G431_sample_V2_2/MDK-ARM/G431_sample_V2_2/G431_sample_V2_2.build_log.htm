@@ -22,12 +22,77 @@ Dialog DLL:      TCM.DLL V1.53.0.0
  
 <h2>Project:</h2>
 C:\Users\galaxy\Desktop\CubeMX_proj\G431_sample_V2_2\MDK-ARM\G431_sample_V2_2.uvprojx
-Project File Date:  01/24/2025
+Project File Date:  04/02/2025
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\software\study\keil\ARM\ARMCC\Bin'
 Build target 'G431_sample_V2_2'
-"G431_sample_V2_2\G431_sample_V2_2.axf" - 0 Error(s), 0 Warning(s).
+compiling app_freertos.c...
+../Core/Src/app_freertos.c(235): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(SEL1_GPIO_Port, SEL1_Pin ,1);
+../Core/Src/app_freertos.c(236): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(SEL2_GPIO_Port, SEL2_Pin ,1);
+../Core/Src/app_freertos.c(237): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(SEL3_GPIO_Port, SEL3_Pin ,1);//U2 多路选择器有问题 连锡短路(*已解决*)
+../Core/Src/app_freertos.c(238): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(SEL4_GPIO_Port, SEL4_Pin ,1);
+../Core/Src/app_freertos.c(239): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(SEL5_GPIO_Port, SEL5_Pin ,1);
+../Core/Src/app_freertos.c(240): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(SEL6_GPIO_Port, SEL6_Pin ,1);
+../Core/Src/app_freertos.c(241): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(SEL7_GPIO_Port, SEL7_Pin ,1);
+../Core/Src/app_freertos.c(242): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(SEL8_GPIO_Port, SEL8_Pin ,1);
+../Core/Src/app_freertos.c(243): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(SEL9_GPIO_Port, SEL9_Pin ,1);
+../Core/Src/app_freertos.c(244): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(SEL10_GPIO_Port,SEL10_Pin,1);
+../Core/Src/app_freertos.c(398): warning:  #167-D: argument of type "volatile uint16_t *" is incompatible with parameter of type "void *const"
+  				{xStatus[ 1] = xQueueReceive(Line1QueueHandle , &comparator_data[ 1], 0);if(xStatus[ 1]){ res_store_p[j*100+(i-1)*10+0+2].word16=comparator_data[ 1]; print_data[j*100+(i-1)*10+0+2].word16=comparator_data[ 1];}  }//comparator_data[ 1]
+../Core/Src/app_freertos.c(399): warning:  #167-D: argument of type "volatile uint16_t *" is incompatible with parameter of type "void *const"
+  				{xStatus[ 2] = xQueueReceive(Line2QueueHandle , &comparator_data[ 2], 0);if(xStatus[ 2]){ res_store_p[j*100+(i-1)*10+1+2].word16=comparator_data[ 2]; print_data[j*100+(i-1)*10+1+2].word16=comparator_data[ 2];}  }//comparator_data[ 2]
+../Core/Src/app_freertos.c(400): warning:  #167-D: argument of type "volatile uint16_t *" is incompatible with parameter of type "void *const"
+  				{xStatus[ 3] = xQueueReceive(Line3QueueHandle , &comparator_data[ 3], 0);if(xStatus[ 3]){ res_store_p[j*100+(i-1)*10+2+2].word16=comparator_data[ 3]; print_data[j*100+(i-1)*10+2+2].word16=comparator_data[ 3];}  }//comparator_data[ 3]
+../Core/Src/app_freertos.c(401): warning:  #167-D: argument of type "volatile uint16_t *" is incompatible with parameter of type "void *const"
+  				{xStatus[ 4] = xQueueReceive(Line4QueueHandle , &comparator_data[ 4], 0);if(xStatus[ 4]){ res_store_p[j*100+(i-1)*10+3+2].word16=comparator_data[ 4]; print_data[j*100+(i-1)*10+3+2].word16=comparator_data[ 4];}  }//comparator_data[ 4]
+../Core/Src/app_freertos.c(402): warning:  #167-D: argument of type "volatile uint16_t *" is incompatible with parameter of type "void *const"
+  				{xStatus[ 5] = xQueueReceive(Line5QueueHandle , &comparator_data[ 5], 0);if(xStatus[ 5]){ res_store_p[j*100+(i-1)*10+4+2].word16=comparator_data[ 5]; print_data[j*100+(i-1)*10+4+2].word16=comparator_data[ 5];}  }//comparator_data[ 5]
+../Core/Src/app_freertos.c(403): warning:  #167-D: argument of type "volatile uint16_t *" is incompatible with parameter of type "void *const"
+  				{xStatus[ 6] = xQueueReceive(Line6QueueHandle , &comparator_data[ 6], 0);if(xStatus[ 6]){ res_store_p[j*100+(i-1)*10+5+2].word16=comparator_data[ 6]; print_data[j*100+(i-1)*10+5+2].word16=comparator_data[ 6];}  }//comparator_data[ 6]
+../Core/Src/app_freertos.c(404): warning:  #167-D: argument of type "volatile uint16_t *" is incompatible with parameter of type "void *const"
+  				{xStatus[ 7] = xQueueReceive(Line7QueueHandle , &comparator_data[ 7], 0);if(xStatus[ 7]){ res_store_p[j*100+(i-1)*10+6+2].word16=comparator_data[ 7]; print_data[j*100+(i-1)*10+6+2].word16=comparator_data[ 7];}  }//comparator_data[ 7]
+../Core/Src/app_freertos.c(405): warning:  #167-D: argument of type "volatile uint16_t *" is incompatible with parameter of type "void *const"
+  				{xStatus[ 8] = xQueueReceive(Line8QueueHandle , &comparator_data[ 8], 0);if(xStatus[ 8]){ res_store_p[j*100+(i-1)*10+7+2].word16=comparator_data[ 8]; print_data[j*100+(i-1)*10+7+2].word16=comparator_data[ 8];}  }//comparator_data[ 8]
+../Core/Src/app_freertos.c(406): warning:  #167-D: argument of type "volatile uint16_t *" is incompatible with parameter of type "void *const"
+  				{xStatus[ 9] = xQueueReceive(Line9QueueHandle , &comparator_data[ 9], 0);if(xStatus[ 9]){ res_store_p[j*100+(i-1)*10+8+2].word16=comparator_data[ 9]; print_data[j*100+(i-1)*10+8+2].word16=comparator_data[ 9];}  }//comparator_data[ 9]
+../Core/Src/app_freertos.c(407): warning:  #167-D: argument of type "volatile uint16_t *" is incompatible with parameter of type "void *const"
+  				{xStatus[10] = xQueueReceive(Line10QueueHandle, &comparator_data[10], 0);if(xStatus[10]){ res_store_p[j*100+(i-1)*10+9+2].word16=comparator_data[10]; print_data[j*100+(i-1)*10+9+2].word16=comparator_data[10];}  }//comparator_data[10]
+../Core/Src/app_freertos.c(425): warning:  #167-D: argument of type "volatile uint8_t *" is incompatible with parameter of type "uint8_t *"
+  		CDC_Transmit_FS(res_send_p->byte, 2008);
+../Core/Src/app_freertos.c(336): warning:  #177-D: variable "xFrequency"  was declared but never referenced
+  	const TickType_t xFrequency = pdMS_TO_TICKS(1);
+../Core/Src/app_freertos.c(443): warning:  #177-D: variable "USBD_Result"  was declared but never referenced
+  	uint8_t USBD_Result=0;
+../Core/Src/app_freertos.c(445): warning:  #177-D: variable "event"  was declared but never referenced
+  	osEvent event[11];
+../Core/Src/app_freertos.c(447): warning:  #177-D: variable "i"  was declared but never referenced
+  	uint8_t i = 0;
+../Core/Src/app_freertos.c(513): warning:  #177-D: variable "time_cnt"  was declared but never referenced
+  	static uint16_t time_cnt=0;
+../Core/Src/app_freertos.c(903): warning:  #188-D: enumerated type mixed with another type
+  			HAL_GPIO_WritePin(CS1_GPIO_Port,CS1_Pin,0);
+../Core/Src/app_freertos.c(905): warning:  #188-D: enumerated type mixed with another type
+  			HAL_GPIO_WritePin(CS2_GPIO_Port,CS2_Pin,0);
+../Core/Src/app_freertos.c(912): warning:  #188-D: enumerated type mixed with another type
+  		HAL_GPIO_WritePin(CS1_GPIO_Port,CS1_Pin,1);
+../Core/Src/app_freertos.c(914): warning:  #188-D: enumerated type mixed with another type
+  		HAL_GPIO_WritePin(CS2_GPIO_Port,CS2_Pin,1);
+../Core/Src/app_freertos.c: 30 warnings, 0 errors
+linking...
+Program Size: Code=29808 RO-data=764 RW-data=588 ZI-data=25644  
+FromELF: creating hex file...
+"G431_sample_V2_2\G431_sample_V2_2.axf" - 0 Error(s), 30 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -51,7 +116,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:04
 </pre>
 </body>
 </html>

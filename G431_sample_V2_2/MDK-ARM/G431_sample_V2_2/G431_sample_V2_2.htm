@@ -3,7 +3,7 @@
 <title>Static Call Graph - [G431_sample_V2_2\G431_sample_V2_2.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image G431_sample_V2_2\G431_sample_V2_2.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Tue Mar 25 20:42:35 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed Apr 02 09:48:47 2025
 <BR><P>
 <H3>Maximum Stack Usage =        320 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1716,11 +1716,12 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gpiotrigTask
 </UL>
 
-<P><STRONG><a name="[6d]"></a>gpiotrigTask</STRONG> (Thumb, 878 bytes, Stack size 0 bytes, app_freertos.o(i.gpiotrigTask))
-<BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = gpiotrigTask &rArr; xQueueReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[6d]"></a>gpiotrigTask</STRONG> (Thumb, 890 bytes, Stack size 8 bytes, app_freertos.o(i.gpiotrigTask))
+<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = gpiotrigTask &rArr; xQueueReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGetTickCount
 <LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
+<LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelayUntil
 <LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 <LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CDC_Transmit_FS
 <LI><a href="#[12f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exchange_res_p
@@ -1923,7 +1924,8 @@ Global Symbols
 <LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspendAll
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddCurrentTaskToDelayedList
 </UL>
-<BR>[Called By]<UL><LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBTask
+<BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gpiotrigTask
+<LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBTask
 <LI><a href="#[6c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartDefaultTask
 </UL>
 
