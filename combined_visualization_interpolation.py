@@ -99,11 +99,16 @@ class SerialWorker(QThread):
 
 # 主窗口类
 class MatrixVisualizer(QMainWindow):
-    def __init__(self,interplotation):
+    def __init__(self,interplotation = False,rotation_angle = 0,flip_horizontal = False,flip_vertical = False):
         super().__init__()
         self.setWindowTitle("实时传感器矩阵可视化")
         self.interplotation = interplotation # 插值标志
         # self.interplotation = False
+
+        # 新增旋转和翻转参数
+        self.rotation_angle = rotation_angle          # 0/90/180/270
+        self.flip_horizontal = flip_horizontal     # 水平镜像
+        self.flip_vertical = flip_vertical       # 垂直镜像
         
         
         # 创建主窗口组件
@@ -168,6 +173,20 @@ class MatrixVisualizer(QMainWindow):
             if len(full_data) == 100:
                 self.data = np.array(full_data).reshape(10, 10)
 
+                # 新增：应用旋转
+                if self.rotation_angle == 90:# 逆时针90°
+                    self.data = np.rot90(self.data, 1)
+                elif self.rotation_angle == 180:
+                    self.data = np.rot90(self.data, 2)
+                elif self.rotation_angle == 270:
+                    self.data = np.rot90(self.data, 3)
+
+                # 新增：应用镜像翻转
+                if self.flip_horizontal:# 上下调换
+                    self.data = np.fliplr(self.data)
+                if self.flip_vertical:  # 左右调换
+                    self.data = np.flipud(self.data)
+
                 if self.interplotation :
                     # (10, 10)插值到100x100（10倍放大）
                     interpolated_data = zoom(self.data, (5, 5), order=3)  # 3阶插值
@@ -210,7 +229,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     
     # 创建主窗口实例
-    main_win = MatrixVisualizer(interplotation = False)
+    main_win = MatrixVisualizer(interplotation = False,rotation_angle = 0,flip_horizontal = False,flip_vertical = False)
     main_win.setup_display()  # 初始化显示布局
     main_win.resize(800, 800)
     main_win.show()
