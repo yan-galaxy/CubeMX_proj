@@ -142,9 +142,9 @@ class SerialWorker(QThread):
                                 
                                 # 求均值
                                 avg_matrix = np.mean(normalized_matrices, axis=0)
-                                # 打印结果（已保留三位小数）
-                                with np.printoptions(precision=3, suppress=True):
-                                    print('avg_matrix:\n', avg_matrix)
+                                # # 打印结果（已保留三位小数）
+                                # with np.printoptions(precision=3, suppress=True):
+                                #     print('avg_matrix:\n', avg_matrix)
 
 
 
@@ -152,15 +152,26 @@ class SerialWorker(QThread):
                                 if self.matrix_flag == 0 :# 获得初始帧作为基准帧
                                     self.matrix_init = avg_matrix.copy()  # 保存为数组
                                     self.matrix_flag = 1
+                                    with np.printoptions(precision=3, suppress=True):
+                                        print('self.matrix_init:\n', self.matrix_init)
                                 else:
                                     result = self.matrix_init - avg_matrix  # 数组支持元素级减法  力越大数值越大
-                                    # 限幅到[-50, 500]范围内    ***每更换一个器件就需要重新设定范围***
-                                    clipped_result = np.clip(result, a_min=self.normalization_low, a_max=self.normalization_high)
-                                    # 归一化到[0, 1]范围
-                                    normalized_result = (clipped_result - (self.normalization_low)) / (self.normalization_high - self.normalization_low)  # 分母是550（500-(-50)）
-                                    result = normalized_result
+
+                                    normal_result = result/self.matrix_init
+                                    normal_result = np.where(normal_result < 0, 0, normal_result)
+                                    normal_result = np.where(normal_result > 1, 0, normal_result)
+                                    result = normal_result
+
+
                                     # with np.printoptions(precision=3, suppress=True):
-                                    #     print('result:\n', result)
+                                    #     print('normal_result:\n', normal_result)
+                                    # # 限幅到[normalization_low, normalization_high]范围内    ***每更换一个器件就需要重新设定范围***
+                                    # clipped_result = np.clip(result, a_min=self.normalization_low, a_max=self.normalization_high)
+                                    # # 归一化到[0, 1]范围
+                                    # normalized_result = (clipped_result - (self.normalization_low)) / (self.normalization_high - self.normalization_low)  # 分母是550（500-(-50)）
+                                    # result = normalized_result
+                                    # # with np.printoptions(precision=3, suppress=True):
+                                    # #     print('result:\n', result)
 
                                     result = result.flatten()# 必须转为一维数组
                                     # print('result.tolist()\n', np.array(result.tolist()).shape)
@@ -234,10 +245,10 @@ class MatrixVisualizer(QMainWindow):
         self.timer.timeout.connect(self.update_plot)
         self.timer.start(5)
         
-        # 新增：添加控制台打印定时器
-        self.print_timer = QtCore.QTimer()
-        self.print_timer.timeout.connect(self.print_matrix)
-        self.print_timer.start(500)  # 每500ms打印一次
+        # # 新增：添加控制台打印定时器
+        # self.print_timer = QtCore.QTimer()
+        # self.print_timer.timeout.connect(self.print_matrix)
+        # self.print_timer.start(500)  # 每500ms打印一次
 
         self.frame_count = 0
         self.start_time = QtCore.QTime.currentTime()
@@ -319,7 +330,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     
     # 创建主窗口实例
-    main_win = MatrixVisualizer(interplotation = False,rotation_angle = 90,flip_horizontal = False,flip_vertical = True)
+    main_win = MatrixVisualizer(interplotation = True,rotation_angle = 90,flip_horizontal = False,flip_vertical = True)
     main_win.setup_display()  # 初始化显示布局
     main_win.resize(800, 800)
     main_win.show()
