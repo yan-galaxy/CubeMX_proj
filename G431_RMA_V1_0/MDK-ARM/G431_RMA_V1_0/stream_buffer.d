@@ -1,8 +1,8 @@
 g431_rma_v1_0\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c
-g431_rma_v1_0\stream_buffer.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
-g431_rma_v1_0\stream_buffer.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
+g431_rma_v1_0\stream_buffer.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+g431_rma_v1_0\stream_buffer.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 g431_rma_v1_0\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-g431_rma_v1_0\stream_buffer.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
+g431_rma_v1_0\stream_buffer.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 g431_rma_v1_0\stream_buffer.o: ../Core/Inc/FreeRTOSConfig.h
 g431_rma_v1_0\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 g431_rma_v1_0\stream_buffer.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

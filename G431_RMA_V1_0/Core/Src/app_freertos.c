@@ -152,41 +152,41 @@ void StartDefaultTask(void const * argument)
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 		
 ////		osSemaphoreWait(dataBinarySemHandle, osWaitForever);
-//		if(osSemaphoreWait(dataBinarySemHandle, 0) == osOK)
-//		{
-//			// 格式化数据帧（示例：每行11通道，共10组）
-//			sprintf((char *)usb_TxBuf, 
-//					"Frame %02d: \r\n", 
-//					index++);
+		if(osSemaphoreWait(dataBinarySemHandle, 0) == osOK)
+		{
+			// 格式化数据帧（示例：每行11通道，共10组）
+			sprintf((char *)usb_TxBuf, 
+					"Frame %02d: \r\n", 
+					index++);
 
-//			for (uint8_t i = 0; i < 11; i++) {
-//				sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
-//					"line:%2d:%4d %4d %4d %4d %4d %4d %4d %4d %4d %4d \r\n", 
-//						i+1,
-//						samp_data[i][0], samp_data[i][1], samp_data[i][2], 
-//						samp_data[i][3], samp_data[i][4], samp_data[i][5], 
-//						samp_data[i][6], samp_data[i][7], samp_data[i][8], 
-//						samp_data[i][9]);
-//			}
-//			sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
-//					"value: (kOm)\r\n");
-//			for (uint8_t i = 0; i < 11; i++) {
-//				sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
-//					"line:%2d:%02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f \r\n", 
-//						i+1,
-//						(4095-samp_data[0][0])/(float)(4095-samp_data[i][0])*res_ref_kOm, (4095-samp_data[0][1])/(float)(4095-samp_data[i][1])*res_ref_kOm, (4095-samp_data[0][2])/(float)(4095-samp_data[i][2])*res_ref_kOm, 
-//						(4095-samp_data[0][3])/(float)(4095-samp_data[i][3])*res_ref_kOm, (4095-samp_data[0][4])/(float)(4095-samp_data[i][4])*res_ref_kOm, (4095-samp_data[0][5])/(float)(4095-samp_data[i][5])*res_ref_kOm, 
-//						(4095-samp_data[0][6])/(float)(4095-samp_data[i][6])*res_ref_kOm, (4095-samp_data[0][7])/(float)(4095-samp_data[i][7])*res_ref_kOm, (4095-samp_data[0][8])/(float)(4095-samp_data[i][8])*res_ref_kOm, 
-//						(4095-samp_data[0][9])/(float)(4095-samp_data[i][9])*res_ref_kOm);
-//			}
-//			
-//			
-//			
-//			usb_RxLength=strlen((char *)usb_TxBuf);
-//			CDC_Transmit_FS(usb_TxBuf, usb_RxLength);//USB CDC测试
-//			
-//			osSemaphoreRelease(dataBinarySemHandle);
-//		}
+			for (uint8_t i = 0; i < 11; i++) {
+				sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
+					"line:%2d:%4d %4d %4d %4d %4d %4d %4d %4d %4d %4d \r\n", 
+						i+1,
+						samp_data[i][0], samp_data[i][1], samp_data[i][2], 
+						samp_data[i][3], samp_data[i][4], samp_data[i][5], 
+						samp_data[i][6], samp_data[i][7], samp_data[i][8], 
+						samp_data[i][9]);
+			}
+			sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
+					"value: (kOm)\r\n");
+			for (uint8_t i = 0; i < 11; i++) {
+				sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
+					"line:%2d:%02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f  %02.2f \r\n", 
+						i+1,
+						(4095-samp_data[0][0])/(float)(4095-samp_data[i][0])*res_ref_kOm, (4095-samp_data[0][1])/(float)(4095-samp_data[i][1])*res_ref_kOm, (4095-samp_data[0][2])/(float)(4095-samp_data[i][2])*res_ref_kOm, 
+						(4095-samp_data[0][3])/(float)(4095-samp_data[i][3])*res_ref_kOm, (4095-samp_data[0][4])/(float)(4095-samp_data[i][4])*res_ref_kOm, (4095-samp_data[0][5])/(float)(4095-samp_data[i][5])*res_ref_kOm, 
+						(4095-samp_data[0][6])/(float)(4095-samp_data[i][6])*res_ref_kOm, (4095-samp_data[0][7])/(float)(4095-samp_data[i][7])*res_ref_kOm, (4095-samp_data[0][8])/(float)(4095-samp_data[i][8])*res_ref_kOm, 
+						(4095-samp_data[0][9])/(float)(4095-samp_data[i][9])*res_ref_kOm);
+			}
+			
+			
+			
+			usb_RxLength=strlen((char *)usb_TxBuf);
+			CDC_Transmit_FS(usb_TxBuf, usb_RxLength);//USB CDC测试
+			
+			osSemaphoreRelease(dataBinarySemHandle);
+		}
 		osDelay(100);
 
 		
@@ -349,8 +349,8 @@ void SampleTask(void const * argument)
 //			user_delaynus_tim(100);
 			vTaskDelayUntil(&xLastWakeTime, xFrequency);//		osDelay(1);  vTaskSuspend(NULL);          // 挂起当前任务（自身）
 		}
-		exchange_res_p();//切换缓存区
-		CDC_Transmit_FS(res_send_p->byte, 2208);//2008
+//		exchange_res_p();//切换缓存区
+//		CDC_Transmit_FS(res_send_p->byte, 2208);//2008
 		
 		
 //		osDelay(1000);
