@@ -8,6 +8,7 @@ from queue import Queue
 from PyQt5.QtCore import QThread, pyqtSignal
 
 from scipy.ndimage import zoom  # 使用scipy的缩放函数 插值需要
+from PyQt5.QtWidgets import QGraphicsEllipseItem
 
 # 串口数据处理线程
 class SerialWorker(QThread):
@@ -227,7 +228,7 @@ class MatrixVisualizer(QMainWindow):
         # self.plot.setYRange(0, 100)
 
     def setup_display(self):
-        """添加颜色条"""
+        """添加颜色条和新图形"""
         color_bar = pg.ColorBarItem(
             values=(0.0, 1.0),
             width=25,
@@ -239,13 +240,66 @@ class MatrixVisualizer(QMainWindow):
         self.central_widget.addItem(self.plot, 0, 0)
         self.central_widget.addItem(color_bar, 0, 1)
 
-
         # 添加单个传感器数据曲线图
-        self.single_data_plot = self.central_widget.addPlot(row=0, col=2, colspan=1)
+        self.single_data_plot = self.central_widget.addPlot(row=0, col=1, colspan=1)  # 调整到第二列
         self.single_data_plot.setTitle("合力实时数据曲线")
         self.single_data_plot.setLabels(left='归一化值', bottom='数据点序号')
-        self.single_data_plot.setYRange(0.0, 300.0)  # 根据归一化范围设置
-        self.single_data_curve = self.single_data_plot.plot(pen='y')  # 黄色曲线
+        self.single_data_plot.setYRange(0.0, 300.0)
+        self.single_data_curve = self.single_data_plot.plot(pen='y')
+
+        # # 新增：添加固定圆图表（第三列）
+        # self.circle_plot = self.central_widget.addPlot(row=0, col=2)  # 第三列是col=2
+        # self.circle_plot.setTitle("固定圆示例")
+        # self.circle_plot.hideAxis('left')
+        # self.circle_plot.hideAxis('bottom')
+
+        # # 创建圆形
+        # rect = QtCore.QRectF(-50, -50, 100, 100)  # 中心在(0,0)，半径50
+        # circle = QGraphicsEllipseItem(rect)  # 直接使用导入的类
+        # circle.setPen(pg.mkPen('g', width=2))  # 绿色边框
+        # circle.setBrush(pg.mkBrush(0, 255, 0, 255))  # 绿色半透明填充  第四个参数是透明度，取值范围0-255
+        # self.circle_plot.addItem(circle)
+        # self.circle_plot.setXRange(-100, 100)
+        # self.circle_plot.setYRange(-100, 100)
+
+        # 新增：添加4x4圆形矩阵到第三列
+        self.circle_plot = self.central_widget.addPlot(row=0, col=2)
+        self.circle_plot.setTitle("4x4圆形矩阵")
+        self.circle_plot.hideAxis('left')
+        self.circle_plot.hideAxis('bottom')
+        self.circle_plot.setXRange(-100, 100)
+        self.circle_plot.setYRange(-100, 100)
+
+        # 设置圆形参数
+        radius = 10  # 半径
+        spacing = 30  # 圆心间距
+        colors = ['g', 'r', 'b', 'y']  # 可选：不同颜色（可注释掉）
+
+        # 生成4x4矩阵坐标
+        x_centers = np.linspace(-spacing*1.5, spacing*1.5, 4)  # 自动计算坐标
+        y_centers = np.linspace(-spacing*1.5, spacing*1.5, 4)
+
+        # 循环创建圆形
+        for i, x in enumerate(x_centers):
+            for j, y in enumerate(y_centers):
+                # 计算矩形位置
+                rect = QtCore.QRectF(
+                    x - radius,  # 左上角x
+                    y - radius,  # 左上角y
+                    2*radius,    # 宽度
+                    2*radius     # 高度
+                )
+                circle = QGraphicsEllipseItem(rect)
+
+                # 设置样式（可选颜色变化）
+                # color = colors[(i+j)%4]  # 交替颜色
+                # circle.setPen(pg.mkPen(color, width=2))
+                # circle.setBrush(pg.mkBrush(color))
+                circle.setPen(pg.mkPen('g', width=2))  # 绿色边框
+                circle.setBrush(pg.mkBrush(0, 255, 0, 255))  # 绿色半透明填充  第四个参数是透明度，取值范围0-255
+
+                self.circle_plot.addItem(circle)
+
     def closeEvent(self, event):
         """窗口关闭时停止串口线程"""
         self.worker.stop()
