@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import QGraphicsEllipseItem
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 数据就绪信号
     
-    def __init__(self,port='COM9',normalization_low = -5,normalization_high = 500):
+    def __init__(self,port='COM9',normalization_low = -5,normalization_high = 150):
         super().__init__()
         self.port = port         # 串口号
         self.baudrate = 115200     # 波特率
@@ -73,8 +73,20 @@ class SerialWorker(QThread):
                                 if self.matrix_flag == 0 :# 获得初始帧作为基准帧
                                     self.matrix_init = average.copy()  # 保存为数组
                                     self.matrix_flag = 1
+                                    # 计算统计量
+                                    avg = np.mean(self.matrix_init)
+                                    max_val = np.max(self.matrix_init)
+                                    min_val = np.min(self.matrix_init)
+                                    var_val = np.var(self.matrix_init)
+
+                                    print(f"初始矩阵统计信息:")
+                                    print(f"平均值: {avg:.2f}")
+                                    print(f"最大值: {max_val:.2f}")
+                                    print(f"最小值: {min_val:.2f}")
+                                    print(f"方差: {var_val:.2f}")
                                 else:
                                     result = self.matrix_init - average  # 数组支持元素级减法  力越大数值越大
+                                    # print('result:\n', result)
                                     # 限幅到[-50, 500]范围内    ***每更换一个器件就需要重新设定范围***
                                     clipped_result = np.clip(result, a_min=self.normalization_low, a_max=self.normalization_high)
                                     # 归一化到[0, 1]范围
@@ -110,6 +122,11 @@ class MatrixVisualizer(QMainWindow):
         self.single_data_values = []  # 存储实时数据点
         self.single_data_plot = None  # 曲线图对象
         self.single_data_curve = None # 曲线图曲线
+
+        self.circle_items = []  # 存储所有圆形项
+        self.base_radius = 1   # 基准半径
+        self.radius_scale = 30 # 半径缩放系数（根据数据范围调整）
+        self.init_coord = np.zeros(16).reshape(4, 4)
 
         # 新增旋转和翻转参数
         self.rotation_angle = rotation_angle          # 0/90/180/270
@@ -177,6 +194,7 @@ class MatrixVisualizer(QMainWindow):
         while not self.data_queue.empty():
             full_data = self.data_queue.get()
             if len(full_data) == 100:
+                self.frame_count += 1
                 self.data = np.array(full_data).reshape(10, 10)
 
                 # 新增：应用旋转
@@ -193,13 +211,14 @@ class MatrixVisualizer(QMainWindow):
                 if self.flip_vertical:  # 左右调换
                     self.data = np.flipud(self.data)
 
+                raw_data = self.data
                 if self.interplotation :
                     # (10, 10)插值到100x100（10倍放大）
                     interpolated_data = zoom(self.data, (5, 5), order=3)  # 3阶插值
                     self.data = interpolated_data
 
                 self.image_item.setImage(self.data, levels=(0.0, 1.0))
-                self.frame_count += 1  
+                  
 
                 # 提取目标传感器数据（假设选择中心点（4,4））
                 # target_row, target_col = 4, 4  # 10x10矩阵的中心位置（索引从0开始）
@@ -215,6 +234,56 @@ class MatrixVisualizer(QMainWindow):
                 # 更新曲线数据
                 if self.single_data_curve:
                     self.single_data_curve.setData(self.single_data_values)
+
+
+
+                # 将10x10数据降采样到4x4
+                # 步骤1：去除最外层一圈数据（保留中间8x8）
+                clip8x8_matrix = raw_data[1:-1, 1:-1]  # 索引从1到8（不包含9）
+                # 正确的reshape和transpose顺序
+                original_blocks = clip8x8_matrix.reshape(4, 2, 4, 2).transpose(0, 2, 1, 3)
+                
+                # 步骤2：计算每个2x2块的平均值
+                downsampled = original_blocks.mean(axis=(2, 3))  # 对每个块的行和列求平均
+                # 步骤3：计算横向差（列方向）
+                horizontal_diff_x = (
+                    original_blocks[:,:,:,1].mean(axis=2)  # 右边列的平均值
+                    - original_blocks[:,:,:,0].mean(axis=2)  # 左边列的平均值
+                )
+
+                # 步骤4：计算纵向差（行方向）
+                vertical_diff_y = (
+                    original_blocks[:,:,0,:].mean(axis=2)  # 上面行的平均值
+                    - original_blocks[:,:,1,:].mean(axis=2)  # 下面行的平均值
+                )
+
+                # print(original_blocks)
+                # print(original_blocks.shape)
+                # print(clip8x8_matrix)
+
+
+
+                spacing=50
+                
+                for idx, (circle, x0, y0) in enumerate(self.circle_items):
+                    # 获取对应数据值（0-1范围）
+                    value = downsampled.flat[idx]  # 扁平化后索引
+                    
+                    # 计算新半径（根据数据值缩放）
+                    new_radius = self.base_radius * (1 + self.radius_scale * value)
+                    
+                    # 计算位置偏移（根据数据值调整）
+                    offset_x = horizontal_diff_x.flat[idx] * spacing  # 中心对称偏移
+                    offset_y = vertical_diff_y.flat[idx] * spacing
+                    
+                    # 更新圆形参数
+                    rect = QtCore.QRectF(
+                        x0 + offset_x - new_radius,
+                        y0 + offset_y - new_radius,
+                        2*new_radius,
+                        2*new_radius
+                    )
+                    circle.setRect(rect)
                               
         current_time = QtCore.QTime.currentTime()
         if self.start_time.msecsTo(current_time) >= 1000:  # 每1秒计算一次
@@ -240,65 +309,71 @@ class MatrixVisualizer(QMainWindow):
         self.central_widget.addItem(self.plot, 0, 0)
         self.central_widget.addItem(color_bar, 0, 1)
 
-        # 添加单个传感器数据曲线图
-        self.single_data_plot = self.central_widget.addPlot(row=0, col=1, colspan=1)  # 调整到第二列
-        self.single_data_plot.setTitle("合力实时数据曲线")
-        self.single_data_plot.setLabels(left='归一化值', bottom='数据点序号')
-        self.single_data_plot.setYRange(0.0, 300.0)
-        self.single_data_curve = self.single_data_plot.plot(pen='y')
-
-        # # 新增：添加固定圆图表（第三列）
-        # self.circle_plot = self.central_widget.addPlot(row=0, col=2)  # 第三列是col=2
-        # self.circle_plot.setTitle("固定圆示例")
-        # self.circle_plot.hideAxis('left')
-        # self.circle_plot.hideAxis('bottom')
-
-        # # 创建圆形
-        # rect = QtCore.QRectF(-50, -50, 100, 100)  # 中心在(0,0)，半径50
-        # circle = QGraphicsEllipseItem(rect)  # 直接使用导入的类
-        # circle.setPen(pg.mkPen('g', width=2))  # 绿色边框
-        # circle.setBrush(pg.mkBrush(0, 255, 0, 255))  # 绿色半透明填充  第四个参数是透明度，取值范围0-255
-        # self.circle_plot.addItem(circle)
-        # self.circle_plot.setXRange(-100, 100)
-        # self.circle_plot.setYRange(-100, 100)
+        # # 添加单个传感器数据曲线图
+        # self.single_data_plot = self.central_widget.addPlot(row=0, col=1, colspan=1)  # 调整到第二列
+        # self.single_data_plot.setTitle("合力实时数据曲线")
+        # self.single_data_plot.setLabels(left='归一化值', bottom='数据点序号')
+        # self.single_data_plot.setYRange(0.0, 300.0)
+        # self.single_data_curve = self.single_data_plot.plot(pen='y')
 
         # 新增：添加4x4圆形矩阵到第三列
-        self.circle_plot = self.central_widget.addPlot(row=0, col=2)
+        self.circle_plot = self.central_widget.addPlot(row=0, col=1)
         self.circle_plot.setTitle("4x4圆形矩阵")
         self.circle_plot.hideAxis('left')
         self.circle_plot.hideAxis('bottom')
         self.circle_plot.setXRange(-100, 100)
         self.circle_plot.setYRange(-100, 100)
+        self.circle_plot.setAspectLocked(True, ratio=1)  # 锁定1:1纵横比
 
-        # 设置圆形参数
-        radius = 10  # 半径
+        # # 设置圆形参数
+        # radius = 2  # 半径
+        # spacing = 30  # 圆心间距
+        # colors = ['g', 'r', 'b', 'y']  # 可选：不同颜色（可注释掉）
+
+        # # 生成4x4矩阵坐标
+        # x_centers = np.linspace(-spacing*1.5, spacing*1.5, 4)  # 自动计算坐标
+        # y_centers = np.linspace(-spacing*1.5, spacing*1.5, 4)
+
+        # # 循环创建圆形
+        # for i, x in enumerate(x_centers):
+        #     for j, y in enumerate(y_centers):
+        #         # 计算矩形位置
+        #         rect = QtCore.QRectF(
+        #             x - radius,  # 左上角x
+        #             y - radius,  # 左上角y
+        #             2*radius,    # 宽度
+        #             2*radius     # 高度
+        #         )
+        #         circle = QGraphicsEllipseItem(rect)
+
+        #         # 设置样式（可选颜色变化）
+        #         # color = colors[(i+j)%4]  # 交替颜色
+        #         # circle.setPen(pg.mkPen(color, width=2))
+        #         # circle.setBrush(pg.mkBrush(color))
+        #         circle.setPen(pg.mkPen('g', width=2))  # 绿色边框
+        #         circle.setBrush(pg.mkBrush(0, 255, 0, 255))  # 绿色半透明填充  第四个参数是透明度，取值范围0-255
+
+        #         self.circle_plot.addItem(circle)
+
+
         spacing = 30  # 圆心间距
-        colors = ['g', 'r', 'b', 'y']  # 可选：不同颜色（可注释掉）
-
-        # 生成4x4矩阵坐标
-        x_centers = np.linspace(-spacing*1.5, spacing*1.5, 4)  # 自动计算坐标
-        y_centers = np.linspace(-spacing*1.5, spacing*1.5, 4)
-
-        # 循环创建圆形
-        for i, x in enumerate(x_centers):
-            for j, y in enumerate(y_centers):
-                # 计算矩形位置
+        for i in range(4):
+            for j in range(4):
+                # 计算初始位置（保持中心对称）
+                x_center = (i - 1.5) * spacing
+                y_center = (j - 1.5) * spacing
+                
                 rect = QtCore.QRectF(
-                    x - radius,  # 左上角x
-                    y - radius,  # 左上角y
-                    2*radius,    # 宽度
-                    2*radius     # 高度
+                    x_center - self.base_radius, 
+                    y_center - self.base_radius, 
+                    2*self.base_radius, 
+                    2*self.base_radius
                 )
                 circle = QGraphicsEllipseItem(rect)
-
-                # 设置样式（可选颜色变化）
-                # color = colors[(i+j)%4]  # 交替颜色
-                # circle.setPen(pg.mkPen(color, width=2))
-                # circle.setBrush(pg.mkBrush(color))
-                circle.setPen(pg.mkPen('g', width=2))  # 绿色边框
-                circle.setBrush(pg.mkBrush(0, 255, 0, 255))  # 绿色半透明填充  第四个参数是透明度，取值范围0-255
-
+                circle.setPen(pg.mkPen('g', width=2))
+                circle.setBrush(pg.mkBrush(0, 255, 0, 255))  # 半透明绿色 第四个参数是透明度，取值范围0-255
                 self.circle_plot.addItem(circle)
+                self.circle_items.append( (circle, x_center, y_center) )  # 保存初始位置
 
     def closeEvent(self, event):
         """窗口关闭时停止串口线程"""
@@ -312,7 +387,9 @@ if __name__ == "__main__":
     # 创建主窗口实例
     main_win = MatrixVisualizer(interplotation = True,rotation_angle = 0,flip_horizontal = False,flip_vertical = False)
     main_win.setup_display()  # 初始化显示布局
-    main_win.resize(800, 800)
+    main_win.resize(1600, 900)
+    # main_win.showFullScreen()  # 全屏模式
+    # main_win.showMaximized()  # 启动时窗口最大化
     main_win.show()
     
     sys.exit(app.exec_())
