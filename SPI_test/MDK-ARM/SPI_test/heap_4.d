@@ -1,0 +1,13 @@
+spi_test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c
+spi_test\heap_4.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+spi_test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+spi_test\heap_4.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+spi_test\heap_4.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+spi_test\heap_4.o: ../Core/Inc/FreeRTOSConfig.h
+spi_test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+spi_test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+spi_test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+spi_test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+spi_test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+spi_test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+spi_test\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
