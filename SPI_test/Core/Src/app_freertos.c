@@ -73,6 +73,10 @@ void AD5206_SetResistance(uint8_t index, uint8_t channel, uint8_t resistance) {
 		spi_data[1]=resistance;
 		
 		HAL_SPI_Transmit(&hspi1,spi_data,2,0xffff);
+		
+		spi_data[0] = ~spi_data[0];
+		spi_data[1] = ~spi_data[1];
+		HAL_SPI_Transmit(&hspi1,spi_data,2,0xffff);
     if(index==0)
 		HAL_GPIO_WritePin(SPI_CS_GPIO_Port,SPI_CS_Pin,1);
 //	else if(index==1)
@@ -138,7 +142,7 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
 	for(;;)
 	{
-		AD5206_SetResistance(0,0,10);
+		AD5206_SetResistance(0,3,10);
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 		sprintf(usb_buff,"PB2 adc_value:%d\r\n",adc_value[0]);
 		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
