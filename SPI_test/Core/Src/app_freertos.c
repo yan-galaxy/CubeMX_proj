@@ -146,7 +146,7 @@ void StartDefaultTask(void const * argument)
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 		sprintf(usb_buff,"PB2 adc_value:%d\r\n",adc_value[0]);
 		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
-		osDelay(500);
+		osDelay(1);
 	}
   /* USER CODE END StartDefaultTask */
 }

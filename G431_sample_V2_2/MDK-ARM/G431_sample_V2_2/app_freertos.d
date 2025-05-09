@@ -1,7 +1,7 @@
 g431_sample_v2_2\app_freertos.o: ../Core/Src/app_freertos.c
 g431_sample_v2_2\app_freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-g431_sample_v2_2\app_freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
-g431_sample_v2_2\app_freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+g431_sample_v2_2\app_freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+g431_sample_v2_2\app_freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 g431_sample_v2_2\app_freertos.o: ../Core/Inc/FreeRTOSConfig.h
 g431_sample_v2_2\app_freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 g431_sample_v2_2\app_freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
@@ -55,14 +55,14 @@ g431_sample_v2_2\app_freertos.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_l
 g431_sample_v2_2\app_freertos.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h
 g431_sample_v2_2\app_freertos.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h
 g431_sample_v2_2\app_freertos.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_exti.h
-g431_sample_v2_2\app_freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdio.h
-g431_sample_v2_2\app_freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
+g431_sample_v2_2\app_freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+g431_sample_v2_2\app_freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 g431_sample_v2_2\app_freertos.o: ../USB_Device/App/usbd_cdc_if.h
 g431_sample_v2_2\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h
 g431_sample_v2_2\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 g431_sample_v2_2\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h
 g431_sample_v2_2\app_freertos.o: ../USB_Device/Target/usbd_conf.h
-g431_sample_v2_2\app_freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
+g431_sample_v2_2\app_freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 g431_sample_v2_2\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 g431_sample_v2_2\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 g431_sample_v2_2\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h

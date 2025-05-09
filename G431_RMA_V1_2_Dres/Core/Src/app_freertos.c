@@ -127,8 +127,8 @@ R10:v1 6           adc1_value[6]
 R11:v1 7           adc1_value[7]
 */
 uint16_t samp_data[11][10];
-uint16_t adc1_value[8];
-uint16_t adc2_value[2];
+uint16_t adc1_value[9];
+uint16_t adc2_value[1];
 volatile Word_union res_data_1[1104];
 volatile Word_union res_data_2[1104];
 volatile Word_union* res_send_p=res_data_1;
@@ -256,8 +256,8 @@ void StartDefaultTask(void const * argument)
 void SampleTask(void const * argument)
 {
   /* USER CODE BEGIN SampleTask */
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adc1_value, 8);
-	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)adc2_value, 2);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adc1_value, 9);
+	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)adc2_value, 1);
 	
 	TickType_t xLastWakeTime;
     const TickType_t xFrequency = pdMS_TO_TICKS(1);  // 1秒周期[6](@ref)
@@ -309,12 +309,12 @@ void SampleTask(void const * argument)
 					user_delaynus_tim(30);
 					samp_data[i][9]=adc1_value[5];//IN10对应R1
 					samp_data[i][8]=adc1_value[4];//IN9 对应R2
-					samp_data[i][7]=adc2_value[0];//IN8 对应R3
+					samp_data[i][7]=adc1_value[8];//IN8 对应R3
 					samp_data[i][6]=adc1_value[3];//IN7 对应R4
 					samp_data[i][5]=adc1_value[1];//IN6 对应R5
 					samp_data[i][4]=adc1_value[0];//IN5 对应R7
 					samp_data[i][3]=adc1_value[2];//IN4 对应R8
-					samp_data[i][2]=adc2_value[1];//IN3 对应R9
+					samp_data[i][2]=adc2_value[0];//IN3 对应R9
 					samp_data[i][1]=adc1_value[6];//IN2 对应R10
 					samp_data[i][0]=adc1_value[7];//IN1 对应R11
 					

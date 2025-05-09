@@ -2,13 +2,13 @@ g431_sample_v2_2\usbd_ctlreq.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/
 g431_sample_v2_2\usbd_ctlreq.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
 g431_sample_v2_2\usbd_ctlreq.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h
 g431_sample_v2_2\usbd_ctlreq.o: ../USB_Device/Target/usbd_conf.h
-g431_sample_v2_2\usbd_ctlreq.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdio.h
-g431_sample_v2_2\usbd_ctlreq.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
-g431_sample_v2_2\usbd_ctlreq.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
+g431_sample_v2_2\usbd_ctlreq.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+g431_sample_v2_2\usbd_ctlreq.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+g431_sample_v2_2\usbd_ctlreq.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 g431_sample_v2_2\usbd_ctlreq.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 g431_sample_v2_2\usbd_ctlreq.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h
 g431_sample_v2_2\usbd_ctlreq.o: ../Drivers/CMSIS/Include/core_cm4.h
-g431_sample_v2_2\usbd_ctlreq.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+g431_sample_v2_2\usbd_ctlreq.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 g431_sample_v2_2\usbd_ctlreq.o: ../Drivers/CMSIS/Include/cmsis_version.h
 g431_sample_v2_2\usbd_ctlreq.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 g431_sample_v2_2\usbd_ctlreq.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -20,7 +20,7 @@ g431_sample_v2_2\usbd_ctlreq.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ha
 g431_sample_v2_2\usbd_ctlreq.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h
 g431_sample_v2_2\usbd_ctlreq.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 g431_sample_v2_2\usbd_ctlreq.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-g431_sample_v2_2\usbd_ctlreq.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
+g431_sample_v2_2\usbd_ctlreq.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 g431_sample_v2_2\usbd_ctlreq.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h
 g431_sample_v2_2\usbd_ctlreq.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h
 g431_sample_v2_2\usbd_ctlreq.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h

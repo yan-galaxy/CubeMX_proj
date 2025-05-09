@@ -102,13 +102,12 @@ int main(void)
 //	LL_TIM_EnableIT_UPDATE(TIM7);//start TIM7 IRQ
 	LL_TIM_EnableCounter(TIM7);//start TIM7
 	
-	AD5206_SetResistance(0, 0, 12);//0Îª49¦¸×óÓÒ£¬1Îª460¦¸×óÓÒ£¬2Îª865¦¸×óÓÒ£¬3Îª1275¦¸×óÓÒ£¬12Îª4940¦¸×óÓÒ
+	AD5206_SetResistance(0, 0, 12);//0Îª49¦¸×óÓÒ£¬1Îª460¦¸×óÓÒ£¬2Îª865¦¸×óÓÒ£¬3Îª1275¦¸×óÓÒ£¬4Îª1700¦¸×óÓÒ£¬5Îª2100¦¸×óÓÒ£¬12Îª4940¦¸×óÓÒ£¬24Îª9900¦¸×óÓÒ
 	AD5206_SetResistance(0, 1, 12);
 	AD5206_SetResistance(0, 2, 12);
 	AD5206_SetResistance(0, 3, 12);
 	AD5206_SetResistance(0, 5, 12);
-	
-	AD5206_SetResistance(1, 0, 12);//0Îª49¦¸×óÓÒ£¬1Îª440¦¸×óÓÒ£¬2Îª827¦¸×óÓÒ£¬3Îª1218¦¸×óÓÒ£¬4Îª1600¦¸×óÓÒ£¬5Îª1990¦¸×óÓÒ£¬6Îª2377¦¸×óÓÒ£¬12Îª4740¦¸×óÓÒ
+	AD5206_SetResistance(1, 0, 12);//0Îª49¦¸×óÓÒ£¬1Îª440¦¸×óÓÒ£¬2Îª827¦¸×óÓÒ£¬3Îª1218¦¸×óÓÒ£¬4Îª1600¦¸×óÓÒ£¬5Îª1990¦¸×óÓÒ£¬6Îª2377¦¸×óÓÒ£¬12Îª4740¦¸×óÓÒ£¬24Îª9300¦¸×óÓÒ£¬25Îª9700¦¸×óÓÒ
 	AD5206_SetResistance(1, 1, 12);
 	AD5206_SetResistance(1, 2, 12);
 	AD5206_SetResistance(1, 3, 12);

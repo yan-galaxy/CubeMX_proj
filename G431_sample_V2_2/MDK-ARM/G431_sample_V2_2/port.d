@@ -1,7 +1,7 @@
 g431_sample_v2_2\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/port.c
 g431_sample_v2_2\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-g431_sample_v2_2\port.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
-g431_sample_v2_2\port.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+g431_sample_v2_2\port.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+g431_sample_v2_2\port.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 g431_sample_v2_2\port.o: ../Core/Inc/FreeRTOSConfig.h
 g431_sample_v2_2\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 g431_sample_v2_2\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
