@@ -1,0 +1,1 @@
+g431_rma_v1_2_dres\startup_stm32g431xx.o: startup_stm32g431xx.s
