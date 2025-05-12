@@ -127,8 +127,8 @@ R10:v1 6           adc1_value[6]
 R11:v1 7           adc1_value[7]
 */
 uint16_t samp_data[11][10];
-uint16_t adc1_value[9];
-uint16_t adc2_value[1];
+uint16_t adc1_value[6];
+uint16_t adc2_value[4];
 volatile Word_union res_data_1[1104];
 volatile Word_union res_data_2[1104];
 volatile Word_union* res_send_p=res_data_1;
@@ -143,7 +143,7 @@ void StartDefaultTask(void const * argument)
 	
 	
 	static uint32_t index = 0;          // 数据帧索引
-	static double res_ref_kOm = 4.84;
+	static double res_ref_kOm = 60.0;
 	
 	
   /* Infinite loop */
@@ -199,7 +199,7 @@ void StartDefaultTask(void const * argument)
 		
 		
 		
-		
+// 640.5+12.5=653
 ////		OUT11_GPIO_Port->BSRR = (OUT11_Pin << 16);//低电平
 //		OUT11_GPIO_Port->BSRR = OUT11_Pin;//高电平
 //		
@@ -256,11 +256,11 @@ void StartDefaultTask(void const * argument)
 void SampleTask(void const * argument)
 {
   /* USER CODE BEGIN SampleTask */
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adc1_value, 9);
-	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)adc2_value, 1);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adc1_value, 6);
+	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)adc2_value, 4);
 	
 	TickType_t xLastWakeTime;
-    const TickType_t xFrequency = pdMS_TO_TICKS(1);  // 1秒周期[6](@ref)
+    const TickType_t xFrequency = pdMS_TO_TICKS(10);  // 1秒周期[6](@ref)
    
 	
 	res_data_1[0].byte[0]=0x55;//帧头
@@ -306,19 +306,32 @@ void SampleTask(void const * argument)
 				for(uint8_t i=0;i<11;i++)
 				{
 					select_switcher(i);
-					user_delaynus_tim(30);
-					samp_data[i][9]=adc1_value[5];//IN10对应R1
-					samp_data[i][8]=adc1_value[4];//IN9 对应R2
-					samp_data[i][7]=adc1_value[8];//IN8 对应R3
-					samp_data[i][6]=adc1_value[3];//IN7 对应R4
-					samp_data[i][5]=adc1_value[1];//IN6 对应R5
-					samp_data[i][4]=adc1_value[0];//IN5 对应R7
-					samp_data[i][3]=adc1_value[2];//IN4 对应R8
-					samp_data[i][2]=adc2_value[0];//IN3 对应R9
-					samp_data[i][1]=adc1_value[6];//IN2 对应R10
-					samp_data[i][0]=adc1_value[7];//IN1 对应R11
+//					select_switcher_2(i);
+					user_delaynus_tim(500);
 					
-					//+2是为了跳过帧头
+//					samp_data[i][9]=adc1_value[5];//IN10对应R1
+//					samp_data[i][8]=adc1_value[4];//IN9 对应R2
+//					samp_data[i][7]=adc1_value[8];//IN8 对应R3
+//					samp_data[i][6]=adc1_value[3];//IN7 对应R4
+//					samp_data[i][5]=adc1_value[1];//IN6 对应R5
+//					samp_data[i][4]=adc1_value[0];//IN5 对应R7
+//					samp_data[i][3]=adc1_value[2];//IN4 对应R8
+//					samp_data[i][2]=adc2_value[0];//IN3 对应R9
+//					samp_data[i][1]=adc1_value[6];//IN2 对应R10
+//					samp_data[i][0]=adc1_value[7];//IN1 对应R11
+					
+					samp_data[i][9]=adc1_value[3];//IN10对应R1
+					samp_data[i][8]=adc1_value[2];//IN9 对应R2
+					samp_data[i][7]=adc1_value[5];//IN8 对应R3
+					samp_data[i][6]=adc1_value[1];//IN7 对应R4
+					samp_data[i][5]=adc2_value[1];//IN6 对应R5
+					samp_data[i][4]=adc2_value[0];//IN5 对应R7
+					samp_data[i][3]=adc1_value[0];//IN4 对应R8
+					samp_data[i][2]=adc2_value[3];//IN3 对应R9
+					samp_data[i][1]=adc1_value[4];//IN2 对应R10
+					samp_data[i][0]=adc2_value[2];//IN1 对应R11
+					
+//					//+2是为了跳过帧头
 					res_store_p[j*110+i*10+0+2].word16=samp_data[i][0];
 					res_store_p[j*110+i*10+1+2].word16=samp_data[i][1];
 					res_store_p[j*110+i*10+2+2].word16=samp_data[i][2];
@@ -329,22 +342,31 @@ void SampleTask(void const * argument)
 					res_store_p[j*110+i*10+7+2].word16=samp_data[i][7];
 					res_store_p[j*110+i*10+8+2].word16=samp_data[i][8];
 					res_store_p[j*110+i*10+9+2].word16=samp_data[i][9];
-//					if( i > 0 )//不发送参考电阻的那行数据
-//					{
-//						//+2是为了跳过帧头
-//						res_store_p[j*100+(i-1)*10+0+2].word16=samp_data[i][0];
-//						res_store_p[j*100+(i-1)*10+1+2].word16=samp_data[i][1];
-//						res_store_p[j*100+(i-1)*10+2+2].word16=samp_data[i][2];
-//						res_store_p[j*100+(i-1)*10+3+2].word16=samp_data[i][3];
-//						res_store_p[j*100+(i-1)*10+4+2].word16=samp_data[i][4];
-//						res_store_p[j*100+(i-1)*10+5+2].word16=samp_data[i][5];
-//						res_store_p[j*100+(i-1)*10+6+2].word16=samp_data[i][6];
-//						res_store_p[j*100+(i-1)*10+7+2].word16=samp_data[i][7];
-//						res_store_p[j*100+(i-1)*10+8+2].word16=samp_data[i][8];
-//						res_store_p[j*100+(i-1)*10+9+2].word16=samp_data[i][9];
-//					}
+					
+					
+					
+					
+//////////					if( i > 0 )//不发送参考电阻的那行数据
+//////////					{
+//////////						//+2是为了跳过帧头
+//////////						res_store_p[j*100+(i-1)*10+0+2].word16=samp_data[i][0];
+//////////						res_store_p[j*100+(i-1)*10+1+2].word16=samp_data[i][1];
+//////////						res_store_p[j*100+(i-1)*10+2+2].word16=samp_data[i][2];
+//////////						res_store_p[j*100+(i-1)*10+3+2].word16=samp_data[i][3];
+//////////						res_store_p[j*100+(i-1)*10+4+2].word16=samp_data[i][4];
+//////////						res_store_p[j*100+(i-1)*10+5+2].word16=samp_data[i][5];
+//////////						res_store_p[j*100+(i-1)*10+6+2].word16=samp_data[i][6];
+//////////						res_store_p[j*100+(i-1)*10+7+2].word16=samp_data[i][7];
+//////////						res_store_p[j*100+(i-1)*10+8+2].word16=samp_data[i][8];
+//////////						res_store_p[j*100+(i-1)*10+9+2].word16=samp_data[i][9];
+//////////					}
+
+
 				}
+				OUT11_GPIO_Port->BSRR=OUT11_Pin;//高电平
+				OUT10_GPIO_Port->BSRR=OUT10_Pin;//高电平
 				osSemaphoreRelease(dataBinarySemHandle);
+				
 			}
 //			user_delaynus_tim(100);
 			vTaskDelayUntil(&xLastWakeTime, xFrequency);//		osDelay(1);  vTaskSuspend(NULL);          // 挂起当前任务（自身）
@@ -427,6 +449,77 @@ void select_switcher(uint8_t index)
 		case 10:
 			OUT9_GPIO_Port->BSRR =OUT9_Pin;//高电平
 			OUT10_GPIO_Port->BSRR=(OUT10_Pin << 16);//低电平
+			break;
+	}
+}
+void select_switcher_2(uint8_t index)
+{
+	switch(index)
+	{
+		case 0:
+//			OUT1_GPIO_Port->BSRR=OUT1_Pin;//高电平
+//			OUT2_GPIO_Port->BSRR=OUT2_Pin;//高电平
+//			OUT3_GPIO_Port->BSRR=OUT3_Pin;//高电平
+//			OUT4_GPIO_Port->BSRR=OUT4_Pin;//高电平
+//			OUT5_GPIO_Port->BSRR=OUT5_Pin;//高电平
+//			OUT6_GPIO_Port->BSRR=OUT6_Pin;//高电平
+//			OUT7_GPIO_Port->BSRR=OUT7_Pin;//高电平
+//			OUT8_GPIO_Port->BSRR=OUT8_Pin;//高电平
+//			OUT9_GPIO_Port->BSRR=OUT9_Pin;//高电平
+			OUT10_GPIO_Port->BSRR=OUT10_Pin;//高电平
+			OUT11_GPIO_Port->BSRR=(OUT11_Pin << 16);//低电平
+			break;
+		case 1:
+			OUT11_GPIO_Port->BSRR=OUT11_Pin;//高电平
+			OUT1_GPIO_Port->BSRR =(OUT1_Pin << 16);//低电平
+			break;
+		case 3:
+			OUT11_GPIO_Port->BSRR=OUT11_Pin;//高电平
+			OUT1_GPIO_Port->BSRR=OUT1_Pin;//高电平
+			OUT2_GPIO_Port->BSRR=(OUT2_Pin << 16);//低电平
+			break;
+		case 5:
+			OUT11_GPIO_Port->BSRR=OUT11_Pin;//高电平
+			OUT2_GPIO_Port->BSRR=OUT2_Pin;//高电平
+			OUT3_GPIO_Port->BSRR=(OUT3_Pin << 16);//低电平
+			break;
+		case 7:
+			OUT11_GPIO_Port->BSRR=OUT11_Pin;//高电平
+			OUT3_GPIO_Port->BSRR=OUT3_Pin;//高电平
+			OUT4_GPIO_Port->BSRR=(OUT4_Pin << 16);//低电平
+			break;
+		case 9:
+			OUT11_GPIO_Port->BSRR=OUT11_Pin;//高电平
+			OUT4_GPIO_Port->BSRR=OUT4_Pin;//高电平
+			OUT5_GPIO_Port->BSRR=(OUT5_Pin << 16);//低电平
+			break;
+		case 11:
+			OUT11_GPIO_Port->BSRR=OUT11_Pin;//高电平
+			OUT5_GPIO_Port->BSRR=OUT5_Pin;//高电平
+			OUT6_GPIO_Port->BSRR=(OUT6_Pin << 16);//低电平
+			break;
+		case 13:
+			OUT11_GPIO_Port->BSRR=OUT11_Pin;//高电平
+			OUT6_GPIO_Port->BSRR=OUT6_Pin;//高电平
+			OUT7_GPIO_Port->BSRR=(OUT7_Pin << 16);//低电平
+			break;
+		case 15:
+			OUT11_GPIO_Port->BSRR=OUT11_Pin;//高电平
+			OUT7_GPIO_Port->BSRR=OUT7_Pin;//高电平
+			OUT8_GPIO_Port->BSRR=(OUT8_Pin << 16);//低电平
+			break;
+		case 17:
+			OUT11_GPIO_Port->BSRR=OUT11_Pin;//高电平
+			OUT8_GPIO_Port->BSRR=OUT8_Pin;//高电平
+			OUT9_GPIO_Port->BSRR=(OUT9_Pin << 16);//低电平
+			break;
+		case 19:
+			OUT11_GPIO_Port->BSRR=OUT11_Pin;//高电平
+			OUT9_GPIO_Port->BSRR =OUT9_Pin;//高电平
+			OUT10_GPIO_Port->BSRR=(OUT10_Pin << 16);//低电平
+			break;
+		case 2:case 4:case 6:case 8:case 10:case 12:case 14:case 16:case 18:case 20:
+			OUT11_GPIO_Port->BSRR =(OUT11_Pin << 16);//低电平
 			break;
 	}
 }

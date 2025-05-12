@@ -102,18 +102,30 @@ int main(void)
 //	LL_TIM_EnableIT_UPDATE(TIM7);//start TIM7 IRQ
 	LL_TIM_EnableCounter(TIM7);//start TIM7
 	
-	AD5206_SetResistance(0, 0, 12);//0为49Ω左右，1为460Ω左右，2为865Ω左右，3为1275Ω左右，4为1700Ω左右，5为2100Ω左右，12为4940Ω左右，24为9900Ω左右
-	AD5206_SetResistance(0, 1, 12);
-	AD5206_SetResistance(0, 2, 12);
-	AD5206_SetResistance(0, 3, 12);
-	AD5206_SetResistance(0, 5, 12);
-	AD5206_SetResistance(1, 0, 12);//0为49Ω左右，1为440Ω左右，2为827Ω左右，3为1218Ω左右，4为1600Ω左右，5为1990Ω左右，6为2377Ω左右，12为4740Ω左右，24为9300Ω左右，25为9700Ω左右
-	AD5206_SetResistance(1, 1, 12);
-	AD5206_SetResistance(1, 2, 12);
-	AD5206_SetResistance(1, 3, 12);
-	AD5206_SetResistance(1, 5, 12);
+	for(uint8_t i=0;i<5;i++)
+	{
+		AD5206_SetResistance(0, 0, 150);//U3 上面这个
+		AD5206_SetResistance(0, 1, 150);//0为49Ω左右，1为460Ω左右，2为865Ω左右，3为1275Ω左右，4为1700Ω左右，5为2100Ω左右，6为2500Ω左右，12为4940Ω左右，24为9900Ω左右，25为10270Ω左右
+		AD5206_SetResistance(0, 2, 150);//125为50.0kΩ左右
+		AD5206_SetResistance(0, 3, 150);
+		AD5206_SetResistance(0, 5, 150);
+		AD5206_SetResistance(1, 0, 150);//U4 下面这个
+		AD5206_SetResistance(1, 1, 150);//0为49Ω左右，1为440Ω左右，2为827Ω左右，3为1218Ω左右，4为1600Ω左右，5为1990Ω左右，6为2377Ω左右，12为4740Ω左右，24为9300Ω左右，25为9700Ω左右
+		AD5206_SetResistance(1, 2, 150);//125为49.0kΩ左右
+		AD5206_SetResistance(1, 3, 150);
+		AD5206_SetResistance(1, 5, 150);
+	}
 	
-//	while(1);
+	
+//	while(1)
+//	{
+//		OUT10_GPIO_Port->BSRR=(OUT10_Pin << 16);//低电平
+//		OUT1_GPIO_Port->BSRR=(OUT1_Pin << 16);//低电平
+//		HAL_Delay(1);
+//		OUT10_GPIO_Port->BSRR=OUT10_Pin;//高电平
+//		OUT1_GPIO_Port->BSRR=OUT1_Pin;//高电平
+//		HAL_Delay(2);
+//	}
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

@@ -74,6 +74,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 void select_switcher(uint8_t index);
+void select_switcher_2(uint8_t index);
 void AD5206_SetResistance(uint8_t index, uint8_t channel, uint8_t resistance);
 void user_delaynus_tim(uint16_t nus);
 void exchange_res_p(void);
