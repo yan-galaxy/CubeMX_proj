@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>G431_INCRMA_Dres</TargetName>
+      <TargetName>RMA_BasicTest</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
@@ -18,7 +18,7 @@
           <Vendor>STMicroelectronics</Vendor>
           <PackID>Keil.STM32G4xx_DFP.1.6.0</PackID>
           <PackURL>https://www.keil.com/pack/</PackURL>
-          <Cpu>IRAM(0x20000000-0x20007FFF) IROM(0x8000000-0x801FFFF) CLOCK(8000000) FPU2 CPUTYPE("Cortex-M4") TZ</Cpu>
+          <Cpu>IRAM(0x20000000-0x20007FFF) IROM(0x8000000-0x801FFFF)  CLOCK(8000000) FPU2 CPUTYPE("Cortex-M4") TZ</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
           <FlashDriverDll></FlashDriverDll>
@@ -48,8 +48,8 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>G431_INCRMA_Dres\</OutputDirectory>
-          <OutputName>G431_INCRMA_Dres</OutputName>
+          <OutputDirectory>RMA_BasicTest\</OutputDirectory>
+          <OutputName>RMA_BasicTest</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -337,7 +337,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_FULL_LL_DRIVER,USE_HAL_DRIVER,STM32G431xx</Define>
+              <Define>USE_HAL_DRIVER,STM32G431xx</Define>
               <Undefine></Undefine>
               <IncludePath>../Core/Inc;../USB_Device/App;../USB_Device/Target;../Drivers/STM32G4xx_HAL_Driver/Inc;../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../Drivers/CMSIS/Device/ST/STM32G4xx/Include;../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
@@ -419,16 +419,6 @@
               <FilePath>../Core/Src/dma.c</FilePath>
             </File>
             <File>
-              <FileName>spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>tim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/tim.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32g4xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32g4xx_it.c</FilePath>
@@ -478,16 +468,6 @@
         <Group>
           <GroupName>Drivers/STM32G4xx_HAL_Driver</GroupName>
           <Files>
-            <File>
-              <FileName>stm32g4xx_ll_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_utils.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32g4xx_ll_exti.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_exti.c</FilePath>
-            </File>
             <File>
               <FileName>stm32g4xx_hal_pcd.c</FileName>
               <FileType>1</FileType>
@@ -584,16 +564,6 @@
               <FilePath>../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_adc.c</FilePath>
             </File>
             <File>
-              <FileName>stm32g4xx_hal_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32g4xx_hal_spi_ex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi_ex.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32g4xx_hal_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.c</FilePath>
@@ -602,21 +572,6 @@
               <FileName>stm32g4xx_hal_tim_ex.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32g4xx_ll_tim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_tim.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32g4xx_ll_gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32g4xx_ll_dma.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_dma.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -723,7 +678,7 @@
       <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="4.3.0" condition="CMSIS Core">
         <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="4.5.0"/>
         <targetInfos>
-          <targetInfo name="G431_INCRMA_Dres"/>
+          <targetInfo name="RMA_BasicTest"/>
         </targetInfos>
       </component>
     </components>
