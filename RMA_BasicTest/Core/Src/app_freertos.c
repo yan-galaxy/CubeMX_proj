@@ -113,6 +113,7 @@ void MX_FREERTOS_Init(void) {
   * @param  argument: Not used
   * @retval None
   */
+#define KEY_ON 0
 uint8_t key_flag;
 uint16_t adc_value[3];
 /* USER CODE END Header_StartDefaultTask */
@@ -135,10 +136,21 @@ void StartDefaultTask(void const * argument)
 	uint16_t record_OUT4_IN2;
 	uint16_t record_OUT4_IN3;
 	
+	uint16_t record_2_OUT1_IN1;
+	uint16_t record_2_OUT1_IN2;
+	uint16_t record_2_OUT1_IN3;
+	uint16_t record_2_OUT2_IN1;
+	uint16_t record_2_OUT2_IN2;
+	uint16_t record_2_OUT2_IN3;
+	uint16_t record_2_OUT3_IN1;
+	uint16_t record_2_OUT3_IN2;
+	uint16_t record_2_OUT3_IN3;
+	
 	double Rref1 = 1016;
 	double Rref2 = 1005;
 	double Rref3 = 1002;
 	double R11,R12,R13,R21,R22,R23,R31,R32,R33;
+	double R11_2,R12_2,R13_2,R21_2,R22_2,R23_2,R31_2,R32_2,R33_2;
 	
 	double voltage_IN1=0.0;
 	double voltage_IN2=0.0;
@@ -172,8 +184,9 @@ void StartDefaultTask(void const * argument)
 		voltage_IN1=0.0;
 		voltage_IN2=0.0;
 		voltage_IN3=0.0;
-		while(key_flag==0)
-			osDelay(1);
+		if(KEY_ON)
+			while(key_flag==0)
+				osDelay(1);
 		
 		
 		HAL_GPIO_WritePin(OUT1_GPIO_Port,OUT1_Pin,1);
@@ -199,8 +212,9 @@ void StartDefaultTask(void const * argument)
 		voltage_IN1=0.0;
 		voltage_IN2=0.0;
 		voltage_IN3=0.0;
-		while(key_flag==1)
-			osDelay(1);
+		if(KEY_ON)
+			while(key_flag==1)
+				osDelay(1);
 		
 		HAL_GPIO_WritePin(OUT1_GPIO_Port,OUT1_Pin,1);
 		HAL_GPIO_WritePin(OUT2_GPIO_Port,OUT2_Pin,1);
@@ -225,8 +239,9 @@ void StartDefaultTask(void const * argument)
 		voltage_IN1=0.0;
 		voltage_IN2=0.0;
 		voltage_IN3=0.0;
-		while(key_flag==2)
-			osDelay(1);
+		if(KEY_ON)
+			while(key_flag==2)
+				osDelay(1);
 		
 		HAL_GPIO_WritePin(OUT1_GPIO_Port,OUT1_Pin,1);
 		HAL_GPIO_WritePin(OUT2_GPIO_Port,OUT2_Pin,1);
@@ -251,8 +266,88 @@ void StartDefaultTask(void const * argument)
 		voltage_IN1=0.0;
 		voltage_IN2=0.0;
 		voltage_IN3=0.0;
-		while(key_flag==3)
+		if(KEY_ON)
+			while(key_flag==3)
+				osDelay(1);
+			
+		
+		HAL_GPIO_WritePin(OUT1_GPIO_Port,OUT1_Pin,0);
+		HAL_GPIO_WritePin(OUT2_GPIO_Port,OUT2_Pin,1);
+		HAL_GPIO_WritePin(OUT3_GPIO_Port,OUT3_Pin,1);
+		HAL_GPIO_WritePin(OUT4_GPIO_Port,OUT4_Pin,0);
+		osDelay(1);
+		for(uint16_t i=0;i<200;i++)
+		{
+			voltage_IN1+=adc_value[0];
+			voltage_IN2+=adc_value[1];
+		    voltage_IN3+=adc_value[2];
 			osDelay(1);
+		}
+		voltage_IN1/=200.0;
+		voltage_IN2/=200.0;
+		voltage_IN3/=200.0;
+		record_2_OUT1_IN1 = voltage_IN1;
+		record_2_OUT1_IN2 = voltage_IN2;
+		record_2_OUT1_IN3 = voltage_IN3;
+		voltage_IN1=0.0;
+		voltage_IN2=0.0;
+		voltage_IN3=0.0;
+		if(KEY_ON)
+			while(key_flag==0)
+				osDelay(1);
+			
+		HAL_GPIO_WritePin(OUT1_GPIO_Port,OUT1_Pin,1);
+		HAL_GPIO_WritePin(OUT2_GPIO_Port,OUT2_Pin,0);
+		HAL_GPIO_WritePin(OUT3_GPIO_Port,OUT3_Pin,1);
+		HAL_GPIO_WritePin(OUT4_GPIO_Port,OUT4_Pin,0);
+		osDelay(1);
+		for(uint16_t i=0;i<200;i++)
+		{
+			voltage_IN1+=adc_value[0];
+			voltage_IN2+=adc_value[1];
+		    voltage_IN3+=adc_value[2];
+			osDelay(1);
+		}
+		voltage_IN1/=200.0;
+		voltage_IN2/=200.0;
+		voltage_IN3/=200.0;
+		record_2_OUT2_IN1 = voltage_IN1;
+		record_2_OUT2_IN2 = voltage_IN2;
+		record_2_OUT2_IN3 = voltage_IN3;
+		voltage_IN1=0.0;
+		voltage_IN2=0.0;
+		voltage_IN3=0.0;
+		if(KEY_ON)
+			while(key_flag==1)
+				osDelay(1);
+			
+			
+		HAL_GPIO_WritePin(OUT1_GPIO_Port,OUT1_Pin,1);
+		HAL_GPIO_WritePin(OUT2_GPIO_Port,OUT2_Pin,1);
+		HAL_GPIO_WritePin(OUT3_GPIO_Port,OUT3_Pin,0);
+		HAL_GPIO_WritePin(OUT4_GPIO_Port,OUT4_Pin,0);
+		osDelay(1);
+		for(uint16_t i=0;i<200;i++)
+		{
+			voltage_IN1+=adc_value[0];
+			voltage_IN2+=adc_value[1];
+		    voltage_IN3+=adc_value[2];
+			osDelay(1);
+		}
+		voltage_IN1/=200.0;
+		voltage_IN2/=200.0;
+		voltage_IN3/=200.0;
+		record_2_OUT3_IN1 = voltage_IN1;
+		record_2_OUT3_IN2 = voltage_IN2;
+		record_2_OUT3_IN3 = voltage_IN3;
+		voltage_IN1=0.0;
+		voltage_IN2=0.0;
+		voltage_IN3=0.0;
+		if(KEY_ON)
+			while(key_flag==2)
+				osDelay(1);
+		
+		key_flag=0;
 		
 		
 		R31 = (double)( 4095 - record_OUT4_IN1 ) / (double)( 4095 - record_OUT3_IN1 ) * Rref1;
@@ -268,6 +363,23 @@ void StartDefaultTask(void const * argument)
 		R13 = (double)( 4095 - record_OUT4_IN3 ) / (double)( 4095 - record_OUT1_IN3 ) * Rref3;
 		
 		sprintf(usb_buff,"\r\n\r\nR31:%4.3lf, R32:%4.3lf, R33:%4.3lf\r\nR21:%4.3lf, R22:%4.3lf, R23:%4.3lf\r\nR11:%4.3lf, R12:%4.3lf, R13:%4.3lf\r\n",R31,R32,R33,R21,R22,R23,R11,R12,R13);
+		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
+			
+		osDelay(5);
+		//INCRMA·½·¨
+		R31_2 = (double)( record_OUT3_IN1 - record_2_OUT3_IN1 ) / (double)( record_OUT4_IN1 - record_2_OUT3_IN1 ) * Rref1;
+		R32_2 = (double)( record_OUT3_IN2 - record_2_OUT3_IN2 ) / (double)( record_OUT4_IN2 - record_2_OUT3_IN2 ) * Rref2;
+		R33_2 = (double)( record_OUT3_IN3 - record_2_OUT3_IN3 ) / (double)( record_OUT4_IN3 - record_2_OUT3_IN3 ) * Rref3;
+												   
+		R21_2 = (double)( record_OUT2_IN1 - record_2_OUT2_IN1 ) / (double)( record_OUT4_IN1 - record_2_OUT2_IN1 ) * Rref1;
+		R22_2 = (double)( record_OUT2_IN2 - record_2_OUT2_IN2 ) / (double)( record_OUT4_IN2 - record_2_OUT2_IN2 ) * Rref2;
+		R23_2 = (double)( record_OUT2_IN3 - record_2_OUT2_IN3 ) / (double)( record_OUT4_IN3 - record_2_OUT2_IN3 ) * Rref3;
+												   
+		R11_2 = (double)( record_OUT1_IN1 - record_2_OUT1_IN1 ) / (double)( record_OUT4_IN1 - record_2_OUT1_IN1 ) * Rref1;
+		R12_2 = (double)( record_OUT1_IN2 - record_2_OUT1_IN2 ) / (double)( record_OUT4_IN2 - record_2_OUT1_IN2 ) * Rref2;
+		R13_2 = (double)( record_OUT1_IN3 - record_2_OUT1_IN3 ) / (double)( record_OUT4_IN3 - record_2_OUT1_IN3 ) * Rref3;
+		
+		sprintf(usb_buff,"\r\n\r\nR31_2:%4.3lf, R32_2:%4.3lf, R33_2:%4.3lf\r\nR21_2:%4.3lf, R22_2:%4.3lf, R23_2:%4.3lf\r\nR11_2:%4.3lf, R12_2:%4.3lf, R13_2:%4.3lf\r\n",R31_2,R32_2,R33_2,R21_2,R22_2,R23_2,R11_2,R12_2,R13_2);
 		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
 //		while(1)
 //		{
@@ -294,7 +406,7 @@ void StartDefaultTask(void const * argument)
 //		voltage_IN2=0.0;
 //		voltage_IN3=0.0;
 		
-		osDelay(300);
+		osDelay(100);
 	}
   /* USER CODE END StartDefaultTask */
 }
