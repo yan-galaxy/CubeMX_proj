@@ -116,6 +116,7 @@ void MX_FREERTOS_Init(void) {
 #define KEY_ON 0
 uint8_t key_flag;
 uint16_t adc_value[3];
+uint16_t avr_num=50;
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const * argument)
 {
@@ -160,22 +161,24 @@ void StartDefaultTask(void const * argument)
 	for(;;)
 	{
 		
+		sprintf(usb_buff,"\r\n\r\nStart£¡£¡\r\n");
+		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
 		
 		HAL_GPIO_WritePin(OUT1_GPIO_Port,OUT1_Pin,0);
 		HAL_GPIO_WritePin(OUT2_GPIO_Port,OUT2_Pin,1);
 		HAL_GPIO_WritePin(OUT3_GPIO_Port,OUT3_Pin,1);
 		HAL_GPIO_WritePin(OUT4_GPIO_Port,OUT4_Pin,1);
 		osDelay(1);
-		for(uint16_t i=0;i<200;i++)
+		for(uint16_t i=0;i<(double)avr_num;i++)
 		{
 			voltage_IN1+=adc_value[0];
 			voltage_IN2+=adc_value[1];
 		    voltage_IN3+=adc_value[2];
 			osDelay(1);
 		}
-		voltage_IN1/=200.0;
-		voltage_IN2/=200.0;
-		voltage_IN3/=200.0;
+		voltage_IN1/=(double)avr_num;
+		voltage_IN2/=(double)avr_num;
+		voltage_IN3/=(double)avr_num;
 //		sprintf(usb_buff,"OUT1=0\r\nPA0 adc_value:%4.3lf , PB11 adc_value:%4.3lf , PA4 adc_value:%4.3lf key_flag:%d\r\n",voltage_IN1,voltage_IN2,voltage_IN3,key_flag);
 //		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
 		record_OUT1_IN1 = voltage_IN1;
@@ -194,16 +197,16 @@ void StartDefaultTask(void const * argument)
 		HAL_GPIO_WritePin(OUT3_GPIO_Port,OUT3_Pin,1);
 		HAL_GPIO_WritePin(OUT4_GPIO_Port,OUT4_Pin,1);
 		osDelay(1);
-		for(uint16_t i=0;i<200;i++)
+		for(uint16_t i=0;i<(double)avr_num;i++)
 		{
 			voltage_IN1+=adc_value[0];
 			voltage_IN2+=adc_value[1];
 		    voltage_IN3+=adc_value[2];
 			osDelay(1);
 		}
-		voltage_IN1/=200.0;
-		voltage_IN2/=200.0;
-		voltage_IN3/=200.0;
+		voltage_IN1/=(double)avr_num;
+		voltage_IN2/=(double)avr_num;
+		voltage_IN3/=(double)avr_num;
 //		sprintf(usb_buff,"OUT2=0\r\nPA0 adc_value:%4.3lf , PB11 adc_value:%4.3lf , PA4 adc_value:%4.3lf key_flag:%d\r\n",voltage_IN1,voltage_IN2,voltage_IN3,key_flag);
 //		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
 		record_OUT2_IN1 = voltage_IN1;
@@ -221,16 +224,16 @@ void StartDefaultTask(void const * argument)
 		HAL_GPIO_WritePin(OUT3_GPIO_Port,OUT3_Pin,0);
 		HAL_GPIO_WritePin(OUT4_GPIO_Port,OUT4_Pin,1);
 		osDelay(1);
-		for(uint16_t i=0;i<200;i++)
+		for(uint16_t i=0;i<(double)avr_num;i++)
 		{
 			voltage_IN1+=adc_value[0];
 			voltage_IN2+=adc_value[1];
 		    voltage_IN3+=adc_value[2];
 			osDelay(1);
 		}
-		voltage_IN1/=200.0;
-		voltage_IN2/=200.0;
-		voltage_IN3/=200.0;
+		voltage_IN1/=(double)avr_num;
+		voltage_IN2/=(double)avr_num;
+		voltage_IN3/=(double)avr_num;
 //		sprintf(usb_buff,"OUT3=0\r\nPA0 adc_value:%4.3lf , PB11 adc_value:%4.3lf , PA4 adc_value:%4.3lf key_flag:%d\r\n",voltage_IN1,voltage_IN2,voltage_IN3,key_flag);
 //		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
 		record_OUT3_IN1 = voltage_IN1;
@@ -248,16 +251,16 @@ void StartDefaultTask(void const * argument)
 		HAL_GPIO_WritePin(OUT3_GPIO_Port,OUT3_Pin,1);
 		HAL_GPIO_WritePin(OUT4_GPIO_Port,OUT4_Pin,0);
 		osDelay(1);
-		for(uint16_t i=0;i<200;i++)
+		for(uint16_t i=0;i<(double)avr_num;i++)
 		{
 			voltage_IN1+=adc_value[0];
 			voltage_IN2+=adc_value[1];
 		    voltage_IN3+=adc_value[2];
 			osDelay(1);
 		}
-		voltage_IN1/=200.0;
-		voltage_IN2/=200.0;
-		voltage_IN3/=200.0;
+		voltage_IN1/=(double)avr_num;
+		voltage_IN2/=(double)avr_num;
+		voltage_IN3/=(double)avr_num;
 //		sprintf(usb_buff,"OUT4=0\r\nPA0 adc_value:%4.3lf , PB11 adc_value:%4.3lf , PA4 adc_value:%4.3lf key_flag:%d\r\n",voltage_IN1,voltage_IN2,voltage_IN3,key_flag);
 //		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
 		record_OUT4_IN1 = voltage_IN1;
@@ -276,16 +279,16 @@ void StartDefaultTask(void const * argument)
 		HAL_GPIO_WritePin(OUT3_GPIO_Port,OUT3_Pin,1);
 		HAL_GPIO_WritePin(OUT4_GPIO_Port,OUT4_Pin,0);
 		osDelay(1);
-		for(uint16_t i=0;i<200;i++)
+		for(uint16_t i=0;i<(double)avr_num;i++)
 		{
 			voltage_IN1+=adc_value[0];
 			voltage_IN2+=adc_value[1];
 		    voltage_IN3+=adc_value[2];
 			osDelay(1);
 		}
-		voltage_IN1/=200.0;
-		voltage_IN2/=200.0;
-		voltage_IN3/=200.0;
+		voltage_IN1/=(double)avr_num;
+		voltage_IN2/=(double)avr_num;
+		voltage_IN3/=(double)avr_num;
 		record_2_OUT1_IN1 = voltage_IN1;
 		record_2_OUT1_IN2 = voltage_IN2;
 		record_2_OUT1_IN3 = voltage_IN3;
@@ -301,16 +304,16 @@ void StartDefaultTask(void const * argument)
 		HAL_GPIO_WritePin(OUT3_GPIO_Port,OUT3_Pin,1);
 		HAL_GPIO_WritePin(OUT4_GPIO_Port,OUT4_Pin,0);
 		osDelay(1);
-		for(uint16_t i=0;i<200;i++)
+		for(uint16_t i=0;i<(double)avr_num;i++)
 		{
 			voltage_IN1+=adc_value[0];
 			voltage_IN2+=adc_value[1];
 		    voltage_IN3+=adc_value[2];
 			osDelay(1);
 		}
-		voltage_IN1/=200.0;
-		voltage_IN2/=200.0;
-		voltage_IN3/=200.0;
+		voltage_IN1/=(double)avr_num;
+		voltage_IN2/=(double)avr_num;
+		voltage_IN3/=(double)avr_num;
 		record_2_OUT2_IN1 = voltage_IN1;
 		record_2_OUT2_IN2 = voltage_IN2;
 		record_2_OUT2_IN3 = voltage_IN3;
@@ -327,16 +330,16 @@ void StartDefaultTask(void const * argument)
 		HAL_GPIO_WritePin(OUT3_GPIO_Port,OUT3_Pin,0);
 		HAL_GPIO_WritePin(OUT4_GPIO_Port,OUT4_Pin,0);
 		osDelay(1);
-		for(uint16_t i=0;i<200;i++)
+		for(uint16_t i=0;i<(double)avr_num;i++)
 		{
 			voltage_IN1+=adc_value[0];
 			voltage_IN2+=adc_value[1];
 		    voltage_IN3+=adc_value[2];
 			osDelay(1);
 		}
-		voltage_IN1/=200.0;
-		voltage_IN2/=200.0;
-		voltage_IN3/=200.0;
+		voltage_IN1/=(double)avr_num;
+		voltage_IN2/=(double)avr_num;
+		voltage_IN3/=(double)avr_num;
 		record_2_OUT3_IN1 = voltage_IN1;
 		record_2_OUT3_IN2 = voltage_IN2;
 		record_2_OUT3_IN3 = voltage_IN3;
@@ -406,7 +409,7 @@ void StartDefaultTask(void const * argument)
 //		voltage_IN2=0.0;
 //		voltage_IN3=0.0;
 		
-		osDelay(100);
+		osDelay(500);
 	}
   /* USER CODE END StartDefaultTask */
 }

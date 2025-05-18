@@ -93,7 +93,21 @@ int main(void)
   MX_USB_Device_Init();
   MX_ADC2_Init();
   /* USER CODE BEGIN 2 */
-
+//	while(1)
+//	{
+//		HAL_GPIO_WritePin(OUT1_GPIO_Port,OUT1_Pin,1);
+//		HAL_GPIO_WritePin(OUT2_GPIO_Port,OUT2_Pin,1);
+//		HAL_GPIO_WritePin(OUT3_GPIO_Port,OUT3_Pin,1);
+//		HAL_GPIO_WritePin(OUT4_GPIO_Port,OUT4_Pin,1);
+//		
+//		HAL_Delay(40);
+//		HAL_GPIO_WritePin(OUT1_GPIO_Port,OUT1_Pin,0);
+//		HAL_GPIO_WritePin(OUT2_GPIO_Port,OUT2_Pin,0);
+//		HAL_GPIO_WritePin(OUT3_GPIO_Port,OUT3_Pin,0);
+//		HAL_GPIO_WritePin(OUT4_GPIO_Port,OUT4_Pin,0);
+//		
+//		HAL_Delay(10);
+//	}
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
