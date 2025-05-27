@@ -101,19 +101,68 @@ void MX_FREERTOS_Init(void) {
   * @param  argument: Not used
   * @retval None
   */
-uint16_t adc_value[10];
+typedef struct
+{
+	uint16_t IN2;//adc1
+	uint16_t IN7;
+	uint16_t IN8;
+	uint16_t IN9;
+	uint16_t IN10;
+	uint16_t IN1;//adc2
+	uint16_t IN3;
+	uint16_t IN4;
+	uint16_t IN5;
+	uint16_t IN6;
+	
+}Adc_IN_Struct;
+Adc_IN_Struct adc_value_struct;
+uint16_t adc1_value[5];
+//0:PB14 IN2
+//1:PA0  IN7
+//2:PA1  IN8
+//3:PA2  IN9
+//4:PA3  IN10
+uint16_t adc2_value[5];
+//0:PB15 IN1
+//1:PB11 IN3
+//2:PB2  IN4
+//3:PA5  IN5
+//4:PA4  IN6
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
 	char usb_buff[128]={0};
-	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)adc_value, 10);
+	HAL_GPIO_WritePin(IO1_GPIO_Port ,IO1_Pin ,1);
+	HAL_GPIO_WritePin(IO2_GPIO_Port ,IO2_Pin ,1);
+	HAL_GPIO_WritePin(IO3_GPIO_Port ,IO3_Pin ,1);
+	HAL_GPIO_WritePin(IO4_GPIO_Port ,IO4_Pin ,1);
+	HAL_GPIO_WritePin(IO5_GPIO_Port ,IO5_Pin ,1);
+	HAL_GPIO_WritePin(IO6_GPIO_Port ,IO6_Pin ,1);
+	HAL_GPIO_WritePin(IO7_GPIO_Port ,IO7_Pin ,1);
+	HAL_GPIO_WritePin(IO8_GPIO_Port ,IO8_Pin ,1);
+	HAL_GPIO_WritePin(IO9_GPIO_Port ,IO9_Pin ,1);
+	HAL_GPIO_WritePin(IO10_GPIO_Port,IO10_Pin,1);
+	HAL_GPIO_WritePin(IO11_GPIO_Port,IO11_Pin,1);
+	
+//	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adc1_value, 5);
+//	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)adc2_value, 5);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)(&(adc_value_struct.IN2)), 5);
+	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)(&(adc_value_struct.IN1)), 5);
+//	adc_value_struct.IN2=1;
   /* Infinite loop */
 	for(;;)
 	{
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
-		sprintf(usb_buff,"PB2 adc_value:%d\r\n",adc_value[0]);
+//		sprintf(usb_buff,"IN1:%d ,IN2:%d ,IN3:%d ,IN4:%d ,IN5:%d ,IN6:%d ,IN7:%d ,IN8:%d ,IN9:%d ,IN10:%d\r\n",
+//			adc2_value[0],adc1_value[0],adc2_value[1],adc2_value[2],adc2_value[3],adc2_value[4],adc1_value[1],adc1_value[2],adc1_value[3],adc1_value[4]);
+		sprintf(usb_buff,"IN1:%d ,IN2:%d ,IN3:%d ,IN4:%d ,IN5:%d ,IN6:%d ,IN7:%d ,IN8:%d ,IN9:%d ,IN10:%d\r\n",
+			adc_value_struct.IN1,adc_value_struct.IN2,adc_value_struct.IN3,adc_value_struct.IN4,adc_value_struct.IN5,adc_value_struct.IN6,adc_value_struct.IN7,adc_value_struct.IN8,adc_value_struct.IN9,adc_value_struct.IN10);
+//		sprintf(usb_buff,"adc_value_struct:%p,adc_value_struct.IN2:%p,adc_value_struct.IN7:%p,adc_value_struct.IN1:%p\r\n",&adc_value_struct,&(adc_value_struct.IN2),&(adc_value_struct.IN7),&(adc_value_struct.IN1));
 		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
+		
+		
+		
 		osDelay(500);
 	}
   /* USER CODE END StartDefaultTask */

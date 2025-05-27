@@ -33,5 +33,7 @@ basictest\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_u
 basictest\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pcd_ex.h
 basictest\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h
 basictest\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h
+basictest\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi.h
+basictest\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h
 basictest\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h
 basictest\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h
