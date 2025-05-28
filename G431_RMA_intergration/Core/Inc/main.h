@@ -29,6 +29,18 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32g4xx_hal.h"
 
+#include "stm32g4xx_ll_tim.h"
+#include "stm32g4xx_ll_bus.h"
+#include "stm32g4xx_ll_cortex.h"
+#include "stm32g4xx_ll_rcc.h"
+#include "stm32g4xx_ll_system.h"
+#include "stm32g4xx_ll_utils.h"
+#include "stm32g4xx_ll_pwr.h"
+#include "stm32g4xx_ll_gpio.h"
+#include "stm32g4xx_ll_dma.h"
+
+#include "stm32g4xx_ll_exti.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
@@ -57,7 +69,9 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 void AD5206_SetResistance(uint8_t index, uint8_t channel, uint8_t resistance);
-
+void select_switcher(uint8_t index);
+void select_switcher2(uint8_t index);
+void user_delaynus_tim(uint16_t nus);
 
 /* USER CODE END EFP */
 

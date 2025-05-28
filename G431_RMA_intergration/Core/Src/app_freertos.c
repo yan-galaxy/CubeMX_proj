@@ -133,6 +133,7 @@ void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
 	char usb_buff[128]={0};
+	
 	AD5206_SetResistance(1,3,5);//IN1-OUT11  2082Ω
 	AD5206_SetResistance(1,1,5);//IN2-OUT11  2093Ω
 	AD5206_SetResistance(1,0,5);//IN3-OUT11  2095Ω
@@ -143,7 +144,7 @@ void StartDefaultTask(void const * argument)
 	AD5206_SetResistance(0,1,5);//IN8-OUT11  1987Ω
 	AD5206_SetResistance(0,0,5);//IN9-OUT11  1988Ω
 	AD5206_SetResistance(0,2,5);//IN10-OUT11 1990Ω
-	
+
 	
 	HAL_GPIO_WritePin(IO1_GPIO_Port ,IO1_Pin ,1);
 	HAL_GPIO_WritePin(IO2_GPIO_Port ,IO2_Pin ,1);
@@ -156,10 +157,34 @@ void StartDefaultTask(void const * argument)
 	HAL_GPIO_WritePin(IO9_GPIO_Port ,IO9_Pin ,1);
 	HAL_GPIO_WritePin(IO10_GPIO_Port,IO10_Pin,1);
 	HAL_GPIO_WritePin(IO11_GPIO_Port,IO11_Pin,1);
+//	select_switcher2(0);
+//	select_switcher2(1);
+//	select_switcher2(2);
+//	select_switcher2(3);
+//	select_switcher2(4);
+//	select_switcher2(5);
+//	select_switcher2(6);
+//	select_switcher2(7);
+//	select_switcher2(8);
+//	select_switcher2(9);
+//	select_switcher2(10);
+//	select_switcher2(11);
+//	select_switcher2(12);
+//	select_switcher2(13);
+//	select_switcher2(14);
+//	select_switcher2(15);
+//	select_switcher2(16);
+//	select_switcher2(17);
+//	select_switcher2(18);
+//	select_switcher2(19);
+//	select_switcher2(20);
+//	select_switcher2(0);
+	
+	
 	
 //	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)adc1_value, 5);
 //	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)adc2_value, 5);
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)(&(adc_value_struct.IN2)), 5);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)(&(adc_value_struct.IN2)), 5);//  1/42.5MHz*(640.5+12.5=653)cycles *5ch = 76.8235us
 	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)(&(adc_value_struct.IN1)), 5);
 //	adc_value_struct.IN2=1;
   /* Infinite loop */
@@ -182,6 +207,22 @@ void StartDefaultTask(void const * argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+void user_delaynus_tim(uint16_t nus)
+{
+//    uint16_t differ = 0xFFFF - nus - 5;
+//	uint16_t start_cnt=LL_TIM_GetCounter(TIM7);
+	
+	LL_TIM_SetCounter(TIM7, 0);
+	
+//	if (start_cnt + nus < 0xFFFF)
+	{
+		while (LL_TIM_GetCounter(TIM7) < nus)
+		{
+			;// Optionally, add a timeout condition here to avoid an infinite loop
+		}
+	
+	}
+}
 void select_switcher(uint8_t index)
 {
 	switch(index)
@@ -232,7 +273,68 @@ void select_switcher(uint8_t index)
 			break;
 	}
 }
-
+void select_switcher2(uint8_t index)
+{
+	switch(index)
+	{
+		case 0:
+			IO10_GPIO_Port->BSRR=IO10_Pin;//高电平
+			IO11_GPIO_Port->BSRR=(IO11_Pin << 16);//低电平
+			break;
+		case 1:
+			IO11_GPIO_Port->BSRR=IO11_Pin;//高电平
+			IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
+			break;
+		case 3:
+			IO11_GPIO_Port->BSRR=IO11_Pin;//高电平
+			IO1_GPIO_Port->BSRR=IO1_Pin;//高电平
+			IO2_GPIO_Port->BSRR=(IO2_Pin << 16);//低电平
+			break;
+		case 5:
+			IO11_GPIO_Port->BSRR=IO11_Pin;//高电平
+			IO2_GPIO_Port->BSRR=IO2_Pin;//高电平
+			IO3_GPIO_Port->BSRR=(IO3_Pin << 16);//低电平
+			break;
+		case 7:
+			IO11_GPIO_Port->BSRR=IO11_Pin;//高电平
+			IO3_GPIO_Port->BSRR=IO3_Pin;//高电平
+			IO4_GPIO_Port->BSRR=(IO4_Pin << 16);//低电平
+			break;
+		case 9:
+			IO11_GPIO_Port->BSRR=IO11_Pin;//高电平
+			IO4_GPIO_Port->BSRR=IO4_Pin;//高电平
+			IO5_GPIO_Port->BSRR=(IO5_Pin << 16);//低电平
+			break;
+		case 11:
+			IO11_GPIO_Port->BSRR=IO11_Pin;//高电平
+			IO5_GPIO_Port->BSRR=IO5_Pin;//高电平
+			IO6_GPIO_Port->BSRR=(IO6_Pin << 16);//低电平
+			break;
+		case 13:
+			IO11_GPIO_Port->BSRR=IO11_Pin;//高电平
+			IO6_GPIO_Port->BSRR=IO6_Pin;//高电平
+			IO7_GPIO_Port->BSRR=(IO7_Pin << 16);//低电平
+			break;
+		case 15:
+			IO11_GPIO_Port->BSRR=IO11_Pin;//高电平
+			IO7_GPIO_Port->BSRR=IO7_Pin;//高电平
+			IO8_GPIO_Port->BSRR=(IO8_Pin << 16);//低电平
+			break;
+		case 17:
+			IO11_GPIO_Port->BSRR=IO11_Pin;//高电平
+			IO8_GPIO_Port->BSRR=IO8_Pin;//高电平
+			IO9_GPIO_Port->BSRR=(IO9_Pin << 16);//低电平
+			break;
+		case 19:
+			IO11_GPIO_Port->BSRR=IO11_Pin;//高电平
+			IO9_GPIO_Port->BSRR =IO9_Pin;//高电平
+			IO10_GPIO_Port->BSRR=(IO10_Pin << 16);//低电平
+			break;
+		case 2:case 4:case 6:case 8:case 10:case 12:case 14:case 16:case 18:case 20:
+			IO11_GPIO_Port->BSRR =(IO11_Pin << 16);//低电平
+			break;
+	}
+}
 // 设置AD5206的电阻值
 // index: 0 1
 // channel: 0~5

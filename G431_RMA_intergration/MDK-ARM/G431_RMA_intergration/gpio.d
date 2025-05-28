@@ -39,6 +39,17 @@ g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_
 g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h
 g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h
 g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h
+g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h
+g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_bus.h
+g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_cortex.h
+g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_rcc.h
+g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_system.h
+g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_utils.h
+g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_pwr.h
+g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h
+g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h
+g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h
+g431_rma_intergration\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_exti.h
 g431_rma_intergration\gpio.o: ../USB_Device/App/usbd_cdc_if.h
 g431_rma_intergration\gpio.o: ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h
 g431_rma_intergration\gpio.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h

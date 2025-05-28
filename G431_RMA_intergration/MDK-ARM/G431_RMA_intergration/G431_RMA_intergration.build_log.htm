@@ -27,7 +27,50 @@ Project File Date:  05/28/2025
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin'
 Build target 'G431_RMA_intergration'
-"G431_RMA_intergration\G431_RMA_intergration.axf" - 0 Error(s), 0 Warning(s).
+compiling app_freertos.c...
+../Core/Src/app_freertos.c(149): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(IO1_GPIO_Port ,IO1_Pin ,1);
+../Core/Src/app_freertos.c(150): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(IO2_GPIO_Port ,IO2_Pin ,1);
+../Core/Src/app_freertos.c(151): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(IO3_GPIO_Port ,IO3_Pin ,1);
+../Core/Src/app_freertos.c(152): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(IO4_GPIO_Port ,IO4_Pin ,1);
+../Core/Src/app_freertos.c(153): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(IO5_GPIO_Port ,IO5_Pin ,1);
+../Core/Src/app_freertos.c(154): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(IO6_GPIO_Port ,IO6_Pin ,1);
+../Core/Src/app_freertos.c(155): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(IO7_GPIO_Port ,IO7_Pin ,1);
+../Core/Src/app_freertos.c(156): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(IO8_GPIO_Port ,IO8_Pin ,1);
+../Core/Src/app_freertos.c(157): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(IO9_GPIO_Port ,IO9_Pin ,1);
+../Core/Src/app_freertos.c(158): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(IO10_GPIO_Port,IO10_Pin,1);
+../Core/Src/app_freertos.c(159): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(IO11_GPIO_Port,IO11_Pin,1);
+../Core/Src/app_freertos.c(236): warning:  #61-D: integer operation result is out of range
+  			IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
+../Core/Src/app_freertos.c(236): warning:  #68-D: integer conversion resulted in a change of sign
+  			IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
+../Core/Src/app_freertos.c(286): warning:  #61-D: integer operation result is out of range
+  			IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
+../Core/Src/app_freertos.c(286): warning:  #68-D: integer conversion resulted in a change of sign
+  			IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
+../Core/Src/app_freertos.c(351): warning:  #188-D: enumerated type mixed with another type
+  			HAL_GPIO_WritePin(CS1_GPIO_Port,CS1_Pin,0);
+../Core/Src/app_freertos.c(353): warning:  #188-D: enumerated type mixed with another type
+  			HAL_GPIO_WritePin(CS2_GPIO_Port,CS2_Pin,0);
+../Core/Src/app_freertos.c(360): warning:  #188-D: enumerated type mixed with another type
+  		HAL_GPIO_WritePin(CS1_GPIO_Port,CS1_Pin,1);
+../Core/Src/app_freertos.c(362): warning:  #188-D: enumerated type mixed with another type
+  		HAL_GPIO_WritePin(CS2_GPIO_Port,CS2_Pin,1);
+../Core/Src/app_freertos.c: 19 warnings, 0 errors
+linking...
+Program Size: Code=24304 RO-data=644 RW-data=508 ZI-data=11036  
+FromELF: creating hex file...
+"G431_RMA_intergration\G431_RMA_intergration.axf" - 0 Error(s), 19 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -50,7 +93,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

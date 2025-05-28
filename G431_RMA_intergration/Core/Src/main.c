@@ -22,6 +22,7 @@
 #include "adc.h"
 #include "dma.h"
 #include "spi.h"
+#include "tim.h"
 #include "usb_device.h"
 #include "gpio.h"
 
@@ -95,8 +96,11 @@ int main(void)
   MX_ADC2_Init();
   MX_ADC1_Init();
   MX_SPI1_Init();
+  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
-
+	LL_TIM_SetCounter(TIM7, 0);
+//	LL_TIM_EnableIT_UPDATE(TIM7);//start TIM7 IRQ
+	LL_TIM_EnableCounter(TIM7);//start TIM7
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
