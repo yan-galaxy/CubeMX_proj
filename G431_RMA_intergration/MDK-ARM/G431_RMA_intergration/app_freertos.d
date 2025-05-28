@@ -69,6 +69,9 @@ g431_rma_intergration\app_freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC
 g431_rma_intergration\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 g431_rma_intergration\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 g431_rma_intergration\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
+g431_rma_intergration\app_freertos.o: ..\Drivers\CMSIS\DSP\Include\arm_math.h
+g431_rma_intergration\app_freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+g431_rma_intergration\app_freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\float.h
 g431_rma_intergration\app_freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 g431_rma_intergration\app_freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 g431_rma_intergration\app_freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h

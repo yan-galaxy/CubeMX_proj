@@ -61,3 +61,6 @@ g431_rma_intergration\gpio.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\
 g431_rma_intergration\gpio.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 g431_rma_intergration\gpio.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 g431_rma_intergration\gpio.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
+g431_rma_intergration\gpio.o: ..\Drivers\CMSIS\DSP\Include\arm_math.h
+g431_rma_intergration\gpio.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+g431_rma_intergration\gpio.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\float.h

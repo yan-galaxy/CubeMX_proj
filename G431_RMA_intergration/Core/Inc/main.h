@@ -45,11 +45,17 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
 #include "stdio.h"
+#include "arm_math.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+/* CubeMX中选择复制全部库文件到工程    在设置中DEFINE出添加 ,__FPU_PRESENT = 1U,ARM_MATH_CM4,__CC_ARM,__TARGET_FPU_VFP   添加Drivers\CMSIS\DSP\Include路径即可使用arm_math.h*/
 
+typedef union  {
+    uint16_t word16;         // 16bit
+		uint8_t byte[2];       // 8bit   byte[0]:low_8bit   byte[1]:high_8bit     example:  word16=0x5678  byte[0]=0x78 byte[1]=0x56
+}Word_union;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -71,8 +77,11 @@ void Error_Handler(void);
 void AD5206_SetResistance(uint8_t index, uint8_t channel, uint8_t resistance);
 void select_switcher(uint8_t index);
 void select_switcher2(uint8_t index);
+void select_switcher3(uint8_t index);
 void user_delaynus_tim(uint16_t nus);
-
+void select_switcher_all_high(void);
+void select_switcher_all_low(void);
+void exchange_res_p(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
