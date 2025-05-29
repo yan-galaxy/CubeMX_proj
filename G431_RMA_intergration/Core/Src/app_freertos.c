@@ -148,7 +148,7 @@ volatile Word_union res_data_2[2104];
 volatile Word_union* res_send_p=res_data_1;
 volatile Word_union* res_store_p=res_data_2;
 
-#define SHOW_USB_DATA 1
+#define SHOW_USB_DATA 0U
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const * argument)
 {
@@ -180,7 +180,7 @@ void StartDefaultTask(void const * argument)
 //			adc_value_struct.IN6,adc_value_struct.IN7,adc_value_struct.IN8,adc_value_struct.IN9,adc_value_struct.IN10);
 //		CDC_Transmit_FS((uint8_t *)usb_TxBuf,strlen(usb_TxBuf));
 		
-#ifdef SHOW_USB_DATA
+#if SHOW_USB_DATA == 1U
 		if(osSemaphoreWait(dataBinarySemHandle, 0) == osOK)
 		{
 			// 格式化数据帧（示例：每行11通道，共10组）
@@ -253,23 +253,26 @@ void SampleTask(void const * argument)
 	TickType_t xLastWakeTime;
     const TickType_t xFrequency = pdMS_TO_TICKS(2);  // 1秒周期[6](@ref)
 	
+	osSemaphoreWait(dataBinarySemHandle, osWaitForever);
+		
 	select_switcher_all_high();
-	AD5206_SetResistance(1,3,5);//IN1-OUT11  5:2082Ω
-	AD5206_SetResistance(1,1,5);//IN2-OUT11  5:2093Ω
-	AD5206_SetResistance(1,0,5);//IN3-OUT11  5:2095Ω
-	AD5206_SetResistance(1,2,5);//IN4-OUT11  5:2088Ω
-	AD5206_SetResistance(1,5,5);//IN5-OUT11  5:2082Ω
-	AD5206_SetResistance(0,5,5);//IN6-OUT11  5:1985Ω
-	AD5206_SetResistance(0,3,5);//IN7-OUT11  5:1987Ω
-	AD5206_SetResistance(0,1,5);//IN8-OUT11  5:1987Ω
-	AD5206_SetResistance(0,0,5);//IN9-OUT11  5:1988Ω
-	AD5206_SetResistance(0,2,5);//IN10-OUT11 5:1990Ω
+	AD5206_SetResistance(1,3,125);//IN1-OUT11  5:2082Ω  12:4.92kΩ  25:10.20kΩ  125:51.1kΩ
+	AD5206_SetResistance(1,1,125);//IN2-OUT11  5:2093Ω  12:4.95kΩ  25:10.29kΩ  125:51.2kΩ
+	AD5206_SetResistance(1,0,125);//IN3-OUT11  5:2095Ω  12:4.95kΩ  25:10.32kΩ  125:51.2kΩ
+	AD5206_SetResistance(1,2,125);//IN4-OUT11  5:2088Ω  12:4.94kΩ  25:10.35kΩ  125:51.1kΩ
+	AD5206_SetResistance(1,5,125);//IN5-OUT11  5:2082Ω  12:4.94kΩ  25:10.25kΩ  125:51.1kΩ
+	AD5206_SetResistance(0,5,125);//IN6-OUT11  5:1985Ω  12:4.73kΩ  25:9.82kΩ   125:49.1kΩ
+	AD5206_SetResistance(0,3,125);//IN7-OUT11  5:1987Ω  12:4.74kΩ  25:9.74kΩ   125:48.7kΩ
+	AD5206_SetResistance(0,1,125);//IN8-OUT11  5:1987Ω  12:4.72kΩ  25:9.81kΩ   125:49.0kΩ
+	AD5206_SetResistance(0,0,125);//IN9-OUT11  5:1988Ω  12:4.73kΩ  25:9.77kΩ   125:48.8kΩ
+	AD5206_SetResistance(0,2,125);//IN10-OUT11 5:1990Ω  12:4.75kΩ  25:9.78kΩ   125:48.9kΩ
 	
 	//  1/42.5MHz*(640.5+12.5=653)cycles *5ch = 76.8235us    ADC转换时配置为 640.5cycles
 	//  1/42.5MHz*(247.5+12.5=260)cycles *5ch = 30.5882us    ADC转换时配置为 247.5cycles
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)(&(adc_value_struct.IN2)), 5);
 	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)(&(adc_value_struct.IN1)), 5);
 	
+	osSemaphoreRelease(dataBinarySemHandle);
 	
 	
 	res_data_1[0].byte[0]=0x55;//帧头
@@ -314,7 +317,7 @@ void SampleTask(void const * argument)
 				{
 					select_switcher3(i);
 					user_delaynus_tim(85);
-					#ifdef SHOW_USB_DATA
+					#if SHOW_USB_DATA == 1U
 						samp_data[i][0]=adc_value_struct.IN1;
 						samp_data[i][1]=adc_value_struct.IN2;
 						samp_data[i][2]=adc_value_struct.IN3;
@@ -343,7 +346,7 @@ void SampleTask(void const * argument)
 				{
 					select_switcher3(i);
 					user_delaynus_tim(85);
-					#ifdef SHOW_USB_DATA
+					#if SHOW_USB_DATA == 1U
 						samp_data_INC[i-10][0]=adc_value_struct.IN1;
 						samp_data_INC[i-10][1]=adc_value_struct.IN2;
 						samp_data_INC[i-10][2]=adc_value_struct.IN3;
@@ -373,7 +376,7 @@ void SampleTask(void const * argument)
 			}
 			vTaskDelayUntil(&xLastWakeTime, xFrequency);//		osDelay(1);  vTaskSuspend(NULL);          // 挂起当前任务（自身）
 		}
-		#ifndef SHOW_USB_DATA
+		#if SHOW_USB_DATA == 0U
 			exchange_res_p();//切换缓存区
 			CDC_Transmit_FS(res_send_p->byte, 4208);//2008
 		#endif
@@ -669,6 +672,7 @@ void AD5206_SetResistance(uint8_t index, uint8_t channel, uint8_t resistance) {
 		spi_data[1]=resistance;
 		
 		HAL_SPI_Transmit(&hspi1,spi_data,2,0xffff);
+		osDelay(5);
     if(index==0)
 		HAL_GPIO_WritePin(CS1_GPIO_Port,CS1_Pin,1);
 	else if(index==1)

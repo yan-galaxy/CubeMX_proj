@@ -27,48 +27,68 @@ Project File Date:  05/28/2025
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin'
 Build target 'G431_RMA_intergration'
-compiling tim.c...
-compiling stm32g4xx_hal_msp.c...
-compiling stm32g4xx_it.c...
-compiling dma.c...
-compiling spi.c...
-compiling adc.c...
 compiling gpio.c...
 compiling main.c...
 compiling app_freertos.c...
-../Core/Src/app_freertos.c(426): warning:  #61-D: integer operation result is out of range
+../Core/Src/app_freertos.c(156): warning:  #177-D: variable "usb_TxBuf"  was declared but never referenced
+  	char usb_TxBuf[3048]={0};
+../Core/Src/app_freertos.c(161): warning:  #177-D: variable "index"  was declared but never referenced
+  	static unsigned long long index = 1;          // 数据帧索引
+../Core/Src/app_freertos.c(162): warning:  #177-D: variable "res_ref_kOm1"  was declared but never referenced
+  	static double res_ref_kOm1 = 2.082;  //2082Ω
+../Core/Src/app_freertos.c(163): warning:  #177-D: variable "res_ref_kOm2"  was declared but never referenced
+  	static double res_ref_kOm2 = 2.093;  //2093Ω
+../Core/Src/app_freertos.c(164): warning:  #177-D: variable "res_ref_kOm3"  was declared but never referenced
+  	static double res_ref_kOm3 = 2.095;  //2095Ω
+../Core/Src/app_freertos.c(165): warning:  #177-D: variable "res_ref_kOm4"  was declared but never referenced
+  	static double res_ref_kOm4 = 2.088;  //2088Ω
+../Core/Src/app_freertos.c(166): warning:  #177-D: variable "res_ref_kOm5"  was declared but never referenced
+  	static double res_ref_kOm5 = 2.082;  //2082Ω
+../Core/Src/app_freertos.c(167): warning:  #177-D: variable "res_ref_kOm6"  was declared but never referenced
+  	static double res_ref_kOm6 = 1.985;  //1985Ω
+../Core/Src/app_freertos.c(168): warning:  #177-D: variable "res_ref_kOm7"  was declared but never referenced
+  	static double res_ref_kOm7 = 1.987;  //1987Ω
+../Core/Src/app_freertos.c(169): warning:  #177-D: variable "res_ref_kOm8"  was declared but never referenced
+  	static double res_ref_kOm8 = 1.987;  //1987Ω
+../Core/Src/app_freertos.c(170): warning:  #177-D: variable "res_ref_kOm9"  was declared but never referenced
+  	static double res_ref_kOm9 = 1.988;  //1988Ω
+../Core/Src/app_freertos.c(171): warning:  #177-D: variable "res_ref_kOm10"  was declared but never referenced
+  	static double res_ref_kOm10 = 1.990; //1990Ω
+../Core/Src/app_freertos.c(381): warning:  #167-D: argument of type "volatile uint8_t *" is incompatible with parameter of type "uint8_t *"
+  			CDC_Transmit_FS(res_send_p->byte, 4208);//2008
+../Core/Src/app_freertos.c(429): warning:  #61-D: integer operation result is out of range
   			IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
-../Core/Src/app_freertos.c(426): warning:  #68-D: integer conversion resulted in a change of sign
+../Core/Src/app_freertos.c(429): warning:  #68-D: integer conversion resulted in a change of sign
   			IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
-../Core/Src/app_freertos.c(476): warning:  #61-D: integer operation result is out of range
+../Core/Src/app_freertos.c(479): warning:  #61-D: integer operation result is out of range
   			IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
-../Core/Src/app_freertos.c(476): warning:  #68-D: integer conversion resulted in a change of sign
+../Core/Src/app_freertos.c(479): warning:  #68-D: integer conversion resulted in a change of sign
   			IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
-../Core/Src/app_freertos.c(538): warning:  #61-D: integer operation result is out of range
+../Core/Src/app_freertos.c(541): warning:  #61-D: integer operation result is out of range
   			IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
-../Core/Src/app_freertos.c(538): warning:  #68-D: integer conversion resulted in a change of sign
+../Core/Src/app_freertos.c(541): warning:  #68-D: integer conversion resulted in a change of sign
   			IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
-../Core/Src/app_freertos.c(583): warning:  #61-D: integer operation result is out of range
+../Core/Src/app_freertos.c(586): warning:  #61-D: integer operation result is out of range
   			IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
-../Core/Src/app_freertos.c(583): warning:  #68-D: integer conversion resulted in a change of sign
+../Core/Src/app_freertos.c(586): warning:  #68-D: integer conversion resulted in a change of sign
   			IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
-../Core/Src/app_freertos.c(639): warning:  #61-D: integer operation result is out of range
+../Core/Src/app_freertos.c(642): warning:  #61-D: integer operation result is out of range
   	IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
-../Core/Src/app_freertos.c(639): warning:  #68-D: integer conversion resulted in a change of sign
+../Core/Src/app_freertos.c(642): warning:  #68-D: integer conversion resulted in a change of sign
   	IO1_GPIO_Port->BSRR =(IO1_Pin << 16);//低电平
-../Core/Src/app_freertos.c(664): warning:  #188-D: enumerated type mixed with another type
+../Core/Src/app_freertos.c(667): warning:  #188-D: enumerated type mixed with another type
   			HAL_GPIO_WritePin(CS1_GPIO_Port,CS1_Pin,0);
-../Core/Src/app_freertos.c(666): warning:  #188-D: enumerated type mixed with another type
+../Core/Src/app_freertos.c(669): warning:  #188-D: enumerated type mixed with another type
   			HAL_GPIO_WritePin(CS2_GPIO_Port,CS2_Pin,0);
-../Core/Src/app_freertos.c(673): warning:  #188-D: enumerated type mixed with another type
+../Core/Src/app_freertos.c(677): warning:  #188-D: enumerated type mixed with another type
   		HAL_GPIO_WritePin(CS1_GPIO_Port,CS1_Pin,1);
-../Core/Src/app_freertos.c(675): warning:  #188-D: enumerated type mixed with another type
+../Core/Src/app_freertos.c(679): warning:  #188-D: enumerated type mixed with another type
   		HAL_GPIO_WritePin(CS2_GPIO_Port,CS2_Pin,1);
-../Core/Src/app_freertos.c: 14 warnings, 0 errors
+../Core/Src/app_freertos.c: 27 warnings, 0 errors
 linking...
-Program Size: Code=32468 RO-data=760 RW-data=616 ZI-data=28592  
+Program Size: Code=27244 RO-data=592 RW-data=528 ZI-data=28152  
 FromELF: creating hex file...
-"G431_RMA_intergration\G431_RMA_intergration.axf" - 0 Error(s), 14 Warning(s).
+"G431_RMA_intergration\G431_RMA_intergration.axf" - 0 Error(s), 27 Warning(s).
 
 <h2>Software Packages used:</h2>
 
