@@ -9,6 +9,11 @@ from PyQt5.QtCore import QThread, pyqtSignal
 
 from scipy.ndimage import zoom  # 使用scipy的缩放函数 插值需要
 
+import os
+import threading
+from datetime import datetime
+import csv  # 新增CSV模块
+
 # 串口数据处理线程
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 数据就绪信号
@@ -28,6 +33,61 @@ class SerialWorker(QThread):
         self.normalization_low = normalization_low
         self.normalization_high = normalization_high
 
+        # 原始数据本地保存
+        self.save_dir = "INCRMA_raw_data"
+        self.raw_data_queue = Queue()
+        self.writer_thread = None
+        self.is_saving = False
+        self.csv_file = None  # CSV文件对象
+        self.csv_writer = None  # CSV写入器
+        self.init_raw_data_saving()  # 初始化保存系统
+
+    def init_raw_data_saving(self):
+        """创建保存目录并启动写入线程"""
+        if not os.path.exists(self.save_dir):
+            os.makedirs(self.save_dir)
+            
+        # 使用时间戳命名文件
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.csv_path = os.path.join(self.save_dir, f"raw_data_{timestamp}.csv")
+
+        # 创建并打开CSV文件
+        self.csv_file = open(self.csv_path, 'w', newline='', encoding='utf-8')
+        self.csv_writer = csv.writer(self.csv_file)
+        # 写入表头（示例：FrameIndex + 2100个数据列）
+        header = ["FrameIndex"] + [f"data_{i}" for i in range(2100)]
+        self.csv_writer.writerow(header)
+        
+        # 启动后台写入线程
+        self.is_saving = True
+        self.writer_thread = threading.Thread(
+            target=self.write_raw_data_to_file, 
+            daemon=True
+        )
+        self.writer_thread.start()
+
+    def write_raw_data_to_file(self):
+        """后台线程：从队列取数据并写入.npy文件"""
+        buffer = []
+        batch_size = 100  # 每100帧写入一次磁盘
+
+        """后台线程：从队列取数据并写入.csv文件"""
+        frame_index = 0  # 帧计数器
+        
+        while self.is_saving:
+            if not self.raw_data_queue.empty():
+                data = self.raw_data_queue.get()
+                
+                # 将numpy数组转为列表
+                data_list = data.tolist()
+                
+                # 添加帧索引
+                row = [frame_index] + data_list
+                self.csv_writer.writerow(row)
+                frame_index += 1
+                
+            else:
+                self.msleep(100)  # 避免CPU空转
     def run(self):
         try:
             self.ser = serial.Serial(self.port, self.baudrate, timeout=1)
@@ -79,6 +139,9 @@ class SerialWorker(QThread):
                                     result = normalized_result
                                     self.data_ready.emit(result.tolist())  # 如果需要转回列表再发射
                             elif len(parsed) == 2100:# INCRMA板子接收11x10的数据
+                                # 立即保存原始数据
+                                self.raw_data_queue.put(parsed.copy())
+
                                 frames = np.array(parsed).reshape(10, 21, 10)# 10帧矩阵 矩阵有21行10列
 
                                 # 方法3：完全不使用循环，直接在矩阵上计算
@@ -169,6 +232,13 @@ class SerialWorker(QThread):
 
     def stop(self):
         self.running = False
+        """停止线程时关闭保存流程"""
+        self.is_saving = False
+        if self.csv_file and not self.csv_file.closed:
+            self.csv_file.close()
+        if self.writer_thread and self.writer_thread.is_alive():
+            self.writer_thread.join()
+        # super().stop()
     
 
 
