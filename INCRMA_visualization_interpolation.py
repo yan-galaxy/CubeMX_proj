@@ -86,8 +86,8 @@ class SerialWorker(QThread):
                                 Rref_first_rows = frames[:, 0, :]  # 形状 (10帧 × 10列)
                                 expanded_Rref = np.expand_dims(Rref_first_rows, axis=1)# 添加新维度，变为 (10, 1, 10)
                                 Rref_first_rows = np.repeat(expanded_Rref, repeats=10, axis=1)# 沿第二个轴复制 10 次，形状变为 (10, 10, 10)
-                                # Rref_ohm = [2.082,2.093,2.095,2.088,2.082,1.985,1.987,1.987,1.988,1.990]
-                                Rref_ohm = [51.1,51.2,51.2,51.1,51.1,49.1,48.7,49.0,48.8,48.9]
+                                Rref_ohm = [2.082,2.093,2.095,2.088,2.082,1.985,1.987,1.987,1.988,1.990]
+                                # Rref_ohm = [51.1,51.2,51.2,51.1,51.1,49.1,48.7,49.0,48.8,48.9]
 
                                 # 后续拆分成10和10
                                 RMA_raw_part = frames[:, 1:11, :]   # 第二行开始前10行 (10,10,10)
@@ -108,6 +108,17 @@ class SerialWorker(QThread):
                                 # 打印结果（已保留三位小数）
                                 with np.printoptions(precision=3, suppress=True):
                                     print('avg_matrix:\n', avg_matrix)
+                                    # 计算均值和标准差
+                                    avg_mean = np.mean(avg_matrix)
+                                    avg_std = np.std(avg_matrix)
+                                    print(f'均值: {avg_mean:.3f}, 标准差: {avg_std:.3f}')
+
+                                # # 添加对数处理
+                                # avg_matrix_log = np.log(avg_matrix + 1)  # 防止出现负数
+                                # # 打印结果（已保留三位小数）
+                                # with np.printoptions(precision=3, suppress=True):
+                                #     print('avg_matrix_log:\n', avg_matrix_log)
+                                # avg_matrix = avg_matrix_log
 
 
 
@@ -122,7 +133,7 @@ class SerialWorker(QThread):
 
                                     normal_result = result/self.matrix_init
                                     normal_result = np.where(normal_result < 0, 0, normal_result)
-                                    normal_result = np.where(normal_result > 1, 0, normal_result)
+                                    normal_result = np.where(normal_result > 1, 1, normal_result)
                                     result = normal_result
 
 
@@ -133,9 +144,9 @@ class SerialWorker(QThread):
                                     # # 归一化到[0, 1]范围
                                     # normalized_result = (clipped_result - (self.normalization_low)) / (self.normalization_high - self.normalization_low)  # 分母是550（500-(-50)）
                                     # result = normalized_result
-                                    # # with np.printoptions(precision=3, suppress=True):
-                                    # #     print('result:\n', result)
 
+                                    with np.printoptions(precision=3, suppress=True):
+                                        print('result:\n', result)
                                     result = result.flatten()# 必须转为一维数组
                                     # print('result.tolist()\n', np.array(result.tolist()).shape)
                                     self.data_ready.emit(result.tolist())  # 如果需要转回列表再发送
@@ -293,7 +304,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     
     # 创建主窗口实例
-    main_win = MatrixVisualizer(interplotation = False,rotation_angle = 270,flip_horizontal = False,flip_vertical = False)# False True
+    main_win = MatrixVisualizer(interplotation = True,rotation_angle = 270,flip_horizontal = False,flip_vertical = False)# False True
     main_win.setup_display()  # 初始化显示布局
     main_win.resize(800, 800)
     main_win.show()

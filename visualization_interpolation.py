@@ -13,7 +13,7 @@ from scipy.ndimage import zoom  # 使用scipy的缩放函数 插值需要
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 数据就绪信号
     
-    def __init__(self,port='COM9',normalization_low = -70,normalization_high = 500):
+    def __init__(self,port='COM9',normalization_low = -5,normalization_high = 300):
         super().__init__()
         self.port = port         # 串口号
         self.baudrate = 115200     # 波特率
@@ -230,7 +230,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     
     # 创建主窗口实例
-    main_win = MatrixVisualizer(interplotation = False,rotation_angle = 0,flip_horizontal = False,flip_vertical = False)
+    main_win = MatrixVisualizer(interplotation = False,rotation_angle = 0,flip_horizontal = True,flip_vertical = False)
     main_win.setup_display()  # 初始化显示布局
     main_win.resize(800, 800)
     main_win.show()

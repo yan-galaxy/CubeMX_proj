@@ -159,16 +159,16 @@ void StartDefaultTask(void const * argument)
 
 	
 	static unsigned long long index = 1;          // 数据帧索引
-	static double res_ref_kOm1 = 2.082;  //2082Ω
-	static double res_ref_kOm2 = 2.093;  //2093Ω
-	static double res_ref_kOm3 = 2.095;  //2095Ω
-	static double res_ref_kOm4 = 2.088;  //2088Ω
-	static double res_ref_kOm5 = 2.082;  //2082Ω
-	static double res_ref_kOm6 = 1.985;  //1985Ω
-	static double res_ref_kOm7 = 1.987;  //1987Ω
-	static double res_ref_kOm8 = 1.987;  //1987Ω
-	static double res_ref_kOm9 = 1.988;  //1988Ω
-	static double res_ref_kOm10 = 1.990; //1990Ω
+	static double res_ref_kOm1  = 2.082;  //2082Ω 2.082   51.1
+	static double res_ref_kOm2  = 2.093;  //2093Ω 2.093   51.2
+	static double res_ref_kOm3  = 2.095;  //2095Ω 2.095   51.2
+	static double res_ref_kOm4  = 2.088;  //2088Ω 2.088   51.1
+	static double res_ref_kOm5  = 2.082;  //2082Ω 2.082   51.1
+	static double res_ref_kOm6  = 1.985;  //1985Ω 1.985   49.1
+	static double res_ref_kOm7  = 1.987;  //1987Ω 1.987   48.7
+	static double res_ref_kOm8  = 1.987;  //1987Ω 1.987   49.0
+	static double res_ref_kOm9  = 1.988;  //1988Ω 1.988   48.8
+	static double res_ref_kOm10 = 1.990;  //1990Ω 1.990   48.9
 	
   /* Infinite loop */
 	for(;;)
@@ -198,7 +198,7 @@ void StartDefaultTask(void const * argument)
 						samp_data[i][9]);
 			}
 			sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
-					"value: (kOm)\r\n");
+					"value: (kOm)\r\nRMA\r\n");
 			/* 普通RMA */
 			for (uint8_t i = 0; i < 11; i++) {
 				sprintf((char *)usb_TxBuf + strlen((char *)usb_TxBuf), 
@@ -235,7 +235,7 @@ void StartDefaultTask(void const * argument)
 			osSemaphoreRelease(dataBinarySemHandle);
 		}
 #endif
-		osDelay(100);
+		osDelay(500);
 	}
   /* USER CODE END StartDefaultTask */
 }
@@ -251,24 +251,26 @@ void SampleTask(void const * argument)
 {
   /* USER CODE BEGIN SampleTask */
 	TickType_t xLastWakeTime;
-    const TickType_t xFrequency = pdMS_TO_TICKS(2);  // 1秒周期[6](@ref)
+    const TickType_t xFrequency = pdMS_TO_TICKS(1);  // 1秒周期[6](@ref)
 	
 	osSemaphoreWait(dataBinarySemHandle, osWaitForever);
 		
 	select_switcher_all_high();
-	AD5206_SetResistance(1,3,125);//IN1-OUT11  5:2082Ω  12:4.92kΩ  25:10.20kΩ  125:51.1kΩ
-	AD5206_SetResistance(1,1,125);//IN2-OUT11  5:2093Ω  12:4.95kΩ  25:10.29kΩ  125:51.2kΩ
-	AD5206_SetResistance(1,0,125);//IN3-OUT11  5:2095Ω  12:4.95kΩ  25:10.32kΩ  125:51.2kΩ
-	AD5206_SetResistance(1,2,125);//IN4-OUT11  5:2088Ω  12:4.94kΩ  25:10.35kΩ  125:51.1kΩ
-	AD5206_SetResistance(1,5,125);//IN5-OUT11  5:2082Ω  12:4.94kΩ  25:10.25kΩ  125:51.1kΩ
-	AD5206_SetResistance(0,5,125);//IN6-OUT11  5:1985Ω  12:4.73kΩ  25:9.82kΩ   125:49.1kΩ
-	AD5206_SetResistance(0,3,125);//IN7-OUT11  5:1987Ω  12:4.74kΩ  25:9.74kΩ   125:48.7kΩ
-	AD5206_SetResistance(0,1,125);//IN8-OUT11  5:1987Ω  12:4.72kΩ  25:9.81kΩ   125:49.0kΩ
-	AD5206_SetResistance(0,0,125);//IN9-OUT11  5:1988Ω  12:4.73kΩ  25:9.77kΩ   125:48.8kΩ
-	AD5206_SetResistance(0,2,125);//IN10-OUT11 5:1990Ω  12:4.75kΩ  25:9.78kΩ   125:48.9kΩ
+	AD5206_SetResistance(1,3,5);//IN1-OUT11  5:2082Ω  12:4.92kΩ  25:10.20kΩ  125:51.1kΩ
+	AD5206_SetResistance(1,1,5);//IN2-OUT11  5:2093Ω  12:4.95kΩ  25:10.29kΩ  125:51.2kΩ
+	AD5206_SetResistance(1,0,5);//IN3-OUT11  5:2095Ω  12:4.95kΩ  25:10.32kΩ  125:51.2kΩ
+	AD5206_SetResistance(1,2,5);//IN4-OUT11  5:2088Ω  12:4.94kΩ  25:10.35kΩ  125:51.1kΩ
+	AD5206_SetResistance(1,5,5);//IN5-OUT11  5:2082Ω  12:4.94kΩ  25:10.25kΩ  125:51.1kΩ
+	AD5206_SetResistance(0,5,5);//IN6-OUT11  5:1985Ω  12:4.73kΩ  25:9.82kΩ   125:49.1kΩ
+	AD5206_SetResistance(0,3,5);//IN7-OUT11  5:1987Ω  12:4.74kΩ  25:9.74kΩ   125:48.7kΩ
+	AD5206_SetResistance(0,1,5);//IN8-OUT11  5:1987Ω  12:4.72kΩ  25:9.81kΩ   125:49.0kΩ
+	AD5206_SetResistance(0,0,5);//IN9-OUT11  5:1988Ω  12:4.73kΩ  25:9.77kΩ   125:48.8kΩ
+	AD5206_SetResistance(0,2,5);//IN10-OUT11 5:1990Ω  12:4.75kΩ  25:9.78kΩ   125:48.9kΩ
 	
 	//  1/42.5MHz*(640.5+12.5=653)cycles *5ch = 76.8235us    ADC转换时配置为 640.5cycles
 	//  1/42.5MHz*(247.5+12.5=260)cycles *5ch = 30.5882us    ADC转换时配置为 247.5cycles
+	//  1/42.5MHz*(92.5+12.5=105 )cycles *5ch = 12.3530us    ADC转换时配置为 92.5cycles
+	
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)(&(adc_value_struct.IN2)), 5);
 	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)(&(adc_value_struct.IN1)), 5);
 	
@@ -303,7 +305,7 @@ void SampleTask(void const * argument)
 	res_data_2[2103].byte[1]=0x77;
 	
 	
-	
+	const uint16_t delay_time_us = 30;//采样等待时间
 	xLastWakeTime = xTaskGetTickCount();  // 初始化基准时间[2](@ref)
   /* Infinite loop */
 	for(;;)
@@ -312,64 +314,149 @@ void SampleTask(void const * argument)
 		{
 			if(osSemaphoreWait(dataBinarySemHandle, 0) == osOK)//		osSemaphoreWait(dataBinarySemHandle, osWaitForever);
 			{
-				/* 普通RMA */
-				for(uint8_t i=0;i<11;i++)
+				for(uint8_t i=0;i<21;i++)
 				{
-					select_switcher3(i);
-					user_delaynus_tim(85);
-					#if SHOW_USB_DATA == 1U
-						samp_data[i][0]=adc_value_struct.IN1;
-						samp_data[i][1]=adc_value_struct.IN2;
-						samp_data[i][2]=adc_value_struct.IN3;
-						samp_data[i][3]=adc_value_struct.IN4;
-						samp_data[i][4]=adc_value_struct.IN5;
-						samp_data[i][5]=adc_value_struct.IN6;
-						samp_data[i][6]=adc_value_struct.IN7;
-						samp_data[i][7]=adc_value_struct.IN8;
-						samp_data[i][8]=adc_value_struct.IN9;
-						samp_data[i][9]=adc_value_struct.IN10;
-					#endif
-					//+2是为了跳过帧头
-					res_store_p[j*210+i*10+0+2].word16=adc_value_struct.IN1;
-					res_store_p[j*210+i*10+1+2].word16=adc_value_struct.IN2;
-					res_store_p[j*210+i*10+2+2].word16=adc_value_struct.IN3;
-					res_store_p[j*210+i*10+3+2].word16=adc_value_struct.IN4;
-					res_store_p[j*210+i*10+4+2].word16=adc_value_struct.IN5;
-					res_store_p[j*210+i*10+5+2].word16=adc_value_struct.IN6;
-					res_store_p[j*210+i*10+6+2].word16=adc_value_struct.IN7;
-					res_store_p[j*210+i*10+7+2].word16=adc_value_struct.IN8;
-					res_store_p[j*210+i*10+8+2].word16=adc_value_struct.IN9;
-					res_store_p[j*210+i*10+9+2].word16=adc_value_struct.IN10;
+					select_switcher2(i);
+					user_delaynus_tim(delay_time_us);
+					if(i==0)//普通RMA部分
+					{
+						//+2是为了跳过帧头
+						res_store_p[j*210+i*10+0+2].word16=adc_value_struct.IN1;
+						res_store_p[j*210+i*10+1+2].word16=adc_value_struct.IN2;
+						res_store_p[j*210+i*10+2+2].word16=adc_value_struct.IN3;
+						res_store_p[j*210+i*10+3+2].word16=adc_value_struct.IN4;
+						res_store_p[j*210+i*10+4+2].word16=adc_value_struct.IN5;
+						res_store_p[j*210+i*10+5+2].word16=adc_value_struct.IN6;
+						res_store_p[j*210+i*10+6+2].word16=adc_value_struct.IN7;
+						res_store_p[j*210+i*10+7+2].word16=adc_value_struct.IN8;
+						res_store_p[j*210+i*10+8+2].word16=adc_value_struct.IN9;
+						res_store_p[j*210+i*10+9+2].word16=adc_value_struct.IN10;
+						#if SHOW_USB_DATA == 1U
+							samp_data[i][0]=res_store_p[j*210+i*10+0+2].word16;
+							samp_data[i][1]=res_store_p[j*210+i*10+1+2].word16;
+							samp_data[i][2]=res_store_p[j*210+i*10+2+2].word16;
+							samp_data[i][3]=res_store_p[j*210+i*10+3+2].word16;
+							samp_data[i][4]=res_store_p[j*210+i*10+4+2].word16;
+							samp_data[i][5]=res_store_p[j*210+i*10+5+2].word16;
+							samp_data[i][6]=res_store_p[j*210+i*10+6+2].word16;
+							samp_data[i][7]=res_store_p[j*210+i*10+7+2].word16;
+							samp_data[i][8]=res_store_p[j*210+i*10+8+2].word16;
+							samp_data[i][9]=res_store_p[j*210+i*10+9+2].word16;
+						#endif
+					}
+					else if(i%2==1)//普通RMA部分
+					{
+						//+2是为了跳过帧头
+						res_store_p[j*210+((i+1)/2)*10+0+2].word16=adc_value_struct.IN1;
+						res_store_p[j*210+((i+1)/2)*10+1+2].word16=adc_value_struct.IN2;
+						res_store_p[j*210+((i+1)/2)*10+2+2].word16=adc_value_struct.IN3;
+						res_store_p[j*210+((i+1)/2)*10+3+2].word16=adc_value_struct.IN4;
+						res_store_p[j*210+((i+1)/2)*10+4+2].word16=adc_value_struct.IN5;
+						res_store_p[j*210+((i+1)/2)*10+5+2].word16=adc_value_struct.IN6;
+						res_store_p[j*210+((i+1)/2)*10+6+2].word16=adc_value_struct.IN7;
+						res_store_p[j*210+((i+1)/2)*10+7+2].word16=adc_value_struct.IN8;
+						res_store_p[j*210+((i+1)/2)*10+8+2].word16=adc_value_struct.IN9;
+						res_store_p[j*210+((i+1)/2)*10+9+2].word16=adc_value_struct.IN10;
+						#if SHOW_USB_DATA == 1U
+							samp_data[((i+1)/2)][0]=res_store_p[j*210+((i+1)/2)*10+0+2].word16;
+							samp_data[((i+1)/2)][1]=res_store_p[j*210+((i+1)/2)*10+1+2].word16;
+							samp_data[((i+1)/2)][2]=res_store_p[j*210+((i+1)/2)*10+2+2].word16;
+							samp_data[((i+1)/2)][3]=res_store_p[j*210+((i+1)/2)*10+3+2].word16;
+							samp_data[((i+1)/2)][4]=res_store_p[j*210+((i+1)/2)*10+4+2].word16;
+							samp_data[((i+1)/2)][5]=res_store_p[j*210+((i+1)/2)*10+5+2].word16;
+							samp_data[((i+1)/2)][6]=res_store_p[j*210+((i+1)/2)*10+6+2].word16;
+							samp_data[((i+1)/2)][7]=res_store_p[j*210+((i+1)/2)*10+7+2].word16;
+							samp_data[((i+1)/2)][8]=res_store_p[j*210+((i+1)/2)*10+8+2].word16;
+							samp_data[((i+1)/2)][9]=res_store_p[j*210+((i+1)/2)*10+9+2].word16;
+						#endif
+					}
+					else//INCRMA部分
+					{
+						//+2是为了跳过帧头
+						res_store_p[j*210+(i/2+10)*10+0+2].word16=adc_value_struct.IN1;
+						res_store_p[j*210+(i/2+10)*10+1+2].word16=adc_value_struct.IN2;
+						res_store_p[j*210+(i/2+10)*10+2+2].word16=adc_value_struct.IN3;
+						res_store_p[j*210+(i/2+10)*10+3+2].word16=adc_value_struct.IN4;
+						res_store_p[j*210+(i/2+10)*10+4+2].word16=adc_value_struct.IN5;
+						res_store_p[j*210+(i/2+10)*10+5+2].word16=adc_value_struct.IN6;
+						res_store_p[j*210+(i/2+10)*10+6+2].word16=adc_value_struct.IN7;
+						res_store_p[j*210+(i/2+10)*10+7+2].word16=adc_value_struct.IN8;
+						res_store_p[j*210+(i/2+10)*10+8+2].word16=adc_value_struct.IN9;
+						res_store_p[j*210+(i/2+10)*10+9+2].word16=adc_value_struct.IN10;
+						#if SHOW_USB_DATA == 1U
+							samp_data_INC[i/2][0]=res_store_p[j*210+(i/2+10)*10+0+2].word16;
+							samp_data_INC[i/2][1]=res_store_p[j*210+(i/2+10)*10+1+2].word16;
+							samp_data_INC[i/2][2]=res_store_p[j*210+(i/2+10)*10+2+2].word16;
+							samp_data_INC[i/2][3]=res_store_p[j*210+(i/2+10)*10+3+2].word16;
+							samp_data_INC[i/2][4]=res_store_p[j*210+(i/2+10)*10+4+2].word16;
+							samp_data_INC[i/2][5]=res_store_p[j*210+(i/2+10)*10+5+2].word16;
+							samp_data_INC[i/2][6]=res_store_p[j*210+(i/2+10)*10+6+2].word16;
+							samp_data_INC[i/2][7]=res_store_p[j*210+(i/2+10)*10+7+2].word16;
+							samp_data_INC[i/2][8]=res_store_p[j*210+(i/2+10)*10+8+2].word16;
+							samp_data_INC[i/2][9]=res_store_p[j*210+(i/2+10)*10+9+2].word16;
+						#endif
+					}
 				}
-				/* INCRMA */
-				for(uint8_t i=11;i<21;i++)
-				{
-					select_switcher3(i);
-					user_delaynus_tim(85);
-					#if SHOW_USB_DATA == 1U
-						samp_data_INC[i-10][0]=adc_value_struct.IN1;
-						samp_data_INC[i-10][1]=adc_value_struct.IN2;
-						samp_data_INC[i-10][2]=adc_value_struct.IN3;
-						samp_data_INC[i-10][3]=adc_value_struct.IN4;
-						samp_data_INC[i-10][4]=adc_value_struct.IN5;
-						samp_data_INC[i-10][5]=adc_value_struct.IN6;
-						samp_data_INC[i-10][6]=adc_value_struct.IN7;
-						samp_data_INC[i-10][7]=adc_value_struct.IN8;
-						samp_data_INC[i-10][8]=adc_value_struct.IN9;
-						samp_data_INC[i-10][9]=adc_value_struct.IN10;
-					#endif
-					//+2是为了跳过帧头
-					res_store_p[j*210+i*10+0+2].word16=adc_value_struct.IN1;
-					res_store_p[j*210+i*10+1+2].word16=adc_value_struct.IN2;
-					res_store_p[j*210+i*10+2+2].word16=adc_value_struct.IN3;
-					res_store_p[j*210+i*10+3+2].word16=adc_value_struct.IN4;
-					res_store_p[j*210+i*10+4+2].word16=adc_value_struct.IN5;
-					res_store_p[j*210+i*10+5+2].word16=adc_value_struct.IN6;
-					res_store_p[j*210+i*10+6+2].word16=adc_value_struct.IN7;
-					res_store_p[j*210+i*10+7+2].word16=adc_value_struct.IN8;
-					res_store_p[j*210+i*10+8+2].word16=adc_value_struct.IN9;
-					res_store_p[j*210+i*10+9+2].word16=adc_value_struct.IN10;
-				}
+
+
+//				/* 普通RMA */
+//				for(uint8_t i=0;i<11;i++)
+//				{
+//					select_switcher3(i);
+//					user_delaynus_tim(delay_time_us);					
+//					//+2是为了跳过帧头
+//					res_store_p[j*210+i*10+0+2].word16=adc_value_struct.IN1;
+//					res_store_p[j*210+i*10+1+2].word16=adc_value_struct.IN2;
+//					res_store_p[j*210+i*10+2+2].word16=adc_value_struct.IN3;
+//					res_store_p[j*210+i*10+3+2].word16=adc_value_struct.IN4;
+//					res_store_p[j*210+i*10+4+2].word16=adc_value_struct.IN5;
+//					res_store_p[j*210+i*10+5+2].word16=adc_value_struct.IN6;
+//					res_store_p[j*210+i*10+6+2].word16=adc_value_struct.IN7;
+//					res_store_p[j*210+i*10+7+2].word16=adc_value_struct.IN8;
+//					res_store_p[j*210+i*10+8+2].word16=adc_value_struct.IN9;
+//					res_store_p[j*210+i*10+9+2].word16=adc_value_struct.IN10;
+//					#if SHOW_USB_DATA == 1U
+//						samp_data[i][0]=res_store_p[j*210+i*10+0+2].word16;
+//						samp_data[i][1]=res_store_p[j*210+i*10+1+2].word16;
+//						samp_data[i][2]=res_store_p[j*210+i*10+2+2].word16;
+//						samp_data[i][3]=res_store_p[j*210+i*10+3+2].word16;
+//						samp_data[i][4]=res_store_p[j*210+i*10+4+2].word16;
+//						samp_data[i][5]=res_store_p[j*210+i*10+5+2].word16;
+//						samp_data[i][6]=res_store_p[j*210+i*10+6+2].word16;
+//						samp_data[i][7]=res_store_p[j*210+i*10+7+2].word16;
+//						samp_data[i][8]=res_store_p[j*210+i*10+8+2].word16;
+//						samp_data[i][9]=res_store_p[j*210+i*10+9+2].word16;
+//					#endif
+//				}
+//				/* INCRMA */
+//				for(uint8_t i=11;i<21;i++)
+//				{
+//					select_switcher3(i);
+//					user_delaynus_tim(delay_time_us);
+//					//+2是为了跳过帧头
+//					res_store_p[j*210+i*10+0+2].word16=adc_value_struct.IN1;
+//					res_store_p[j*210+i*10+1+2].word16=adc_value_struct.IN2;
+//					res_store_p[j*210+i*10+2+2].word16=adc_value_struct.IN3;
+//					res_store_p[j*210+i*10+3+2].word16=adc_value_struct.IN4;
+//					res_store_p[j*210+i*10+4+2].word16=adc_value_struct.IN5;
+//					res_store_p[j*210+i*10+5+2].word16=adc_value_struct.IN6;
+//					res_store_p[j*210+i*10+6+2].word16=adc_value_struct.IN7;
+//					res_store_p[j*210+i*10+7+2].word16=adc_value_struct.IN8;
+//					res_store_p[j*210+i*10+8+2].word16=adc_value_struct.IN9;
+//					res_store_p[j*210+i*10+9+2].word16=adc_value_struct.IN10;
+//					#if SHOW_USB_DATA == 1U
+//						samp_data_INC[i-10][0]=res_store_p[j*210+i*10+0+2].word16;
+//						samp_data_INC[i-10][1]=res_store_p[j*210+i*10+1+2].word16;
+//						samp_data_INC[i-10][2]=res_store_p[j*210+i*10+2+2].word16;
+//						samp_data_INC[i-10][3]=res_store_p[j*210+i*10+3+2].word16;
+//						samp_data_INC[i-10][4]=res_store_p[j*210+i*10+4+2].word16;
+//						samp_data_INC[i-10][5]=res_store_p[j*210+i*10+5+2].word16;
+//						samp_data_INC[i-10][6]=res_store_p[j*210+i*10+6+2].word16;
+//						samp_data_INC[i-10][7]=res_store_p[j*210+i*10+7+2].word16;
+//						samp_data_INC[i-10][8]=res_store_p[j*210+i*10+8+2].word16;
+//						samp_data_INC[i-10][9]=res_store_p[j*210+i*10+9+2].word16;
+//					#endif
+//				}
 				IO11_GPIO_Port->BSRR=IO11_Pin;//高电平
 				IO10_GPIO_Port->BSRR=IO10_Pin;//高电平
 				osSemaphoreRelease(dataBinarySemHandle);
