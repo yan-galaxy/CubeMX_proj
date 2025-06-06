@@ -13,6 +13,7 @@ import os
 import threading
 from datetime import datetime
 import csv  # 新增CSV模块
+import numpy as np  # 新增numpy导入
 
 # 串口数据处理线程
 class SerialWorker(QThread):

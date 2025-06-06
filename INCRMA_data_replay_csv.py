@@ -187,7 +187,7 @@ if __name__ == "__main__":
     
     # 创建并显示窗口
     main_win = PlaybackVisualizer(
-        csv_path, 
+        csv_path,
         interplotation=INTERPOLATION,
         rotation_angle=ROTATION,
         flip_horizontal=FLIP_H,
