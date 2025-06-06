@@ -208,8 +208,8 @@ class SerialWorker(QThread):
                                     # normalized_result = (clipped_result - (self.normalization_low)) / (self.normalization_high - self.normalization_low)  # 分母是550（500-(-50)）
                                     # result = normalized_result
 
-                                    with np.printoptions(precision=3, suppress=True):
-                                        print('result:\n', result)
+                                    # with np.printoptions(precision=3, suppress=True):
+                                    #     print('result:\n', result)
                                     result = result.flatten()# 必须转为一维数组
                                     # print('result.tolist()\n', np.array(result.tolist()).shape)
                                     self.data_ready.emit(result.tolist())  # 如果需要转回列表再发送

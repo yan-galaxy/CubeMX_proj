@@ -179,8 +179,8 @@ if __name__ == "__main__":
         print("未选择文件，程序退出。")
         sys.exit(1)
     
-    # 配置回放参数（保留原有参数）
-    INTERPOLATION = True   # 是否启用插值
+    # 配置回放参数（保留原有参数）  True False 0 90 180 270
+    INTERPOLATION = False   # 是否启用插值
     ROTATION = 270         # 旋转角度
     FLIP_H = False         # 水平翻转
     FLIP_V = False         # 垂直翻转
