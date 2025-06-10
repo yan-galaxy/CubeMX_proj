@@ -45,7 +45,7 @@ class DataProcessor:
         INCRMA_normalized = (INCRMA_numerator / INCRMA_denominator) * self.Rref_ohm
         
         # 均值计算
-        avg_matrix = np.mean(INCRMA_normalized, axis=0)
+        avg_matrix = np.mean(INCRMA_normalized, axis=0) # INCRMA_normalized RMA_normalized
         
         # 差值计算
         if self.matrix_flag == 0:

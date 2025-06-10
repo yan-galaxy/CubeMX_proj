@@ -68,10 +68,6 @@ class SerialWorker(QThread):
         self.writer_thread.start()
 
     def write_raw_data_to_file(self):
-        """后台线程：从队列取数据并写入.npy文件"""
-        buffer = []
-        batch_size = 100  # 每100帧写入一次磁盘
-
         """后台线程：从队列取数据并写入.csv文件"""
         frame_index = 0  # 帧计数器
         
@@ -169,13 +165,15 @@ class SerialWorker(QThread):
                                 INCRMA_normalized = (INCRMA_numerator / INCRMA_denominator)*Rref_ohm  # 形状 (10×10×10)
                                 # 求均值 10帧的均值
                                 avg_matrix = np.mean(INCRMA_normalized, axis=0)
-                                # 打印结果（已保留三位小数）
-                                with np.printoptions(precision=3, suppress=True):
-                                    print('avg_matrix:\n', avg_matrix)
-                                    # 计算均值和标准差
-                                    avg_mean = np.mean(avg_matrix)
-                                    avg_std = np.std(avg_matrix)
-                                    print(f'均值: {avg_mean:.3f}, 标准差: {avg_std:.3f}')
+                                # # 打印结果（已保留三位小数）
+                                # with np.printoptions(precision=3, suppress=True):
+                                #     print('avg_matrix:\n', avg_matrix)
+                                #     # 计算均值和标准差
+                                #     avg_mean = np.mean(avg_matrix)
+                                #     avg_std = np.std(avg_matrix)
+                                #     print(f'均值: {avg_mean:.3f}, 标准差: {avg_std:.3f}')
+
+                                
 
                                 # # 添加对数处理
                                 # avg_matrix_log = np.log(avg_matrix + 1)  # 防止出现负数
@@ -190,8 +188,8 @@ class SerialWorker(QThread):
                                 if self.matrix_flag == 0 :# 获得初始帧作为基准帧
                                     self.matrix_init = avg_matrix.copy()  # 保存为数组
                                     self.matrix_flag = 1
-                                    with np.printoptions(precision=3, suppress=True):
-                                        print('self.matrix_init:\n', self.matrix_init)
+                                    # with np.printoptions(precision=3, suppress=True):
+                                    #     print('self.matrix_init:\n', self.matrix_init)
                                 else:
                                     result = self.matrix_init - avg_matrix  # 数组支持元素级减法  力越大数值越大
 

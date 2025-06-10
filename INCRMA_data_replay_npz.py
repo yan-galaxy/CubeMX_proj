@@ -1,12 +1,12 @@
+# INCRMA_data_replay_npz.py
 import sys
 import numpy as np
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog  # 新增QFileDialog导入
+from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore
-import csv
-from scipy.ndimage import zoom  # 使用scipy的缩放函数 插值需要
+from scipy.ndimage import zoom
+import os
 
-# 数据处理核心逻辑复用
 class DataProcessor:
     """封装数据处理逻辑"""
     def __init__(self):
@@ -59,10 +59,8 @@ class DataProcessor:
             normal_result = np.where(normal_result > 1, 1, normal_result)
             return normal_result
 
-# 主窗口类
 class PlaybackVisualizer(QMainWindow):
     def __init__(self, npz_path, interplotation=False, rotation_angle=0, flip_horizontal=False, flip_vertical=False):
-        # csv_path
         super().__init__()
         # 显示配置
         self.interplotation = interplotation
@@ -74,7 +72,7 @@ class PlaybackVisualizer(QMainWindow):
         self.central_widget = pg.GraphicsLayoutWidget()
         self.setCentralWidget(self.central_widget)
         self.image_item = pg.ImageItem()
-        self.plot = self.central_widget.addPlot(title="数据回放")
+        self.plot = self.central_widget.addPlot(title="NPZ数据回放")
         self.plot.addItem(self.image_item)
         self.color_map = pg.colormap.get('viridis')
         self.image_item.setColorMap(self.color_map)
@@ -90,8 +88,7 @@ class PlaybackVisualizer(QMainWindow):
         
         # 数据加载
         self.processor = DataProcessor()
-        # self.data_frames = self.load_csv_data(csv_path)
-        self.data_frames = self.load_npz_data(npz_path)  # 修改：加载NPZ文件
+        self.data_frames = self.load_npz_data(npz_path)
         self.current_frame = 0
         
         # 性能监控
@@ -102,34 +99,25 @@ class PlaybackVisualizer(QMainWindow):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update_plot)
         self.timer.start(10)  # 10ms对应100FPS
-    
-    def load_csv_data(self, csv_path):
-        """加载CSV文件数据"""
-        data_frames = []
-        try:
-            with open(csv_path, 'r') as f:
-                reader = csv.reader(f)
-                next(reader)  # 跳过表头
-                for row in reader:
-                    frame_data = np.array(row[1:], dtype=np.uint16)
-                    data_frames.append(frame_data)
-        except Exception as e:
-            print(f"加载CSV文件失败: {e}")
-        return data_frames
+
     def load_npz_data(self, npz_path):
         """加载NPZ文件数据"""
         data_frames = []
         try:
-            # 读取NPZ文件
             with np.load(npz_path) as data:
-                # 假设数据以"frames"键存储，形状为(N, 2100)
-                raw_data = data["frames"]
-                # 提取数据列（忽略帧索引列）
-                data_frames = raw_data.reshape(-1, 2100)  # 确保为(2100,)每帧
+                # 加载元数据信息
+                if 'normalization_range' in data:
+                    print(f"数据范围: {data['normalization_range']}")
+                if 'timestamp' in data:
+                    print(f"采集时间: {data['timestamp']}")
+                
+                # 加载实际数据
+                if 'data' in data:
+                    data_frames = [row for row in data['data']]
         except Exception as e:
             print(f"加载NPZ文件失败: {e}")
         return data_frames
-    
+
     def update_plot(self):
         """定时更新图像"""
         if self.current_frame >= len(self.data_frames):
@@ -181,26 +169,20 @@ class PlaybackVisualizer(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     
-    # 弹出文件选择对话框（保留原有参数配置）
-    # csv_path, _ = QFileDialog.getOpenFileName(
-    #     None,
-    #     "选择CSV文件",              # 对话框标题
-    #     "INCRMA_raw_data",          # 初始目录
-    #     "CSV文件 (*.csv)"           # 文件过滤器
-    # )
-    file_path, _ = QFileDialog.getOpenFileName(
+    # 弹出文件选择对话框
+    npz_path, _ = QFileDialog.getOpenFileName(
         None,
-        "选择NPZ文件",              # 对话框标题
-        "INCRMA_raw_data",          # 初始目录
-        "NPZ文件 (*.npz)"           # 文件过滤器
+        "选择NPZ文件",
+        "INCRMA_raw_data",
+        "NPZ文件 (*.npz)"
     )
     
     # 如果用户取消选择，退出程序
-    if not file_path:# csv_path
+    if not npz_path:
         print("未选择文件，程序退出。")
         sys.exit(1)
     
-    # 配置回放参数（保留原有参数）  True False 0 90 180 270
+    # 配置回放参数
     INTERPOLATION = False   # 是否启用插值
     ROTATION = 270         # 旋转角度
     FLIP_H = False         # 水平翻转
@@ -208,7 +190,7 @@ if __name__ == "__main__":
     
     # 创建并显示窗口
     main_win = PlaybackVisualizer(
-        file_path, # csv_path
+        npz_path,
         interplotation=INTERPOLATION,
         rotation_angle=ROTATION,
         flip_horizontal=FLIP_H,
