@@ -365,6 +365,7 @@ class MatrixVisualizer(QMainWindow):
 
     def closeEvent(self, event):
         """窗口关闭时停止串口线程"""
+        self.hide()  # 先隐藏图形界面
         self.worker.stop()
         self.worker.wait()
         event.accept()
