@@ -1,0 +1,10 @@
+f042_bmp\stm32f0xx_ll_exti.o: ../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_exti.c
+f042_bmp\stm32f0xx_ll_exti.o: ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_ll_exti.h
+f042_bmp\stm32f0xx_ll_exti.o: ../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h
+f042_bmp\stm32f0xx_ll_exti.o: ../Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f042x6.h
+f042_bmp\stm32f0xx_ll_exti.o: ../Drivers/CMSIS/Include/core_cm0.h
+f042_bmp\stm32f0xx_ll_exti.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+f042_bmp\stm32f0xx_ll_exti.o: ../Drivers/CMSIS/Include/cmsis_version.h
+f042_bmp\stm32f0xx_ll_exti.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
+f042_bmp\stm32f0xx_ll_exti.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
+f042_bmp\stm32f0xx_ll_exti.o: ../Drivers/CMSIS/Device/ST/STM32F0xx/Include/system_stm32f0xx.h

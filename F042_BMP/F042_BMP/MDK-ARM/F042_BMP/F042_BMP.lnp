@@ -1,0 +1,15 @@
+--cpu Cortex-M0
+"f042_bmp\startup_stm32f042x6.o"
+"f042_bmp\main.o"
+"f042_bmp\gpio.o"
+"f042_bmp\stm32f0xx_it.o"
+"f042_bmp\system_stm32f0xx.o"
+"f042_bmp\stm32f0xx_ll_gpio.o"
+"f042_bmp\stm32f0xx_ll_pwr.o"
+"f042_bmp\stm32f0xx_ll_exti.o"
+"f042_bmp\stm32f0xx_ll_rcc.o"
+"f042_bmp\stm32f0xx_ll_utils.o"
+--library_type=microlib --strict --scatter "F042_BMP\F042_BMP.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "F042_BMP.map" -o F042_BMP\F042_BMP.axf
