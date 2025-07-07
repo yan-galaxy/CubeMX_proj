@@ -109,3 +109,4 @@ HAL_StatusTypeDef BMP280_ReadPressureTemperature(BMP280_Device *dev);
 float BMP280_CalculateAltitude(float pressure, float sea_level_pressure);
 
 #endif /* BMP280_H */
+

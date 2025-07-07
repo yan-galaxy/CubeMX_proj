@@ -33,11 +33,14 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "BMP280.h"
 #include "stdio.h"
+#include "math.h"
+
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-extern UART_HandleTypeDef huart2;
+//extern UART_HandleTypeDef huart2;
 
 extern SPI_HandleTypeDef hspi1;
 /* USER CODE END ET */
