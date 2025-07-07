@@ -1,7 +1,9 @@
 --cpu Cortex-M3
 "rct6_bmp\startup_stm32f103xe.o"
+"rct6_bmp\bmp280.o"
 "rct6_bmp\main.o"
 "rct6_bmp\gpio.o"
+"rct6_bmp\spi.o"
 "rct6_bmp\usart.o"
 "rct6_bmp\stm32f1xx_it.o"
 "rct6_bmp\stm32f1xx_hal_msp.o"
@@ -19,6 +21,7 @@
 "rct6_bmp\stm32f1xx_hal_flash.o"
 "rct6_bmp\stm32f1xx_hal_flash_ex.o"
 "rct6_bmp\stm32f1xx_hal_exti.o"
+"rct6_bmp\stm32f1xx_hal_spi.o"
 "rct6_bmp\stm32f1xx_hal_tim.o"
 "rct6_bmp\stm32f1xx_hal_tim_ex.o"
 "rct6_bmp\stm32f1xx_hal_uart.o"
