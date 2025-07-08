@@ -47,6 +47,38 @@ extern SPI_HandleTypeDef hspi1;
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
+typedef union  {
+    uint16_t word16;         // 16bit
+		uint8_t byte[2];       // 8bit   byte[0]:low_8bit   byte[1]:high_8bit     example:  word16=0x5678  byte[0]=0x78 byte[1]=0x56
+}Word_union;
+
+typedef struct{
+	uint8_t head[4];
+	float value[4];
+	uint8_t tail[4];
+}Protocol_struct;
+
+
+/**
+ * 低通滤波器结构体
+ */
+typedef struct {
+    float fc;       // 截止频率(Hz)
+    float fs;       // 采样频率(Hz)
+    float alpha;    // 滤波系数
+    float y_prev;   // 上一时刻输出值
+} LowPassFilter;
+
+/**
+ * 高通滤波器结构体
+ */
+typedef struct {
+    float fc;       // 截止频率(Hz)
+    float fs;       // 采样频率(Hz)
+    float alpha;    // 滤波系数
+    float x_prev;   // 上一时刻输入值
+    float y_prev;   // 上一时刻输出值
+} HighPassFilter;
 
 /* USER CODE END EC */
 
