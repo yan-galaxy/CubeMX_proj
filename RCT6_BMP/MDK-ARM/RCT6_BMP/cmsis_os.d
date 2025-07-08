@@ -1,9 +1,9 @@
 rct6_bmp\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c
-rct6_bmp\cmsis_os.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
+rct6_bmp\cmsis_os.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 rct6_bmp\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 rct6_bmp\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-rct6_bmp\cmsis_os.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
-rct6_bmp\cmsis_os.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+rct6_bmp\cmsis_os.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+rct6_bmp\cmsis_os.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 rct6_bmp\cmsis_os.o: ../Core/Inc/FreeRTOSConfig.h
 rct6_bmp\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 rct6_bmp\cmsis_os.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

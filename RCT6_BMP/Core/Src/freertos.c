@@ -241,7 +241,8 @@ void StartDefaultTask(void const * argument)
 			LowPass_value2=LowPassFilter(bmp_dev2.altitude,40,100,&Prev_value2,&HighPass_value2);
 			LowPass_value3=LowPassFilter(bmp_dev3.altitude,40,100,&Prev_value3,&HighPass_value3);
 			LowPass_value4=LowPassFilter(bmp_dev4.altitude,40,100,&Prev_value4,&HighPass_value4);
-//			sprintf(usb_TxBuf,"%f,%f\r\n",bmp_dev1.altitude,LowPass_value1);
+			
+//			sprintf(usb_TxBuf,"%f,%f\r\n",bmp_dev1.pressure,LowPass_value1);
 			sprintf(usb_TxBuf,"%f,%f,%f,%f\r\n",LowPass_value1,LowPass_value2,LowPass_value3,LowPass_value4);
 		#endif
 		

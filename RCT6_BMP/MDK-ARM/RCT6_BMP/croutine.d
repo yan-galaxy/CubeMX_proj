@@ -1,7 +1,7 @@
 rct6_bmp\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/croutine.c
 rct6_bmp\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-rct6_bmp\croutine.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
-rct6_bmp\croutine.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+rct6_bmp\croutine.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+rct6_bmp\croutine.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 rct6_bmp\croutine.o: ../Core/Inc/FreeRTOSConfig.h
 rct6_bmp\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 rct6_bmp\croutine.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

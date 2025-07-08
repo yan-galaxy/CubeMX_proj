@@ -1,8 +1,8 @@
 rct6_bmp\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/event_groups.c
-rct6_bmp\event_groups.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
+rct6_bmp\event_groups.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 rct6_bmp\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-rct6_bmp\event_groups.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
-rct6_bmp\event_groups.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+rct6_bmp\event_groups.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+rct6_bmp\event_groups.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 rct6_bmp\event_groups.o: ../Core/Inc/FreeRTOSConfig.h
 rct6_bmp\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 rct6_bmp\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

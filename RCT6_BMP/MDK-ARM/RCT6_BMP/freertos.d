@@ -1,7 +1,7 @@
 rct6_bmp\freertos.o: ../Core/Src/freertos.c
 rct6_bmp\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-rct6_bmp\freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
-rct6_bmp\freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+rct6_bmp\freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+rct6_bmp\freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 rct6_bmp\freertos.o: ../Core/Inc/FreeRTOSConfig.h
 rct6_bmp\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 rct6_bmp\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
@@ -41,8 +41,8 @@ rct6_bmp\freertos.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd.h
 rct6_bmp\freertos.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h
 rct6_bmp\freertos.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h
 rct6_bmp\freertos.o: ../MDK-ARM/BMP280.h
-rct6_bmp\freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdio.h
-rct6_bmp\freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\math.h
+rct6_bmp\freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+rct6_bmp\freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 rct6_bmp\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 rct6_bmp\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 rct6_bmp\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
@@ -53,8 +53,8 @@ rct6_bmp\freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/us
 rct6_bmp\freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 rct6_bmp\freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h
 rct6_bmp\freertos.o: ../USB_DEVICE/Target/usbd_conf.h
-rct6_bmp\freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
-rct6_bmp\freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
+rct6_bmp\freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+rct6_bmp\freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 rct6_bmp\freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 rct6_bmp\freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 rct6_bmp\freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
