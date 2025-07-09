@@ -1919,11 +1919,11 @@
       </Doc>
       <Doc>
         <Name>../Core/Src/freertos.c</Name>
-        <ColumnNumber>14</ColumnNumber>
-        <TopLine>354</TopLine>
-        <CurrentLine>535</CurrentLine>
+        <ColumnNumber>24</ColumnNumber>
+        <TopLine>293</TopLine>
+        <CurrentLine>356</CurrentLine>
         <Folding>1</Folding>
-        <ContractedFolders>85,98,373,422,433,459,466,500</ContractedFolders>
+        <ContractedFolders>85,98,382,431,442,468,475,494,509,521,537</ContractedFolders>
         <PaneID>0</PaneID>
       </Doc>
     </MDIGroup>

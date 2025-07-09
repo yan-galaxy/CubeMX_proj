@@ -1,20 +1,17 @@
+# BMP_show.py - 四通道传感器可视化（增强版）
 import sys
 import numpy as np
-from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QLabel, 
-    QHBoxLayout, QVBoxLayout, QGraphicsDropShadowEffect
-)
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QHBoxLayout, QVBoxLayout, QGraphicsDropShadowEffect
 from PyQt5.QtGui import QColor, QLinearGradient, QBrush, QPen
 from PyQt5.QtCore import Qt, QTime, QTimer, QThread, pyqtSignal
 import pyqtgraph as pg
 import serial
 from queue import Queue
 
-
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 数据就绪信号
     
-    def __init__(self, port='COM7', normalization_low=0, normalization_high=1):
+    def __init__(self, port='COM7', normalization_ranges=None):
         super().__init__()
         self.port = port         # 串口号
         self.baudrate = 115200   # 波特率
@@ -23,9 +20,14 @@ class SerialWorker(QThread):
         self.buffer = bytearray()  # 接收缓冲区
         self.FRAME_HEADER = b'\x55\xAA\xBB\xCC'
         self.FRAME_TAIL = b'\xAA\x55\x66\x77'
-        self.normalization_low = normalization_low
-        self.normalization_high = normalization_high
         self.last_values = [0.0, 0.0, 0.0, 0.0]  # 平滑滤波缓存
+        
+        # 默认阈值范围：[[低阈值, 高阈值], ...]
+        if normalization_ranges is None:
+            # 默认全部使用相同范围（保持向后兼容）
+            self.normalization_ranges = [[0.0, 0.5]] * 4
+        else:
+            self.normalization_ranges = normalization_ranges
 
     def run(self):
         try:
@@ -45,7 +47,17 @@ class SerialWorker(QThread):
                             if len(payload) == 16:  # 16字节数据(4 float)
                                 parsed = np.frombuffer(payload, dtype='<f4')  # 显式指定小端序
                                 parsed = parsed[::-1]  # 全部反转
-                                normalized = (parsed - self.normalization_low) / (self.normalization_high - self.normalization_low)
+                                # 新增：每个通道单独归一化
+                                normalized = []
+                                for i in range(4):
+                                    low, high = self.normalization_ranges[i]
+                                    value = parsed[i]
+                                    # 计算归一化值（带安全范围限制）
+                                    norm_value = (value - low) / (high - low) if high != low else 0.0
+                                    # 确保在0-1范围（处理极端情况）
+                                    norm_value = max(0.0, min(1.0, norm_value))
+                                    normalized.append(norm_value)
+                                    
                                 # 应用平滑滤波
                                 smoothed = [0.8 * self.last_values[i] + 0.2 * n for i, n in enumerate(normalized)]
                                 self.last_values = smoothed
@@ -67,9 +79,8 @@ class SerialWorker(QThread):
     def stop(self):
         self.running = False
 
-
 class FourSquareVisualizer(QMainWindow):
-    def __init__(self):
+    def __init__(self, normalization_ranges=None):
         super().__init__()
         self.setWindowTitle("四通道传感器可视化")
         self.setStyleSheet("""
@@ -95,9 +106,9 @@ class FourSquareVisualizer(QMainWindow):
         self.layout.setSpacing(20)
         self.layout.setContentsMargins(20, 20, 20, 20)
         
-        # 创建四个矩形显示区域（核心修改区）
+        # 创建四个矩形显示区域
         self.rect_labels = []
-        self.color_map = pg.colormap.get('plasma')  # 更鲜艳的色图
+        self.color_map = pg.colormap.get('inferno')  # 更鲜艳的色图  plasma viridis inferno magma cividis
         
         for i in reversed(range(4)):
             # 创建容器widget
@@ -134,7 +145,6 @@ class FourSquareVisualizer(QMainWindow):
             x = (view_width - rect_width) // 2
             y = (view_height - rect_height) // 2
             rect_item = pg.QtWidgets.QGraphicsRectItem(x, y, rect_width, rect_height)
-
             rect_item.setBrush(pg.mkBrush('lightgray'))
             rect_item.setPen(pg.mkPen('#4a4a4a', width=2))
             rect_item.setGraphicsEffect(self.create_shadow_effect())  # 添加阴影
@@ -161,7 +171,7 @@ class FourSquareVisualizer(QMainWindow):
         
         # 初始化串口数据队列和线程
         self.data_queue = Queue()
-        self.worker = SerialWorker()
+        self.worker = SerialWorker(normalization_ranges=normalization_ranges)
         self.worker.data_ready.connect(self.receive_data)
         self.worker.start()
         
@@ -195,8 +205,10 @@ class FourSquareVisualizer(QMainWindow):
         while not self.data_queue.empty():
             data = self.data_queue.get()
             for i, value in enumerate(data):
-                self.animate_color(i, value)  # 颜色过渡动画
-                self.rect_labels[i][1].setText(f"{value*100:.1f}%")  # 更新数值
+                # 添加颜色过渡动画
+                self.animate_color(i, value)
+                # 更新标签显示数值
+                self.rect_labels[i][1].setText(f"{value*100:.1f}%")
             
             self.frame_count += 1
             
@@ -228,13 +240,21 @@ class FourSquareVisualizer(QMainWindow):
         self.worker.wait()
         event.accept()
 
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle("Fusion")  # 使用现代样式
     
+    # 自定义各通道归一化范围：
+    # [ [通道0低阈值, 高阈值], [通道1低阈值, 高阈值], ... ]
+    custom_ranges = [
+        [0.0, 0.5],      # 通道0  最左边
+        [0.0, 0.4],      # 通道1
+        [0.0, 0.3],      # 通道2
+        [0.0, 0.15],      # 通道3  最右边
+    ]
+    
     # 创建主窗口实例
-    visualizer = FourSquareVisualizer()
+    visualizer = FourSquareVisualizer(normalization_ranges=custom_ranges)
     visualizer.resize(600, 250)
     visualizer.show()
     

@@ -234,10 +234,10 @@ void StartDefaultTask(void const * argument)
 	LPF_Init(&LFilter[2],10,50);
 	LPF_Init(&LFilter[3],10,50);
 						   
-	HPF_Init(&HFilter[0],0.5,50);
-	HPF_Init(&HFilter[1],0.5,50);
-	HPF_Init(&HFilter[2],0.5,50);
-	HPF_Init(&HFilter[3],0.5,50);
+	HPF_Init(&HFilter[0],0.2,50);
+	HPF_Init(&HFilter[1],0.2,50);
+	HPF_Init(&HFilter[2],0.2,50);
+	HPF_Init(&HFilter[3],0.2,50);
 	
 	TickType_t xLastWakeTime = xTaskGetTickCount();
   /* Infinite loop */
@@ -353,14 +353,23 @@ void StartDefaultTask(void const * argument)
 void LedTask(void const * argument)
 {
   /* USER CODE BEGIN LedTask */
+	for(uint8_t i=0;i<10;i++)
+	{
+		HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
+		HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port,LED3_Pin);
+		HAL_GPIO_TogglePin(LED4_GPIO_Port,LED4_Pin);
+		osDelay(100);
+	}
+	
 	TickType_t xLastWakeTime = xTaskGetTickCount();
   /* Infinite loop */
 	for(;;)
 	{
-		if(Highpass_fdata.value[0]>=0.1)	HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin,0); else	HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin,1);
-		if(Highpass_fdata.value[1]>=0.1)	HAL_GPIO_WritePin(LED2_GPIO_Port,LED2_Pin,0); else	HAL_GPIO_WritePin(LED2_GPIO_Port,LED2_Pin,1);
-		if(Highpass_fdata.value[2]>=0.1)	HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,0); else	HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,1);
-		if(Highpass_fdata.value[3]>=0.1)	HAL_GPIO_WritePin(LED4_GPIO_Port,LED4_Pin,0); else	HAL_GPIO_WritePin(LED4_GPIO_Port,LED4_Pin,1);
+//		if(Highpass_fdata.value[0]>=0.1)	HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin,0); else	HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin,1);
+//		if(Highpass_fdata.value[1]>=0.1)	HAL_GPIO_WritePin(LED2_GPIO_Port,LED2_Pin,0); else	HAL_GPIO_WritePin(LED2_GPIO_Port,LED2_Pin,1);
+//		if(Highpass_fdata.value[2]>=0.1)	HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,0); else	HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin,1);
+//		if(Highpass_fdata.value[3]>=0.0)	HAL_GPIO_WritePin(LED4_GPIO_Port,LED4_Pin,0); else	HAL_GPIO_WritePin(LED4_GPIO_Port,LED4_Pin,1);
 		
 //		osDelay(10);
 		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(10));
