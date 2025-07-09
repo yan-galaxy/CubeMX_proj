@@ -11,7 +11,7 @@ from queue import Queue
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 数据就绪信号
     
-    def __init__(self, port='COM7', normalization_ranges=None):
+    def __init__(self, port='COM6', normalization_ranges=None):
         super().__init__()
         self.port = port         # 串口号
         self.baudrate = 115200   # 波特率
@@ -103,7 +103,7 @@ class FourSquareVisualizer(QMainWindow):
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         self.layout = QHBoxLayout(self.central_widget)
-        self.layout.setSpacing(20)
+        self.layout.setSpacing(200)
         self.layout.setContentsMargins(20, 20, 20, 20)
         
         # 创建四个矩形显示区域
@@ -114,7 +114,7 @@ class FourSquareVisualizer(QMainWindow):
             # 创建容器widget
             container = QWidget()
             container.setObjectName("container")
-            container.setFixedSize(100, 160)
+            container.setFixedSize(250, 350)
             layout = QVBoxLayout(container)
             layout.setSpacing(8)
             layout.setContentsMargins(5, 5, 5, 5)
@@ -255,7 +255,7 @@ if __name__ == "__main__":
     
     # 创建主窗口实例
     visualizer = FourSquareVisualizer(normalization_ranges=custom_ranges)
-    visualizer.resize(600, 250)
+    visualizer.resize(1400, 720)
     visualizer.show()
     
     sys.exit(app.exec_())
