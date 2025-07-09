@@ -48,6 +48,7 @@
 
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
+osThreadId ledTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -55,6 +56,7 @@ osThreadId defaultTaskHandle;
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void const * argument);
+void LedTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -89,6 +91,10 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
+  /* definition and creation of ledTask */
+  osThreadDef(ledTask, LedTask, osPriorityIdle, 0, 128);
+  ledTaskHandle = osThreadCreate(osThread(ledTask), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -107,7 +113,11 @@ void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
 	char usb_buff[128]={0};
-	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)adc_value, 10);
+//	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)adc_value, 10);
+	AD5206_SetResistance(1,4,10);//Reef 50-1.95kΩ 100-3.85kΩ
+	
+	
+	AD5206_SetResistance(1,2,100);//OUT3 50-1.95kΩ 100-3.85kΩ
   /* Infinite loop */
 	for(;;)
 	{
@@ -119,8 +129,78 @@ void StartDefaultTask(void const * argument)
   /* USER CODE END StartDefaultTask */
 }
 
+/* USER CODE BEGIN Header_LedTask */
+/**
+* @brief Function implementing the ledTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_LedTask */
+void LedTask(void const * argument)
+{
+  /* USER CODE BEGIN LedTask */
+	TickType_t xLastWakeTime = xTaskGetTickCount();//HAL_GPIO_TogglePin
+  /* Infinite loop */
+	for(;;)
+	{
+		HAL_GPIO_WritePin(SEL1_GPIO_Port, SEL1_Pin, 0);
+		HAL_GPIO_WritePin(SEL2_GPIO_Port, SEL2_Pin, 0);
+		HAL_GPIO_WritePin(SEL3_GPIO_Port, SEL3_Pin, 0);
+		HAL_GPIO_WritePin(SEL4_GPIO_Port, SEL4_Pin, 0);
+		HAL_GPIO_WritePin(SEL5_GPIO_Port, SEL5_Pin, 0);
+		HAL_GPIO_WritePin(SEL6_GPIO_Port, SEL6_Pin, 0);
+		HAL_GPIO_WritePin(SEL7_GPIO_Port, SEL7_Pin, 0);
+		HAL_GPIO_WritePin(SEL8_GPIO_Port, SEL8_Pin, 0);
+		HAL_GPIO_WritePin(SEL9_GPIO_Port, SEL9_Pin, 0);
+		HAL_GPIO_WritePin(SEL10_GPIO_Port,SEL10_Pin,0);
+		
+		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(1));
+		
+		
+		
+		HAL_GPIO_WritePin(SEL1_GPIO_Port, SEL1_Pin, 1);
+		HAL_GPIO_WritePin(SEL2_GPIO_Port, SEL2_Pin, 1);
+		HAL_GPIO_WritePin(SEL3_GPIO_Port, SEL3_Pin, 1);
+		HAL_GPIO_WritePin(SEL4_GPIO_Port, SEL4_Pin, 1);
+		HAL_GPIO_WritePin(SEL5_GPIO_Port, SEL5_Pin, 1);
+		HAL_GPIO_WritePin(SEL6_GPIO_Port, SEL6_Pin, 1);
+		HAL_GPIO_WritePin(SEL7_GPIO_Port, SEL7_Pin, 1);
+		HAL_GPIO_WritePin(SEL8_GPIO_Port, SEL8_Pin, 1);
+		HAL_GPIO_WritePin(SEL9_GPIO_Port, SEL9_Pin, 1);
+		HAL_GPIO_WritePin(SEL10_GPIO_Port,SEL10_Pin,1);
+		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(3));
+	}
+  /* USER CODE END LedTask */
+}
+
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
-
+// 设置AD5206的电阻值
+// index: 0 1
+// channel: 0~5
+// resistance: 0~255
+void AD5206_SetResistance(uint8_t index, uint8_t channel, uint8_t resistance) {
+		uint8_t spi_data[2]={0x00,10};
+		
+    // 确保通道和电阻值在有效范围内
+    if (channel > 5) return; // AD5206有6个通道，通道号从0到5
+    if (resistance > 255) return; // 电阻值应在0到255之间
+		if (index!=0 && index!=1) return;
+	
+		if(index==0)
+			HAL_GPIO_WritePin(CS1_GPIO_Port,CS1_Pin,0);
+		else if(index==1)
+			HAL_GPIO_WritePin(CS2_GPIO_Port,CS2_Pin,0);
+		
+		spi_data[0]=channel;
+		spi_data[1]=resistance;
+		
+		HAL_SPI_Transmit(&hspi1,spi_data,2,0xffff);
+		osDelay(5);
+    if(index==0)
+		HAL_GPIO_WritePin(CS1_GPIO_Port,CS1_Pin,1);
+	else if(index==1)
+		HAL_GPIO_WritePin(CS2_GPIO_Port,CS2_Pin,1);
+}
 /* USER CODE END Application */
 

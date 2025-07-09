@@ -21,9 +21,6 @@ basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_
 basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h
 basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h
 basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h
-basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h
-basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h
-basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h
 basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h
 basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h
 basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h
@@ -33,5 +30,7 @@ basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_
 basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pcd_ex.h
 basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h
 basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h
+basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi.h
+basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h
 basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h
 basictest\stm32g4xx_hal_dma_ex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h
