@@ -137,7 +137,7 @@ class FilterAnalyzer:
         
         return plt
     
-    def generate_test_signal(self, duration=1.0, frequencies=None, amplitudes=None):
+    def generate_test_signal(self, duration=1.0, frequencies=None, amplitudes=None, random_phase=True):
         """
         生成测试信号
         
@@ -145,25 +145,27 @@ class FilterAnalyzer:
             duration: 信号持续时间(秒)
             frequencies: 信号包含的频率分量(Hz)
             amplitudes: 各频率分量的幅度
+            random_phase: 是否为每个频率分量添加随机相位
         
         返回:
             t: 时间数组
             signal: 生成的测试信号
         """
         if frequencies is None:
-            if self.filter_type == 'lowpass':
-                frequencies = [5, 10, 25, 50, 150, 250, 300, 500]  # 包含高低频分量
-            else:  # highpass
-                frequencies = [5, 10, 25, 50, 150, 250, 300, 500]  # 包含高低频分量
+            # 使用线性间隔生成覆盖全频段的频率点（从0Hz到Nyquist频率）
+            frequencies = np.linspace(1, self.fs / 2, 300)
         
         if amplitudes is None:
-            amplitudes = [1.0] * len(frequencies)
+            # 所有频率分量的幅度设为1.0
+            amplitudes = np.ones_like(frequencies)
         
-        t = np.arange(0, duration, 1/self.fs)
+        t = np.arange(0, duration, 1 / self.fs)
         test_signal = np.zeros_like(t)
         
         for freq, amp in zip(frequencies, amplitudes):
-            test_signal += amp * np.sin(2 * np.pi * freq * t)
+            # 添加随机相位
+            phase = np.random.uniform(0, 2 * np.pi) if random_phase else 0
+            test_signal += amp * np.sin(2 * np.pi * freq * t + phase)
         
         # 添加随机噪声
         noise = 0.2 * np.random.randn(len(t))
@@ -394,13 +396,13 @@ def main():
     analyzer.plot_frequency_response()
     plt.show()
     
-    # 绘制脉冲响应
-    analyzer.plot_impulse_response()
-    plt.show()
+    # # 绘制脉冲响应
+    # analyzer.plot_impulse_response()
+    # plt.show()
     
-    # 绘制阶跃响应
-    analyzer.plot_step_response()
-    plt.show()
+    # # 绘制阶跃响应
+    # analyzer.plot_step_response()
+    # plt.show()
     
     # 生成测试信号并滤波
     t, test_signal = analyzer.generate_test_signal(duration=1.0)
