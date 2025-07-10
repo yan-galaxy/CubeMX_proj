@@ -22,6 +22,9 @@ basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h
 basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h
 basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h
 basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h
+basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h
+basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h
+basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h
 basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h
 basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h
 basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h
@@ -35,6 +38,17 @@ basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi.h
 basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h
 basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h
 basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h
+basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h
+basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_bus.h
+basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_cortex.h
+basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_rcc.h
+basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_system.h
+basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_utils.h
+basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_pwr.h
+basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h
+basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h
+basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h
+basictest\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_exti.h
 basictest\main.o: ../USB_Device/App/usbd_cdc_if.h
 basictest\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h
 basictest\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
@@ -60,6 +74,9 @@ basictest\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
 basictest\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h
 basictest\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 basictest\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
+basictest\main.o: ../Core/Inc/adc.h
+basictest\main.o: ../Core/Inc/dma.h
 basictest\main.o: ../Core/Inc/spi.h
+basictest\main.o: ../Core/Inc/tim.h
 basictest\main.o: ../USB_Device/App/usb_device.h
 basictest\main.o: ../Core/Inc/gpio.h

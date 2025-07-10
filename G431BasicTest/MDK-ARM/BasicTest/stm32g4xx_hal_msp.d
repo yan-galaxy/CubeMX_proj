@@ -22,6 +22,9 @@ basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal
 basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h
 basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h
 basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h
+basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h
+basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h
+basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h
 basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h
 basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h
 basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h
@@ -35,6 +38,17 @@ basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal
 basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h
 basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h
 basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h
+basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h
+basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_bus.h
+basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_cortex.h
+basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_rcc.h
+basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_system.h
+basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_utils.h
+basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_pwr.h
+basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h
+basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h
+basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h
+basictest\stm32g4xx_hal_msp.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_exti.h
 basictest\stm32g4xx_hal_msp.o: ../USB_Device/App/usbd_cdc_if.h
 basictest\stm32g4xx_hal_msp.o: ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h
 basictest\stm32g4xx_hal_msp.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
