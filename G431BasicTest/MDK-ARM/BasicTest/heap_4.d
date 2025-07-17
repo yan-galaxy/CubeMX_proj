@@ -1,8 +1,8 @@
 basictest\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c
-basictest\heap_4.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
+basictest\heap_4.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 basictest\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-basictest\heap_4.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
-basictest\heap_4.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+basictest\heap_4.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+basictest\heap_4.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 basictest\heap_4.o: ../Core/Inc/FreeRTOSConfig.h
 basictest\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 basictest\heap_4.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

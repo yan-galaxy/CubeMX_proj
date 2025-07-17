@@ -17,10 +17,10 @@ from datetime import datetime
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 数据就绪信号
     
-    def __init__(self, port='COM7', normalization_low=0, normalization_high=4096):
+    def __init__(self, port='COM8', normalization_low=0, normalization_high=4096):
         super().__init__()
         self.port = port         # 串口号
-        self.baudrate = 115200     # 波特率
+        self.baudrate = 460800     # 波特率
         self.ser = None            # 串口对象
         self.running = False       # 线程运行标志
         self.buffer = bytearray()  # 接收缓冲区
@@ -120,7 +120,8 @@ class SerialWorker(QThread):
                                     self.matrix_flag = 1
                                 else:
                                     # result = self.matrix_init - average
-                                    result = average
+                                    result = average - self.matrix_init # zhihao哥板子临时改
+                                    # result = average
                                     clipped_result = np.clip(result, a_min=self.normalization_low, a_max=self.normalization_high)
                                     normalized_result = (clipped_result - self.normalization_low) / (self.normalization_high - self.normalization_low)
                                     result = normalized_result
@@ -301,7 +302,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     
     # 创建主窗口实例
-    main_win = MatrixVisualizer(interplotation=True, rotation_angle=270)
+    main_win = MatrixVisualizer(interplotation=True, rotation_angle=270, flip_horizontal=True, flip_vertical=False)
     main_win.setup_display()
     main_win.resize(800, 800)
     main_win.show()

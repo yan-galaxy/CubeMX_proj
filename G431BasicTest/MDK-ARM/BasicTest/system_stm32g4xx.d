@@ -2,7 +2,7 @@ basictest\system_stm32g4xx.o: ../Core/Src/system_stm32g4xx.c
 basictest\system_stm32g4xx.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 basictest\system_stm32g4xx.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h
 basictest\system_stm32g4xx.o: ../Drivers/CMSIS/Include/core_cm4.h
-basictest\system_stm32g4xx.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+basictest\system_stm32g4xx.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 basictest\system_stm32g4xx.o: ../Drivers/CMSIS/Include/cmsis_version.h
 basictest\system_stm32g4xx.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 basictest\system_stm32g4xx.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -14,7 +14,7 @@ basictest\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_
 basictest\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h
 basictest\system_stm32g4xx.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 basictest\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-basictest\system_stm32g4xx.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
+basictest\system_stm32g4xx.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 basictest\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h
 basictest\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h
 basictest\system_stm32g4xx.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h

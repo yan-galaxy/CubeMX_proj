@@ -1,7 +1,7 @@
 basictest\app_freertos.o: ../Core/Src/app_freertos.c
 basictest\app_freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-basictest\app_freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
-basictest\app_freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+basictest\app_freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+basictest\app_freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 basictest\app_freertos.o: ../Core/Inc/FreeRTOSConfig.h
 basictest\app_freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 basictest\app_freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
@@ -63,9 +63,9 @@ basictest\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/I
 basictest\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 basictest\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h
 basictest\app_freertos.o: ../USB_Device/Target/usbd_conf.h
-basictest\app_freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdio.h
-basictest\app_freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
-basictest\app_freertos.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
+basictest\app_freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+basictest\app_freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+basictest\app_freertos.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 basictest\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 basictest\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 basictest\app_freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h

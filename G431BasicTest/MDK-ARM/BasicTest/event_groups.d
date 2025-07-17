@@ -1,8 +1,8 @@
 basictest\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/event_groups.c
-basictest\event_groups.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
+basictest\event_groups.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 basictest\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-basictest\event_groups.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
-basictest\event_groups.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+basictest\event_groups.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+basictest\event_groups.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 basictest\event_groups.o: ../Core/Inc/FreeRTOSConfig.h
 basictest\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 basictest\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

@@ -3,7 +3,7 @@ basictest\usb_device.o: ../USB_Device/App/usb_device.h
 basictest\usb_device.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 basictest\usb_device.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h
 basictest\usb_device.o: ../Drivers/CMSIS/Include/core_cm4.h
-basictest\usb_device.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+basictest\usb_device.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 basictest\usb_device.o: ../Drivers/CMSIS/Include/cmsis_version.h
 basictest\usb_device.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 basictest\usb_device.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -15,7 +15,7 @@ basictest\usb_device.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h
 basictest\usb_device.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h
 basictest\usb_device.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 basictest\usb_device.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-basictest\usb_device.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
+basictest\usb_device.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 basictest\usb_device.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h
 basictest\usb_device.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h
 basictest\usb_device.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h
@@ -40,9 +40,9 @@ basictest\usb_device.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h
 basictest\usb_device.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h
 basictest\usb_device.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h
 basictest\usb_device.o: ../USB_Device/Target/usbd_conf.h
-basictest\usb_device.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdio.h
-basictest\usb_device.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
-basictest\usb_device.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
+basictest\usb_device.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+basictest\usb_device.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+basictest\usb_device.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 basictest\usb_device.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 basictest\usb_device.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 basictest\usb_device.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h

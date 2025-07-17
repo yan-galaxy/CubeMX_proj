@@ -8,7 +8,7 @@ basictest\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h
 basictest\tim.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 basictest\tim.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h
 basictest\tim.o: ../Drivers/CMSIS/Include/core_cm4.h
-basictest\tim.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+basictest\tim.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 basictest\tim.o: ../Drivers/CMSIS/Include/cmsis_version.h
 basictest\tim.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 basictest\tim.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -16,7 +16,7 @@ basictest\tim.o: ../Drivers/CMSIS/Include/mpu_armv7.h
 basictest\tim.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h
 basictest\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h
 basictest\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-basictest\tim.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
+basictest\tim.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 basictest\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h
 basictest\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h
 basictest\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h
@@ -55,9 +55,9 @@ basictest\tim.o: ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_c
 basictest\tim.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 basictest\tim.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h
 basictest\tim.o: ../USB_Device/Target/usbd_conf.h
-basictest\tim.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdio.h
-basictest\tim.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
-basictest\tim.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
+basictest\tim.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+basictest\tim.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+basictest\tim.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 basictest\tim.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 basictest\tim.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 basictest\tim.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h

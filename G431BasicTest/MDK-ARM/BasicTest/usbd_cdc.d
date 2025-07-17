@@ -3,13 +3,13 @@ basictest\usbd_cdc.o: ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/u
 basictest\usbd_cdc.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 basictest\usbd_cdc.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h
 basictest\usbd_cdc.o: ../USB_Device/Target/usbd_conf.h
-basictest\usbd_cdc.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdio.h
-basictest\usbd_cdc.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
-basictest\usbd_cdc.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
+basictest\usbd_cdc.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+basictest\usbd_cdc.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+basictest\usbd_cdc.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 basictest\usbd_cdc.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 basictest\usbd_cdc.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h
 basictest\usbd_cdc.o: ../Drivers/CMSIS/Include/core_cm4.h
-basictest\usbd_cdc.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+basictest\usbd_cdc.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 basictest\usbd_cdc.o: ../Drivers/CMSIS/Include/cmsis_version.h
 basictest\usbd_cdc.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 basictest\usbd_cdc.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -21,7 +21,7 @@ basictest\usbd_cdc.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h
 basictest\usbd_cdc.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h
 basictest\usbd_cdc.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 basictest\usbd_cdc.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-basictest\usbd_cdc.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
+basictest\usbd_cdc.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 basictest\usbd_cdc.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h
 basictest\usbd_cdc.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h
 basictest\usbd_cdc.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h

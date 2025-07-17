@@ -8,7 +8,7 @@ basictest\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h
 basictest\gpio.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 basictest\gpio.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h
 basictest\gpio.o: ../Drivers/CMSIS/Include/core_cm4.h
-basictest\gpio.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+basictest\gpio.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 basictest\gpio.o: ../Drivers/CMSIS/Include/cmsis_version.h
 basictest\gpio.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 basictest\gpio.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -16,7 +16,7 @@ basictest\gpio.o: ../Drivers/CMSIS/Include/mpu_armv7.h
 basictest\gpio.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h
 basictest\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h
 basictest\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-basictest\gpio.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
+basictest\gpio.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 basictest\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h
 basictest\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h
 basictest\gpio.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h
@@ -55,9 +55,9 @@ basictest\gpio.o: ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_
 basictest\gpio.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 basictest\gpio.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h
 basictest\gpio.o: ../USB_Device/Target/usbd_conf.h
-basictest\gpio.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdio.h
-basictest\gpio.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
-basictest\gpio.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
+basictest\gpio.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+basictest\gpio.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+basictest\gpio.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 basictest\gpio.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 basictest\gpio.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 basictest\gpio.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
