@@ -1,0 +1,12 @@
+basictest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/list.c
+basictest\list.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+basictest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+basictest\list.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+basictest\list.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+basictest\list.o: ../Core/Inc/FreeRTOSConfig.h
+basictest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+basictest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+basictest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+basictest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+basictest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+basictest\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
