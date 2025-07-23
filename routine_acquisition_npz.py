@@ -17,7 +17,7 @@ from datetime import datetime
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 数据就绪信号
     
-    def __init__(self, port='COM8', normalization_low=0, normalization_high=4096):
+    def __init__(self, port='COM13', normalization_low=0, normalization_high=2596):
         super().__init__()
         self.port = port         # 串口号
         self.baudrate = 460800     # 波特率
@@ -302,7 +302,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     
     # 创建主窗口实例
-    main_win = MatrixVisualizer(interplotation=True, rotation_angle=270, flip_horizontal=True, flip_vertical=False)
+    main_win = MatrixVisualizer(interplotation=False, rotation_angle=0, flip_horizontal=True, flip_vertical=False)
     main_win.setup_display()
     main_win.resize(800, 800)
     main_win.show()
