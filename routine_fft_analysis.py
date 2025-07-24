@@ -33,27 +33,42 @@ def perform_fft_analysis(data, sampling_rate=1000):
 def perform_stft_analysis(data, sampling_rate=1000, nperseg=256):
     """执行短时FFT分析"""
     f, t, Zxx = stft(data, fs=sampling_rate, nperseg=nperseg)
-    return f, t, np.abs(Zxx)
+    # return f, t, np.abs(Zxx)
 
-def plot_fft_results(xf, yf, channel=0):
+    # 截取大于5Hz的频率部分
+    indices = np.where(f > 5)[0]
+    return f[indices], t, np.abs(Zxx)[indices, :]
+
+def plot_raw_data(time, signal, channels):
+    """绘制原始数据波形"""
+    plt.figure(figsize=(12, 6))
+    plt.plot(time, signal)
+    plt.title(f'原始数据波形 - 通道 {channels[0]}、{channels[1]}、{channels[2]}、{channels[3]}平均')
+    plt.xlabel('时间 (秒)')
+    plt.ylabel('幅值')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+def plot_fft_results(xf, yf):
     """绘制整体FFT结果"""
     plt.figure(figsize=(12, 6))
-    plt.plot(xf, yf)  # 修改这里，直接使用yf而不是yf[:, channel]
-    plt.title(f'整体FFT分析 - 通道 {channel}')
+    plt.plot(xf, yf)
+    plt.title(f'整体FFT分析')
     plt.xlabel('频率 (Hz)')
     plt.ylabel('幅度')
     plt.grid(True)
     plt.tight_layout()
     plt.show()
 
-def plot_stft_results(f, t, Zxx, channel=0):
+def plot_stft_results(f, t, Zxx):
     """绘制短时FFT结果"""
     plt.figure(figsize=(12, 8))
-    plt.pcolormesh(t, f, Zxx, shading='gouraud')  # 修改这里，直接使用Zxx而不是Zxx[channel]
-    plt.title(f'短时FFT分析 - 通道 {channel}')
+    plt.pcolormesh(t, f, Zxx, shading='gouraud')
+    plt.title(f'短时FFT分析')
     plt.ylabel('频率 (Hz)')
     plt.xlabel('时间 (秒)')
     plt.colorbar(label='幅度')
+    plt.ylim(5, f[-1])  # 设置y轴下限为5Hz
     plt.tight_layout()
     plt.show()
 
@@ -80,17 +95,32 @@ def main():
     
     # 参数设置
     sampling_rate = 1000  # 根据实际采样率修改
-    channel = 44          # 默认分析中间通道
+    # channel = 44          # 默认分析中间通道
+    # analysis_data = data[:, channel]
+    # print(len(analysis_data))
+    # analysis_data = analysis_data[17000:] # 截掉前面还没开始振动的部分
+    channels = [43, 44, 54, 55]  # 中间四个通道
+    # 计算时间轴和平均数据
+    time = np.arange(len(data)) / sampling_rate
+    analysis_data = np.mean(data[:, channels], axis=1)
     
+    
+    
+    # 计算时间轴
+    time = np.arange(len(analysis_data)) / sampling_rate
+    
+    # 绘制原始数据
+    plot_raw_data(time, analysis_data, channels)
+
     # 执行整体FFT分析
-    xf, yf = perform_fft_analysis(data[:, channel], sampling_rate)
+    xf, yf = perform_fft_analysis(analysis_data, sampling_rate)
     
     # 执行短时FFT分析
-    f, t, Zxx = perform_stft_analysis(data[:, channel], sampling_rate)
+    f, t, Zxx = perform_stft_analysis(analysis_data, sampling_rate)
     
     # 绘制结果
-    plot_fft_results(xf, yf, channel)
-    plot_stft_results(f, t, Zxx, channel)
+    plot_fft_results(xf, yf)
+    plot_stft_results(f, t, Zxx)
 
 if __name__ == "__main__":
     main()
