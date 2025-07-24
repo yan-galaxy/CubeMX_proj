@@ -289,7 +289,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     
     # 创建主窗口实例
-    main_win = MatrixVisualizer(interplotation=True, rotation_angle=270)
+    main_win = MatrixVisualizer(interplotation=False, rotation_angle=270)
     main_win.setup_display()
     main_win.resize(800, 800)
     main_win.show()
