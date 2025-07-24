@@ -68,7 +68,7 @@ class WaveformVisualizer(QMainWindow):
         self.plot = self.central_widget.addPlot(title="传感器数据波形")
         self.plot.setLabels(left='数值', bottom='时间序号')
         self.plot.showGrid(x=True, y=True)
-        self.plot.setYRange(0, 4.0)  # 固定Y轴范围为0~1.0
+        self.plot.setYRange(0, 1.2)  # 固定Y轴范围为0~1.0
         
         # 创建曲线对象
         self.curve = self.plot.plot(pen='y')
@@ -92,7 +92,7 @@ class WaveformVisualizer(QMainWindow):
         # 定时器配置（每ms更新一次）
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update_plot)
-        self.timer.start(1)  # 20FPS
+        self.timer.start(4)  # 20FPS
 
     def load_npz_data(self, npz_path):
         """加载NPZ文件数据并处理为normal_result格式"""
@@ -102,7 +102,9 @@ class WaveformVisualizer(QMainWindow):
                 if 'data' in data:
                     # 对每个数据帧进行处理
                     for row in data['data']:
+                        # print(row.shape)
                         processed = self.processor.process_frame(row)
+                        # print(processed.shape)
                         # 拆分为 10 个子帧，每个形状为 (10, 10)
                         for i in range(10):
                             subframe = processed[i]  # 形状为 (10, 10)
@@ -120,18 +122,19 @@ class WaveformVisualizer(QMainWindow):
             print("数据播放已完成")
             return
             
-        current_data = self.data_frames[self.current_frame]
-        # print(len(current_data))
+        new_data = []
 
-        # 计算当前帧总和并添加到累积数据列表
-        frame_sum = np.sum(current_data)
-        # 中心四个点的和
-        center_sum = current_data[44]+current_data[45]+current_data[54]+current_data[55]
-        self.summed_data.append(frame_sum)
-        self.show_data.append(center_sum)
+        for _ in range(4): # 每次处理2帧数据
+            if self.current_frame >= len(self.data_frames):
+                break
+            current_data = self.data_frames[self.current_frame]
+            # center_sum = (current_data[44] + current_data[45] + current_data[54] + current_data[55]) / 4.0  # 提取中间四个点：44, 45, 54, 55
+            center_sum = current_data[44]  # 使用第 44 个点的数据
+            new_data.append(center_sum)
+            self.current_frame += 1
 
-         # 限制数据长度（滑动窗口）
-        self.show_data = self.show_data[1:]
+        # 删除旧数据，添加新数据
+        self.show_data = self.show_data[len(new_data):] + new_data
         
 
         # 更新波形（使用累积数据）
@@ -139,9 +142,6 @@ class WaveformVisualizer(QMainWindow):
         y_data = np.array(self.show_data)
 
         self.curve.setData(x_data, y_data)
-
-        # # 更新波形
-        # self.curve.setData(np.arange(len(current_data)), current_data)
         
         # 更新标题显示当前帧号
         self.plot.setTitle(f"传感器数据波形 - 第 {self.current_frame + 1} 帧")

@@ -26,7 +26,7 @@ class RoutineWaveformVisualizer(QMainWindow):
         self.curve = self.plot.plot(pen='y')
 
         # 存储波形数据
-        self.show_data = []
+        self.show_data = [0] * 3000
 
         # 性能监控
         self.frame_count = 0
@@ -35,7 +35,7 @@ class RoutineWaveformVisualizer(QMainWindow):
         # 定时器配置（每 1ms 更新一次）
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update_plot)
-        self.timer.start(1)  # 1ms 间隔
+        self.timer.start(4)  # 1ms 间隔
 
         # 加载数据
         self.data_frames = self.load_npz_data(npz_path)
@@ -45,53 +45,50 @@ class RoutineWaveformVisualizer(QMainWindow):
 
     def load_npz_data(self, npz_path):
         """加载NPZ文件中的数据帧"""
+        data_frames = []
         try:
             with np.load(npz_path) as data:
                 if 'data' in data:
-                    raw_data = data['data']
-                    print(f"成功加载 {len(raw_data)} 帧数据")
-                    return raw_data
+                    for row in data['data']:
+                        # 拆分为 10 个子帧，每个形状为 (10, 10)
+                        for i in range(10):
+                            start = i * 100
+                            end = start + 100
+                            subframe = row[start:end]  # shape: (100,)
+                            data_frames.append(subframe)
+                    print(f"成功加载 {len(data_frames)} 帧数据")
+                    return data_frames
         except Exception as e:
             print(f"加载NPZ文件失败: {e}")
             return []
 
     def update_plot(self):
-        """定时更新波形"""
+        """定时更新波形，每次处理 10 帧数据"""
         if self.current_frame >= len(self.data_frames):
             self.timer.stop()
             print("数据播放已完成")
             self.convert_npz_to_csv()
             return
 
-        current_data = self.data_frames[self.current_frame]
+        new_data = []
 
-        # print(len(current_data))
+        for _ in range(4): # 每次处理2帧数据
+            if self.current_frame >= len(self.data_frames):
+                break
+            current_data = self.data_frames[self.current_frame]
+            # center_sum = (current_data[44] + current_data[45] + current_data[54] + current_data[55]) / 4.0  # 提取中间四个点：44, 45, 54, 55
+            center_sum = current_data[44]  # 使用第 44 个点的数据
+            new_data.append(center_sum)
+            self.current_frame += 1
 
-        # # 提取中间四个点：44, 45, 54, 55
-        # # center_sum = (current_data[44] + current_data[45] + current_data[54] + current_data[55]) / 4.0
-        # center_sum = ( current_data[44] + current_data[144] + current_data[244] + current_data[344] + current_data[444] +
-        #               current_data[544] + current_data[644] + current_data[744] + current_data[844] + current_data[944] ) / 10.0
-
-        # # 添加到波形数据中并限制长度（滑动窗口）
-        # self.show_data.append(center_sum)
-
-        INDEX_NUM = 45
-        # 获取10个点的索引
-        indices = [INDEX_NUM, 100+INDEX_NUM, 200+INDEX_NUM, 300+INDEX_NUM, 400+INDEX_NUM, 500+INDEX_NUM, 600+INDEX_NUM, 700+INDEX_NUM, 800+INDEX_NUM, 900+INDEX_NUM]
-
-        # 将这10个点的值分别添加到 show_data 中
-        for idx in indices:
-            self.show_data.append(current_data[idx])
-
-
-        if len(self.show_data) > 10000:  # 保持最多*个点
-            self.show_data = self.show_data[-10000:]
+        # 删除旧数据，添加新数据
+        self.show_data = self.show_data[len(new_data):] + new_data
 
         # 更新波形
         x_data = np.arange(len(self.show_data))
         y_data = np.array(self.show_data)
-
         self.curve.setData(x_data, y_data)
+
 
         # 更新标题
         self.plot.setTitle(f"中间四个点波形 - 第 {self.current_frame + 1} 帧")
@@ -118,24 +115,22 @@ class RoutineWaveformVisualizer(QMainWindow):
 
         try:
             with open(csv_path, 'w', newline='') as f:
-                # 将 data_frames 转换为 NumPy 数组
-                data_array = np.array(self.data_frames)  # shape: (N, 1000)
-                N = data_array.shape[0]  # 总帧数（大帧）
-                M = N * 10  # 总时刻数 = 每帧 10 个小帧
+                # 当前 data_frames 是 (M, 100)，每个元素是一个小帧
+                data_length = len(self.data_frames)  # 总时刻数 = 小帧数
 
                 # 构建时间序列数据：(M, 100)
-                time_series_data = np.empty((M, 100), dtype=data_array.dtype)
+                time_series_data = []
 
-                # 填充数据
-                for frame_idx in range(N):
-                    for subframe_idx in range(10):
-                        time_idx = frame_idx * 10 + subframe_idx
-                        start = subframe_idx * 100
-                        end = start + 100
-                        time_series_data[time_idx] = data_array[frame_idx, start:end]
+                # 按顺序添加所有小帧数据
+                for time_idx in range(data_length):
+                    subframe = self.data_frames[time_idx]  # shape: (100,)
+                    time_series_data.append(subframe)
+
+                # 转换为 NumPy 数组
+                time_series_data = np.array(time_series_data)  # shape: (data_length, 100)
 
                 # 写入 CSV：每行是一个时刻的 100 个点位
-                for time_idx in range(M):
+                for time_idx in range(data_length):
                     line = ','.join(map(str, time_series_data[time_idx]))
                     f.write(line + '\n')
 
