@@ -103,6 +103,7 @@ def main():
     # 计算时间轴和平均数据
     time = np.arange(len(data)) / sampling_rate
     analysis_data = np.mean(data[:, channels], axis=1)
+    # analysis_data = analysis_data[17000:] # 截掉前面还没开始振动的部分
     
     
     
