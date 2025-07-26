@@ -1,4 +1,4 @@
-# INCRMA_data_replay_npz.py
+# INCRMA_data_replay.py
 import sys
 import numpy as np
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
@@ -60,10 +60,10 @@ class DataProcessor:
             return normal_result
 
 class PlaybackVisualizer(QMainWindow):
-    def __init__(self, npz_path, interplotation=False, rotation_angle=0, flip_horizontal=False, flip_vertical=False):
+    def __init__(self, file_path, interpolation=False, rotation_angle=0, flip_horizontal=False, flip_vertical=False):
         super().__init__()
         # 显示配置
-        self.interplotation = interplotation
+        self.interpolation = interpolation
         self.rotation_angle = rotation_angle
         self.flip_horizontal = flip_horizontal
         self.flip_vertical = flip_vertical
@@ -72,7 +72,7 @@ class PlaybackVisualizer(QMainWindow):
         self.central_widget = pg.GraphicsLayoutWidget()
         self.setCentralWidget(self.central_widget)
         self.image_item = pg.ImageItem()
-        self.plot = self.central_widget.addPlot(title="NPZ数据回放")
+        self.plot = self.central_widget.addPlot(title="数据回放")
         self.plot.addItem(self.image_item)
         self.color_map = pg.colormap.get('viridis')
         self.image_item.setColorMap(self.color_map)
@@ -88,7 +88,7 @@ class PlaybackVisualizer(QMainWindow):
         
         # 数据加载
         self.processor = DataProcessor()
-        self.data_frames = self.load_npz_data(npz_path)
+        self.data_frames = self.load_data(file_path)
         self.current_frame = 0
         
         # 性能监控
@@ -99,6 +99,16 @@ class PlaybackVisualizer(QMainWindow):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update_plot)
         self.timer.start(10)  # 10ms对应100FPS
+
+    def load_data(self, file_path):
+        """根据文件扩展名自动选择加载方式"""
+        _, ext = os.path.splitext(file_path)
+        if ext.lower() == '.npz':
+            return self.load_npz_data(file_path)
+        elif ext.lower() == '.csv':
+            return self.load_csv_data(file_path)
+        else:
+            raise ValueError(f"不支持的文件格式: {ext}")
 
     def load_npz_data(self, npz_path):
         """加载NPZ文件数据"""
@@ -116,6 +126,25 @@ class PlaybackVisualizer(QMainWindow):
                     data_frames = [row for row in data['data']]
         except Exception as e:
             print(f"加载NPZ文件失败: {e}")
+        return data_frames
+
+    def load_csv_data(self, csv_path):
+        """CSV文件加载逻辑"""
+        data_frames = []
+        try:
+            # 假设CSV每行一个数据点（跳过首行）
+            data = np.loadtxt(csv_path, delimiter=',', skiprows=1)
+            total_points = data.size
+            
+            # 数据校验
+            if total_points % 2100 != 0:
+                raise ValueError(f"CSV数据总量({total_points})不是2100的整数倍")
+                
+            # 按每帧2100个数据点切割
+            frame_count = total_points // 2100
+            data_frames = [data[i*2100:(i+1)*2100] for i in range(frame_count)]
+        except Exception as e:
+            print(f"加载CSV文件失败: {e}")
         return data_frames
 
     def update_plot(self):
@@ -145,7 +174,7 @@ class PlaybackVisualizer(QMainWindow):
             processed = np.flipud(processed)
             
         # 插值处理
-        if self.interplotation:
+        if self.interpolation:
             interpolated = zoom(processed, (5, 5), order=3)
             self.image_item.setImage(interpolated, levels=(0.0, 1.0))
         else:
@@ -170,16 +199,22 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     
     # 弹出文件选择对话框
-    npz_path, _ = QFileDialog.getOpenFileName(
+    file_path, _ = QFileDialog.getOpenFileName(
         None,
-        "选择NPZ文件",
+        "选择数据文件",
         "INCRMA_raw_data",
-        "NPZ文件 (*.npz)"
+        "NPZ文件 (*.npz);;CSV文件 (*.csv)"  # 支持两种格式
     )
     
     # 如果用户取消选择，退出程序
-    if not npz_path:
+    if not file_path:
         print("未选择文件，程序退出。")
+        sys.exit(1)
+    
+    # 文件类型校验
+    file_ext = os.path.splitext(file_path)[1].lower()
+    if file_ext not in ['.npz', '.csv']:
+        print(f"不支持的文件类型: {file_ext}")
         sys.exit(1)
     
     # 配置回放参数
@@ -190,8 +225,8 @@ if __name__ == "__main__":
     
     # 创建并显示窗口
     main_win = PlaybackVisualizer(
-        npz_path,
-        interplotation=INTERPOLATION,
+        file_path,
+        interpolation=INTERPOLATION,
         rotation_angle=ROTATION,
         flip_horizontal=FLIP_H,
         flip_vertical=FLIP_V
