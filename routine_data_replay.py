@@ -24,7 +24,7 @@ class DataProcessor:
         """
         # 将 frame 转换为 NumPy 数组并计算沿 axis=0 的平均值
         avg_frame = np.mean(np.array(frame), axis=0)
-
+        # avg_frame[44]=3000 
         # 转换为10x10矩阵
         matrix = avg_frame.reshape(10, 10).astype(float)
         
@@ -35,7 +35,7 @@ class DataProcessor:
             # 新增：计算并保存初始矩阵的平均值
             self.matrix_avg = np.mean(self.matrix_init)
             return np.zeros((10, 10))  # 初始帧返回零矩阵
-            
+        # matrix[4][8]=3000    
         # 差值计算
         result = matrix - self.matrix_init
         
