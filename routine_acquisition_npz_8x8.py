@@ -33,7 +33,7 @@ class SerialWorker(QThread):
         self.normalization_high = normalization_high
 
         # 原始数据本地保存
-        self.save_dir = "Routine_acq_raw_data"
+        self.save_dir = "Routine_acq_raw_data_8x8"
         self.raw_data_queue = Queue()
         self.writer_thread = None
         self.is_saving = False
@@ -47,7 +47,7 @@ class SerialWorker(QThread):
             
         # 使用时间戳命名文件
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.npz_path = os.path.join(self.save_dir, f"raw_data_{timestamp}.npz")
+        self.npz_path = os.path.join(self.save_dir, f"raw_data_8x8_{timestamp}.npz")
         
         # 启动后台写入线程
         self.is_saving = True
@@ -78,7 +78,7 @@ class SerialWorker(QThread):
         if len(self.data_buffer) > 0:
             # 添加元数据信息
             metadata = {
-                'description': 'INCRMA原始传感器数据',
+                'description': '8x8原始传感器数据',
                 'format_version': '1.0',
                 'normalization_range': [self.normalization_low, self.normalization_high],
                 'timestamp': datetime.now().isoformat()
@@ -154,13 +154,13 @@ class SerialWorker(QThread):
                                     # self.data_ready.emit(result.tolist())
                                     self.data_ready.emit(result.flatten().tolist())
 
-                                # # 打印结果（已保留三位小数）
-                                # with np.printoptions(precision=3, suppress=True):
-                                #     print('avg_matrix:\n', average)
-                                #     # 计算均值和标准差
-                                #     avg_mean = np.mean(average)
-                                #     avg_std = np.std(average)
-                                #     print(f'均值: {avg_mean:.3f}, 标准差: {avg_std:.3f}')
+                                # 打印结果（已保留三位小数）
+                                with np.printoptions(precision=3, suppress=True):
+                                    print('avg_matrix:\n', average)
+                                    # 计算均值和标准差
+                                    avg_mean = np.mean(average)
+                                    avg_std = np.std(average)
+                                    print(f'均值: {avg_mean:.3f}, 标准差: {avg_std:.3f}')
 
                             else:
                                 print('当前帧串口数据不完整')
