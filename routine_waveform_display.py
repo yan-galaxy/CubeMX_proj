@@ -77,7 +77,7 @@ class RoutineWaveformVisualizer(QMainWindow):
                 break
             current_data = self.data_frames[self.current_frame]
             # center_sum = (current_data[44] + current_data[45] + current_data[54] + current_data[55]) / 4.0  # 提取中间四个点：44, 45, 54, 55
-            center_sum = current_data[48]  # 使用第 44 个点的数据
+            center_sum = current_data[44]  # 使用第 44 个点的数据
             new_data.append(center_sum)
             self.current_frame += 1
 
