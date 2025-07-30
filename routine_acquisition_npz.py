@@ -17,7 +17,7 @@ from datetime import datetime
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 数据就绪信号
     
-    def __init__(self, port='COM14', normalization_low=0, normalization_high=2596):
+    def __init__(self, port='COM14', normalization_low=0, normalization_high=600):
         super().__init__()
         self.port = port         # 串口号
         self.baudrate = 460800     # 波特率
