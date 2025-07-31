@@ -47,6 +47,14 @@ class DataProcessor:
         # 均值计算
         avg_matrix = np.mean(INCRMA_normalized, axis=0)
         
+        # 打印结果（已保留三位小数）
+        with np.printoptions(precision=3, suppress=True, formatter={'all': lambda x: f"{x:.3f}"}):
+            print('avg_matrix:\n', avg_matrix)
+            # 计算均值和标准差
+            avg_mean = np.mean(avg_matrix)
+            avg_std = np.std(avg_matrix)
+            print(f'均值: {avg_mean:.3f}, 标准差: {avg_std:.3f}')
+
         # 差值计算
         if self.matrix_flag == 0:
             self.matrix_init = avg_matrix.copy()

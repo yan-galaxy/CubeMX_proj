@@ -127,7 +127,7 @@ class SerialWorker(QThread):
                                     result = normalized_result
                                     self.data_ready.emit(result.tolist())
                                 # 打印结果（已保留三位小数）
-                                with np.printoptions(precision=3, suppress=True):
+                                with np.printoptions(precision=3, suppress=True, formatter={'all': lambda x: f"{x:.3f}"}):
                                     print('avg_matrix:\n', average)
                                     # 计算均值和标准差
                                     avg_mean = np.mean(average)

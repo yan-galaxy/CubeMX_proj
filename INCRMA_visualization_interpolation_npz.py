@@ -14,6 +14,9 @@ import os
 import threading
 from datetime import datetime
 
+# 设置全局打印选项，禁止科学计数法
+np.set_printoptions(precision=3, suppress=True)
+
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 数据就绪信号
     
@@ -147,7 +150,7 @@ class SerialWorker(QThread):
                                 
                                 avg_matrix = np.mean(INCRMA_normalized, axis=0)
                                 # 打印结果（已保留三位小数）
-                                with np.printoptions(precision=3, suppress=True):
+                                with np.printoptions(precision=3, suppress=True, formatter={'all': lambda x: f"{x:.3f}"}):
                                     print('avg_matrix:\n', avg_matrix)
                                     # 计算均值和标准差
                                     avg_mean = np.mean(avg_matrix)
