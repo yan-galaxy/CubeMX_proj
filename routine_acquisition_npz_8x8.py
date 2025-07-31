@@ -204,7 +204,7 @@ class MatrixVisualizer(QMainWindow):
         
         # 初始化图像显示区域
         self.image_item = pg.ImageItem()
-        self.plot = self.central_widget.addPlot(title="10x10传感器数据矩阵")
+        self.plot = self.central_widget.addPlot(title="8x8传感器数据矩阵")
         self.plot.addItem(self.image_item)
         self.plot.setLabels(left='Y轴', bottom='X轴')
 
@@ -217,7 +217,7 @@ class MatrixVisualizer(QMainWindow):
         
         # 初始化数据矩阵
         # self.data = np.zeros((10, 10))  # 10x10的初始数据
-        self.data = np.zeros((8, 8))  # 10x10的初始数据
+        self.data = np.zeros((8, 8))  # 8x8的初始数据
         
         # 初始化串口数据队列和线程
         self.data_queue = Queue()

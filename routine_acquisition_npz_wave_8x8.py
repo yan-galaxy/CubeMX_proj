@@ -16,7 +16,7 @@ class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 用于图像更新
     waveform_ready = pyqtSignal(list)  # 用于波形更新
 
-    def __init__(self, port='COM9', normalization_low=0, normalization_high=2500):
+    def __init__(self, port='COM9', normalization_low=0, normalization_high=2550):
         super().__init__()
         self.port = port
         self.baudrate = 460800
@@ -31,7 +31,7 @@ class SerialWorker(QThread):
         self.normalization_low = normalization_low
         self.normalization_high = normalization_high
 
-        self.save_dir = "Routine_acq_raw_data"
+        self.save_dir = "Routine_acq_raw_data_8x8"
         self.raw_data_queue = Queue()
         self.writer_thread = None
         self.is_saving = False
@@ -42,7 +42,7 @@ class SerialWorker(QThread):
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.npz_path = os.path.join(self.save_dir, f"raw_data_{timestamp}.npz")
+        self.npz_path = os.path.join(self.save_dir, f"raw_data_8x8_{timestamp}.npz")
         self.is_saving = True
         self.writer_thread = threading.Thread(target=self.write_raw_data_to_file, daemon=True)
         self.writer_thread.start()
@@ -63,7 +63,7 @@ class SerialWorker(QThread):
         print('正在保存缓冲区数据到npz文件')
         if len(self.data_buffer) > 0:
             metadata = {
-                'description': 'INCRMA原始传感器数据',
+                'description': '常规采集8x8传感器数据',
                 'format_version': '1.0',
                 'normalization_range': [self.normalization_low, self.normalization_high],
                 'timestamp': datetime.now().isoformat()
@@ -90,7 +90,43 @@ class SerialWorker(QThread):
                             if len(parsed) == 1000:
                                 self.raw_data_queue.put(parsed.copy())
                                 frames = parsed.reshape(10, 100)
-                                average = np.mean(frames, axis=0)
+                                average = np.mean(frames, axis=0).reshape(10, 10)
+                                average = average[2:, 2:]
+                                matrix_8x8 = average
+
+                                # 定义8x8映射表
+                                # mapping = [
+                                #     [(0,0), (0,1), (0,4), (0,5), (1,0), (1,1), (1,4), (1,5)],
+                                #     [(0,3), (0,2), (0,7), (0,6), (1,3), (1,2), (1,7), (1,6)],
+                                #     [(2,0), (2,1), (2,4), (2,5), (3,0), (3,1), (3,4), (3,5)],
+                                #     [(2,3), (2,2), (2,7), (2,6), (3,3), (3,2), (3,7), (3,6)],
+                                #     [(4,0), (4,1), (4,4), (4,5), (5,0), (5,1), (5,4), (5,5)],
+                                #     [(4,3), (4,2), (4,7), (4,6), (5,3), (5,2), (5,7), (5,6)],
+                                #     [(6,0), (6,1), (6,4), (6,5), (7,0), (7,1), (7,4), (7,5)],
+                                #     [(6,3), (6,2), (6,7), (6,6), (7,3), (7,2), (7,7), (7,6)],
+                                # ]
+
+                                # 更新的映射表，之前的每个小圆的左右反了
+                                mapping = [
+                                    [(0,1), (0,0), (0,5), (0,4), (1,1), (1,0), (1,5), (1,4)],
+                                    [(0,2), (0,3), (0,6), (0,7), (1,2), (1,3), (1,6), (1,7)],
+                                    [(2,1), (2,0), (2,5), (2,4), (3,1), (3,0), (3,5), (3,4)],
+                                    [(2,2), (2,3), (2,6), (2,7), (3,2), (3,3), (3,6), (3,7)],
+                                    [(4,1), (4,0), (4,5), (4,4), (5,1), (5,0), (5,5), (5,4)],
+                                    [(4,2), (4,3), (4,6), (4,7), (5,2), (5,3), (5,6), (5,7)],
+                                    [(6,1), (6,0), (6,5), (6,4), (7,1), (7,0), (7,5), (7,4)],
+                                    [(6,2), (6,3), (6,6), (6,7), (7,2), (7,3), (7,6), (7,7)],
+                                ]
+
+                                # 创建目标8x8矩阵
+                                target_matrix = np.zeros((8, 8))
+
+                                for i in range(8):
+                                    for j in range(8):
+                                        x, y = mapping[i][j]
+                                        target_matrix[i][j] = matrix_8x8[x][y]
+
+                                average = target_matrix.flatten()
 
                                 if self.matrix_flag == 0:
                                     self.matrix_init = average.copy()
@@ -100,12 +136,19 @@ class SerialWorker(QThread):
                                     clipped_result = np.clip(result, self.normalization_low, self.normalization_high)
                                     normalized_result = (clipped_result - self.normalization_low) / (self.normalization_high - self.normalization_low)
                                     
-                                    # average[55]=4095 # 中心左上 44   中心左下45   中心右上54   中心右下55
-    
+                                    # average[42]=4095 # 中心左上 42   中心左下43   中心右上34   中心右下35
                                     self.waveform_ready.emit(average.tolist())
                                     # average = average/4096.0
+                                    # self.data_ready.emit(average.tolist())
                                     self.data_ready.emit(normalized_result.tolist())# normalized_result.tolist()    average.tolist()
-                                    
+                                
+                                # # 打印结果（已保留三位小数）
+                                # with np.printoptions(precision=3, suppress=True):
+                                #     print('avg_matrix:\n', average)
+                                #     # 计算均值和标准差
+                                #     avg_mean = np.mean(average)
+                                #     avg_std = np.std(average)
+                                #     print(f'均值: {avg_mean:.3f}, 标准差: {avg_std:.3f}')
 
                             self.buffer = self.buffer[end_index + len(self.FRAME_TAIL):]
                             start_index = self.buffer.find(self.FRAME_HEADER)
@@ -131,8 +174,8 @@ class RoutineWaveformVisualizer:
         self.show_data = [0] * 300
 
     def update_plot(self, new_row):
-        if len(new_row) == 100:
-            center_sum = new_row[55]  # 使用第48个通道
+        if len(new_row) == 64:
+            center_sum = new_row[34]  # 使用第48个通道
             new_data = [center_sum]
             self.show_data = self.show_data[len(new_data):] + new_data
 
@@ -150,7 +193,7 @@ class MatrixVisualizer:
         self.flip_vertical = flip_vertical
 
         self.image_item = pg.ImageItem()
-        self.plot = pg.PlotItem(title="10x10传感器数据矩阵")
+        self.plot = pg.PlotItem(title="8x8传感器数据矩阵")
         self.plot.addItem(self.image_item)
         self.plot.setLabels(left='Y轴', bottom='X轴')
         self.layout.addItem(self.plot, 0, 0)
@@ -158,7 +201,8 @@ class MatrixVisualizer:
         self.color_map = pg.colormap.get('viridis')
         self.image_item.setColorMap(self.color_map)
 
-        self.data = np.zeros((10, 10))
+        # self.data = np.zeros((10, 10))
+        self.data = np.zeros((8, 8))  # 8x8的初始数据
         self.fps_label = pg.LabelItem(justify='left')
         self.layout.addItem(self.fps_label, 1, 0)
 
@@ -166,8 +210,8 @@ class MatrixVisualizer:
         self.start_time = QtCore.QTime.currentTime()
 
     def receive_data(self, new_row):
-        if len(new_row) == 100:
-            self.data = np.array(new_row).reshape(10, 10)
+        if len(new_row) == 64:
+            self.data = np.array(new_row).reshape(8, 8)
 
             if self.rotation_angle == 90:
                 self.data = np.rot90(self.data, 1)
@@ -207,7 +251,7 @@ class MainWindow(QMainWindow):
 
         # 创建图像显示组件
         self.image_layout = pg.GraphicsLayoutWidget()
-        self.image_visualizer = MatrixVisualizer(self.image_layout, interplotation=False, rotation_angle=0, flip_horizontal=True, flip_vertical=False)
+        self.image_visualizer = MatrixVisualizer(self.image_layout, interplotation=False, rotation_angle=0, flip_horizontal=True, flip_vertical=True)
         self.central_widget.addWidget(self.image_layout)
 
         # 创建波形显示组件
