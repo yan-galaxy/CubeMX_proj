@@ -132,19 +132,21 @@ void StartDefaultTask(void const * argument)
 	HAL_GPIO_WritePin(SEL9_GPIO_Port, SEL9_Pin, 1);
 	HAL_GPIO_WritePin(SEL10_GPIO_Port,SEL10_Pin,1);
 	
-	AD5206_SetResistance(1,4,35);//Rref  10-0.576V   25-1.097V
+	//鍾鏗饜离ㄩ35 200  講最湮饜离ㄩ5 50
+	
+	AD5206_SetResistance(1,4,5);//Rref  10-0.576V   25-1.097V   
 	
 	//50 200
-	AD5206_SetResistance(1,5,200);//OUT1
-	AD5206_SetResistance(0,4,200);//OUT2
-	AD5206_SetResistance(1,2,200);//OUT3 50-1.95k次 100-3.85k次
-	AD5206_SetResistance(1,0,200);//OUT4
-	AD5206_SetResistance(1,3,200);//OUT5
-	AD5206_SetResistance(1,1,200);//OUT6
-	AD5206_SetResistance(0,0,200);//OUT7
-	AD5206_SetResistance(0,2,200);//OUT8
-	AD5206_SetResistance(0,1,200);//OUT9
-	AD5206_SetResistance(0,3,200);//OUT10
+	AD5206_SetResistance(1,5,50);//OUT1
+	AD5206_SetResistance(0,4,50);//OUT2
+	AD5206_SetResistance(1,2,50);//OUT3 50-1.95k次 100-3.85k次
+	AD5206_SetResistance(1,0,50);//OUT4
+	AD5206_SetResistance(1,3,50);//OUT5
+	AD5206_SetResistance(1,1,50);//OUT6
+	AD5206_SetResistance(0,0,50);//OUT7
+	AD5206_SetResistance(0,2,50);//OUT8
+	AD5206_SetResistance(0,1,50);//OUT9
+	AD5206_SetResistance(0,3,50);//OUT10
 	
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)(&(adc_value_struct.IN2)), 5);
 	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)(&(adc_value_struct.IN1)), 5);
