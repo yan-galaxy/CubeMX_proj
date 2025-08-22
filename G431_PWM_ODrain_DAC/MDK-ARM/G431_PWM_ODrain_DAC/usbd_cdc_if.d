@@ -32,6 +32,8 @@ g431_pwm_odrain_dac\usbd_cdc_if.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx
 g431_pwm_odrain_dac\usbd_cdc_if.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h
 g431_pwm_odrain_dac\usbd_cdc_if.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h
 g431_pwm_odrain_dac\usbd_cdc_if.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h
+g431_pwm_odrain_dac\usbd_cdc_if.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h
+g431_pwm_odrain_dac\usbd_cdc_if.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h
 g431_pwm_odrain_dac\usbd_cdc_if.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h
 g431_pwm_odrain_dac\usbd_cdc_if.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h
 g431_pwm_odrain_dac\usbd_cdc_if.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h

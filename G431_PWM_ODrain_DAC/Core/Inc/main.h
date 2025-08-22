@@ -33,6 +33,7 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
 #include "stdio.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -43,7 +44,10 @@ extern "C" {
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 extern TIM_HandleTypeDef htim2;
+extern TIM_HandleTypeDef htim3;
 extern ADC_HandleTypeDef hadc2;
+extern DAC_HandleTypeDef hdac1;
+extern DAC_HandleTypeDef hdac2;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

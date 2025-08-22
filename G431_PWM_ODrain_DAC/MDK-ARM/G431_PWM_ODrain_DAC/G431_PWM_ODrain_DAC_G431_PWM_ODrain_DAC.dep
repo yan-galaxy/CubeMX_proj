@@ -1,10 +1,10 @@
 Dependencies for Project 'G431_PWM_ODrain_DAC', Target 'G431_PWM_ODrain_DAC': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
-F (startup_stm32g431xx.s)(0x68A728EE)(--cpu Cortex-M4.fp.sp -g --apcs=interwork --pd "__MICROLIB SETA 1" -I ..\Core\Inc-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include--pd "__UVISION_VERSION SETA 536" --pd "_RTE_ SETA 1" --pd "STM32G431xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32g431xx.lst --xref -o g431_pwm_odrain_dac\startup_stm32g431xx.o --depend g431_pwm_odrain_dac\startup_stm32g431xx.d)
-F (../Core/Src/main.c)(0x68A728E7)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\main.o --omf_browse g431_pwm_odrain_dac\main.crf --depend g431_pwm_odrain_dac\main.d)
-I (../Core/Inc/main.h)(0x68A70AC4)
+F (startup_stm32g431xx.s)(0x68A8252D)(--cpu Cortex-M4.fp.sp -g --apcs=interwork --pd "__MICROLIB SETA 1" -I ..\Core\Inc-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include--pd "__UVISION_VERSION SETA 536" --pd "_RTE_ SETA 1" --pd "STM32G431xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32g431xx.lst --xref -o g431_pwm_odrain_dac\startup_stm32g431xx.o --depend g431_pwm_odrain_dac\startup_stm32g431xx.d)
+F (../Core/Src/main.c)(0x68A7E7B7)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\main.o --omf_browse g431_pwm_odrain_dac\main.crf --depend g431_pwm_odrain_dac\main.d)
+I (../Core/Inc/main.h)(0x68A81B7D)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -27,6 +27,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -63,15 +65,16 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x673FF96D)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h)(0x673FF96D)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x673FF96D)
 I (../Core/Inc/adc.h)(0x68A7094D)
+I (../Core/Inc/dac.h)(0x68A7DEDA)
 I (../Core/Inc/dma.h)(0x68A7094E)
-I (../Core/Inc/tim.h)(0x68A70A60)
+I (../Core/Inc/tim.h)(0x68A7DF2E)
 I (../USB_Device/App/usb_device.h)(0x68A7094E)
 I (../Core/Inc/gpio.h)(0x68A70949)
 F (../Core/Src/gpio.c)(0x68A70A5D)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\gpio.o --omf_browse g431_pwm_odrain_dac\gpio.crf --depend g431_pwm_odrain_dac\gpio.d)
 I (../Core/Inc/gpio.h)(0x68A70949)
-I (../Core/Inc/main.h)(0x68A70AC4)
+I (../Core/Inc/main.h)(0x68A81B7D)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -94,6 +97,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -115,7 +120,7 @@ I (C:\software\study\keil\ARM\ARMCC\include\stdlib.h)(0x60252374)
 I (C:\software\study\keil\ARM\ARMCC\include\string.h)(0x6025237E)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x673FF96D)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x673FF96D)
-F (../Core/Src/app_freertos.c)(0x68A70EB7)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\app_freertos.o --omf_browse g431_pwm_odrain_dac\app_freertos.crf --depend g431_pwm_odrain_dac\app_freertos.d)
+F (../Core/Src/app_freertos.c)(0x68A8522F)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\app_freertos.o --omf_browse g431_pwm_odrain_dac\app_freertos.crf --depend g431_pwm_odrain_dac\app_freertos.d)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x673FF96D)
 I (C:\software\study\keil\ARM\ARMCC\include\stddef.h)(0x6025237E)
 I (C:\software\study\keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
@@ -127,9 +132,9 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x673FF96D)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x673FF96D)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x673FF96D)
-I (../Core/Inc/main.h)(0x68A70AC4)
+I (../Core/Inc/main.h)(0x68A81B7D)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -150,6 +155,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -176,11 +183,11 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h)(0x673FF96D)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x673FF96D)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h)(0x673FF96D)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x673FF96D)
-F (../Core/Src/adc.c)(0x68A7094D)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\adc.o --omf_browse g431_pwm_odrain_dac\adc.crf --depend g431_pwm_odrain_dac\adc.d)
+F (../Core/Src/adc.c)(0x68A7EC92)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\adc.o --omf_browse g431_pwm_odrain_dac\adc.crf --depend g431_pwm_odrain_dac\adc.d)
 I (../Core/Inc/adc.h)(0x68A7094D)
-I (../Core/Inc/main.h)(0x68A70AC4)
+I (../Core/Inc/main.h)(0x68A81B7D)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -203,6 +210,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -224,11 +233,61 @@ I (C:\software\study\keil\ARM\ARMCC\include\stdlib.h)(0x60252374)
 I (C:\software\study\keil\ARM\ARMCC\include\string.h)(0x6025237E)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x673FF96D)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x673FF96D)
-F (../Core/Src/dma.c)(0x68A7094E)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\dma.o --omf_browse g431_pwm_odrain_dac\dma.crf --depend g431_pwm_odrain_dac\dma.d)
+F (../Core/Src/dac.c)(0x68A82521)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\dac.o --omf_browse g431_pwm_odrain_dac\dac.crf --depend g431_pwm_odrain_dac\dac.d)
+I (../Core/Inc/dac.h)(0x68A7DEDA)
+I (../Core/Inc/main.h)(0x68A81B7D)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
+I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
+I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x673FF987)
+I (../Drivers/CMSIS/Include/core_cm4.h)(0x673FF96C)
+I (C:\software\study\keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
+I (../Drivers/CMSIS/Include/cmsis_version.h)(0x673FF96C)
+I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x673FF96C)
+I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x673FF96C)
+I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x673FF96C)
+I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x673FF987)
+I (C:\software\study\keil\ARM\ARMCC\include\stddef.h)(0x6025237E)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pcd.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_usb.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pcd_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
+I (../USB_Device/App/usbd_cdc_if.h)(0x68A7094F)
+I (../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h)(0x673FF96D)
+I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h)(0x673FF96D)
+I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h)(0x673FF96D)
+I (../USB_Device/Target/usbd_conf.h)(0x68A7094E)
+I (C:\software\study\keil\ARM\ARMCC\include\stdio.h)(0x60252374)
+I (C:\software\study\keil\ARM\ARMCC\include\stdlib.h)(0x60252374)
+I (C:\software\study\keil\ARM\ARMCC\include\string.h)(0x6025237E)
+I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x673FF96D)
+I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x673FF96D)
+F (../Core/Src/dma.c)(0x68A81435)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\dma.o --omf_browse g431_pwm_odrain_dac\dma.crf --depend g431_pwm_odrain_dac\dma.d)
 I (../Core/Inc/dma.h)(0x68A7094E)
-I (../Core/Inc/main.h)(0x68A70AC4)
+I (../Core/Inc/main.h)(0x68A81B7D)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -251,6 +310,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -272,11 +333,11 @@ I (C:\software\study\keil\ARM\ARMCC\include\stdlib.h)(0x60252374)
 I (C:\software\study\keil\ARM\ARMCC\include\string.h)(0x6025237E)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x673FF96D)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x673FF96D)
-F (../Core/Src/tim.c)(0x68A72AC6)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\tim.o --omf_browse g431_pwm_odrain_dac\tim.crf --depend g431_pwm_odrain_dac\tim.d)
-I (../Core/Inc/tim.h)(0x68A70A60)
-I (../Core/Inc/main.h)(0x68A70AC4)
+F (../Core/Src/tim.c)(0x68A82544)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\tim.o --omf_browse g431_pwm_odrain_dac\tim.crf --depend g431_pwm_odrain_dac\tim.d)
+I (../Core/Inc/tim.h)(0x68A7DF2E)
+I (../Core/Inc/main.h)(0x68A81B7D)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -299,6 +360,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -320,10 +383,10 @@ I (C:\software\study\keil\ARM\ARMCC\include\stdlib.h)(0x60252374)
 I (C:\software\study\keil\ARM\ARMCC\include\string.h)(0x6025237E)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x673FF96D)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x673FF96D)
-F (../Core/Src/stm32g4xx_it.c)(0x68A7094F)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_it.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_it.crf --depend g431_pwm_odrain_dac\stm32g4xx_it.d)
-I (../Core/Inc/main.h)(0x68A70AC4)
+F (../Core/Src/stm32g4xx_it.c)(0x68A81437)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_it.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_it.crf --depend g431_pwm_odrain_dac\stm32g4xx_it.d)
+I (../Core/Inc/main.h)(0x68A81B7D)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -346,6 +409,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -367,11 +432,11 @@ I (C:\software\study\keil\ARM\ARMCC\include\stdlib.h)(0x60252374)
 I (C:\software\study\keil\ARM\ARMCC\include\string.h)(0x6025237E)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x673FF96D)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x673FF96D)
-I (../Core/Inc/stm32g4xx_it.h)(0x68A7094F)
+I (../Core/Inc/stm32g4xx_it.h)(0x68A81437)
 F (../Core/Src/stm32g4xx_hal_msp.c)(0x68A70950)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_msp.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_msp.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_msp.d)
-I (../Core/Inc/main.h)(0x68A70AC4)
+I (../Core/Inc/main.h)(0x68A81B7D)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -394,6 +459,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -417,7 +484,7 @@ I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x673FF96D)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x673FF96D)
 F (../Core/Src/stm32g4xx_hal_timebase_tim.c)(0x68A70950)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_timebase_tim.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_timebase_tim.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_timebase_tim.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -440,6 +507,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -462,7 +531,7 @@ I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x673FF96C)
 I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x673FF96C)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x673FF987)
@@ -476,6 +545,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -508,7 +579,7 @@ I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x673FF96C)
 I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x673FF96C)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x673FF987)
@@ -522,6 +593,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -560,7 +633,7 @@ I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x673FF96C)
 I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x673FF96C)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x673FF987)
@@ -574,6 +647,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -608,7 +683,7 @@ I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x673FF96C)
 I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x673FF96C)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x673FF987)
@@ -622,6 +697,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -637,7 +714,7 @@ I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x673FF96D)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x673FF96D)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pcd.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_pcd.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_pcd.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_pcd.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -660,6 +737,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -673,7 +752,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pcd_ex.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_pcd_ex.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_pcd_ex.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_pcd_ex.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -696,6 +775,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -709,7 +790,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_usb.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_ll_usb.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_ll_usb.crf --depend g431_pwm_odrain_dac\stm32g4xx_ll_usb.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -732,6 +813,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -745,7 +828,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -768,6 +851,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -781,7 +866,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_rcc.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_rcc.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_rcc.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -804,6 +889,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -817,7 +904,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_rcc_ex.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_rcc_ex.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_rcc_ex.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -840,6 +927,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -853,7 +942,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_flash.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_flash.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_flash.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -876,6 +965,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -889,7 +980,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ex.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_flash_ex.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_flash_ex.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_flash_ex.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -912,6 +1003,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -925,7 +1018,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ramfunc.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_flash_ramfunc.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_flash_ramfunc.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_flash_ramfunc.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -948,6 +1041,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -961,7 +1056,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_gpio.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_gpio.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_gpio.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -984,6 +1079,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -997,7 +1094,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_exti.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_exti.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_exti.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_exti.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -1020,6 +1117,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -1033,7 +1132,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_dma.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_dma.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_dma.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -1056,6 +1155,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -1069,7 +1170,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma_ex.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_dma_ex.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_dma_ex.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_dma_ex.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -1092,6 +1193,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -1105,7 +1208,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_pwr.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_pwr.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_pwr.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -1128,6 +1231,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -1141,7 +1246,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_pwr_ex.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_pwr_ex.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_pwr_ex.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -1164,6 +1269,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -1177,7 +1284,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_cortex.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_cortex.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_cortex.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -1200,6 +1307,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -1213,7 +1322,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_adc.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_adc.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_adc.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -1236,6 +1345,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -1249,7 +1360,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc_ex.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_adc_ex.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_adc_ex.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_adc_ex.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -1272,6 +1383,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -1284,9 +1397,9 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_adc.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_ll_adc.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_ll_adc.crf --depend g431_pwm_odrain_dac\stm32g4xx_ll_adc.d)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_tim.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_tim.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_tim.d)
+F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dac.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_dac.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_dac.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_dac.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -1309,6 +1422,84 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pcd.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_usb.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pcd_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
+F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dac_ex.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_dac_ex.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_dac_ex.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_dac_ex.d)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
+I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
+I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x673FF987)
+I (../Drivers/CMSIS/Include/core_cm4.h)(0x673FF96C)
+I (C:\software\study\keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
+I (../Drivers/CMSIS/Include/cmsis_version.h)(0x673FF96C)
+I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x673FF96C)
+I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x673FF96C)
+I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x673FF96C)
+I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x673FF987)
+I (C:\software\study\keil\ARM\ARMCC\include\stddef.h)(0x6025237E)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pcd.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_usb.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pcd_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
+F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_tim.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_tim.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_tim.d)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
+I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
+I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x673FF987)
+I (../Drivers/CMSIS/Include/core_cm4.h)(0x673FF96C)
+I (C:\software\study\keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
+I (../Drivers/CMSIS/Include/cmsis_version.h)(0x673FF96C)
+I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x673FF96C)
+I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x673FF96C)
+I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x673FF96C)
+I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x673FF987)
+I (C:\software\study\keil\ARM\ARMCC\include\stddef.h)(0x6025237E)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -1322,7 +1513,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x673FF987)
 F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.c)(0x673FF987)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../USB_Device/App -I ../USB_Device/Target -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_G431_PWM_ODrain_DAC-IC:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include-D__UVISION_VERSION="536" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o g431_pwm_odrain_dac\stm32g4xx_hal_tim_ex.o --omf_browse g431_pwm_odrain_dac\stm32g4xx_hal_tim_ex.crf --depend g431_pwm_odrain_dac\stm32g4xx_hal_tim_ex.d)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x673FF987)
@@ -1345,6 +1536,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -1367,7 +1560,7 @@ I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x673FF96C)
 I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x673FF96C)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x673FF987)
@@ -1381,6 +1574,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -1552,7 +1747,7 @@ I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x673FF96C)
 I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x673FF96C)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x673FF987)
@@ -1566,6 +1761,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -1597,7 +1794,7 @@ I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x673FF96C)
 I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x673FF96C)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x673FF987)
@@ -1611,6 +1808,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -1641,7 +1840,7 @@ I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x673FF96C)
 I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x673FF96C)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x673FF987)
@@ -1655,6 +1854,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)
@@ -1686,7 +1887,7 @@ I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x673FF96C)
 I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x673FF96C)
 I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x673FF987)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A70950)
+I (../Core/Inc/stm32g4xx_hal_conf.h)(0x68A7DEDD)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x673FF987)
@@ -1700,6 +1901,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h)(0x673FF987)
+I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x673FF987)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x673FF987)

@@ -25,6 +25,8 @@ g431_pwm_odrain_dac\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_co
 g431_pwm_odrain_dac\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h
 g431_pwm_odrain_dac\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h
 g431_pwm_odrain_dac\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h
+g431_pwm_odrain_dac\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac.h
+g431_pwm_odrain_dac\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dac_ex.h
 g431_pwm_odrain_dac\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h
 g431_pwm_odrain_dac\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h
 g431_pwm_odrain_dac\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h
@@ -62,6 +64,7 @@ g431_pwm_odrain_dac\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/q
 g431_pwm_odrain_dac\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h
 g431_pwm_odrain_dac\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
 g431_pwm_odrain_dac\main.o: ../Core/Inc/adc.h
+g431_pwm_odrain_dac\main.o: ../Core/Inc/dac.h
 g431_pwm_odrain_dac\main.o: ../Core/Inc/dma.h
 g431_pwm_odrain_dac\main.o: ../Core/Inc/tim.h
 g431_pwm_odrain_dac\main.o: ../USB_Device/App/usb_device.h
