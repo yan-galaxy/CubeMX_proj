@@ -1,10 +1,10 @@
 
-# import matplotlib.pyplot as plt
-# import numpy as np
+import matplotlib.pyplot as plt
+import numpy as np
 
-# # 解决中文显示问题
-# plt.rcParams['font.sans-serif'] = ['SimHei']
-# plt.rcParams['axes.unicode_minus'] = False
+# 解决中文显示问题
+plt.rcParams['font.sans-serif'] = ['SimHei']
+plt.rcParams['axes.unicode_minus'] = False
 
 print("Hello, World!");
 
@@ -95,86 +95,50 @@ def generate_concave_sequence(length=400):
             
     return sequence
 
-def generate_concave_sequence_2(length=400, factor=1.0):
-    """
-    生成可调节凹度的单调递增序列（0-4095整数）
-    参数：
-        length - 序列长度（>=2）
-        factor - 凹度系数（>0）：
-                 factor < 1：增大凹度（曲线前段更陡）
-                 factor = 1：标准二次曲线
-                 factor > 1：减小凹度（曲线更平缓）
-    返回：
-        list - 符合要求的序列
-    """
-    if length <= 1:
-        return [0] * length if length else []
-    
-    max_x = length - 1
-    sequence = []
-    
-    # 使用归一化幂函数保证终点精度
-    for x in range(length):
-        # 计算归一化位置
-        t = x / max_x
-        # 通过幂函数控制凹度：y = t^(2 - factor)
-        # 当factor=1时为标准二次曲线
-        # 当factor<1时凹度更大
-        # 当factor>1时凹度更小
-        y = t ** (2 - factor)
-        # 线性插值得到精确的0-4095范围
-        value = round(y * 4095)
-        sequence.append(value)
-    
-    # 确保严格单调递增（处理可能的重复值）
-    for i in range(1, length):
-        if sequence[i] <= sequence[i-1]:
-            sequence[i] = sequence[i-1] + 1
-            
-    # 强制确保终点精度
-    sequence[-1] = 4095
-    
-    return sequence
-
 # 示例用法：生成400点序列
 dac_sequence = generate_concave_sequence(400)
-# dac_sequence = generate_concave_sequence_2(length=400, factor=1.0)
 # 输出C数组代码
 print(f"uint32_t arr[{len(dac_sequence)}] = {{")
 print(",".join(map(str, dac_sequence)))
 print("};")
 
 
-print("生成向上凸的单调递增序列:")
+print("生成向上凸的单调递增序列:") # 最后几个数 4093,4094,4095,4096,4097,4098,4099,4100,4101,4102,4103,4104,4095
 def generate_convex_sequence(length=400):
     """
-    生成严格递增的上凸函数序列（0-4095整数）
+    生成严格递增的上凸函数序列（0-4095整数，无超量程）
     参数：
         length - 序列长度（>=1）
     返回：
-        list - 符合要求的序列
+        list - 符合要求的序列（所有值∈[0,4095]）
     """
     if length <= 0:
         return []
     if length == 1:
         return [0]
     
-    n = length - 1
-    # 修正参数计算公式
-    a = -4095 / (n**2)        # 二次项系数
-    b = 8190 / n             # 一次项系数
+    max_x = length - 1  # 最大索引值
+    sequence = []
     
-    # 生成基础序列并四舍五入
-    sequence = [int(round(a*x**2 + b*x)) for x in range(length)]
+    for x in range(length):
+        # 上凸函数核心公式：y = 4095 * [1 - (1 - x/max_x)²]
+        # 确保y从0递增到4095，且所有中间值≤4095
+        normalized_x = x / max_x
+        y = 4095 * (1 - (1 - normalized_x) ** 2)
+        # 强制限制上限为4095，避免浮点误差导致超量程
+        y_clamped = min(round(y), 4095)
+        sequence.append(y_clamped)
     
-    # 严格单调性保障（从第二个元素开始检查）
+    # 确保严格单调递增（防止浮点误差导致的相邻值相等）
     for i in range(1, length):
         if sequence[i] <= sequence[i-1]:
             sequence[i] = sequence[i-1] + 1
-            
-    # 强制修正最后一个元素
-    sequence[-1] = 4095
+            # 再次检查是否超量程（极端情况修正后可能超）
+            if sequence[i] > 4095:
+                sequence[i] = 4095
     
+    # 最终强制修正最后一个元素为4095（确保终点正确）
+    sequence[-1] = 4095
     return sequence
 
 
@@ -185,3 +149,95 @@ dac_sequence = generate_convex_sequence(400)
 print(f"uint32_t arr[{len(dac_sequence)}] = {{")
 print(",".join(map(str, dac_sequence)))
 print("};")
+
+# 生成可调凹度的序列  以幂函数为基础
+def generate_concave_with_k(length=400, k=2.0):
+    """
+    生成可调凹度的向下凹单调递增序列（0-4095整数）
+    参数：
+        length - 序列长度（>=1）
+        k - 凹度控制参数（>1），k越大凹度越强
+    返回：
+        list - 符合要求的序列
+    """
+    if length <= 0:
+        return []
+    if length == 1:
+        return [0]
+    
+    # 幂函数参数计算
+    max_x = length - 1
+    sequence = []
+    
+    # 使用幂函数：y = 4095 * (x/max_x)^k
+    # 当k > 1时为向下凹曲线
+    # 当k == 1时为直线
+    for x in range(length):
+        t = x / max_x
+        y = 4095 * (t ** k)
+        sequence.append(y)
+    
+    # 强制修正最后一个元素并确保单调性
+    sequence[-1] = 4095
+    for i in range(1, length):
+        if sequence[i] <= sequence[i-1]:
+            sequence[i] = sequence[i-1] + 1
+    
+    # 转换为整数序列            
+    return [int(round(val)) for val in sequence]
+
+def generate_concave_with_k_inverse_prop(length=400, k=2.0):
+    """
+    生成可调凹度的向下凹单调递增序列（0-4095整数）
+    参数：
+        length - 序列长度（>=1）
+        k - 凹度控制参数（>1），k越大凹度越强
+    返回：
+        list - 符合要求的序列
+    """
+    if length <= 0:
+        return []
+    if length == 1:
+        return [0]
+    
+    max_x = length - 1
+    sequence = [int(round(4095 * (x/max_x)**k)) for x in range(length)]
+    
+    # 强制修正最后一个元素并确保单调性
+    sequence[-1] = 4095
+    for i in range(1, length):
+        if sequence[i] <= sequence[i-1]:
+            sequence[i] = sequence[i-1] + 1
+            
+    return sequence
+# 获取三个序列数据
+fixed_seq = generate_dac_sequence(400)        # 固定序列
+concave_seq = generate_concave_sequence(400)        # 向下凹序列
+convex_seq = generate_convex_sequence(400)          # 向上凸序列
+
+# 示例用法：生成不同凹度的序列
+concave_seq_weak = generate_concave_with_k(400, k=2.2)    # 弱凹度
+concave_seq_strong = generate_concave_with_k(400, k=4)   # 强凹度
+
+convex_inverse_seq = generate_concave_with_k_inverse_prop(400,k=1.5)
+
+# 创建可视化图表
+plt.figure(figsize=(12, 6))
+plt.plot(fixed_seq, label='固定序列', linestyle='-', linewidth=2)
+plt.plot(concave_seq, label='向下凹的单调递增序列', linestyle='--', linewidth=2)
+plt.plot(convex_seq, label='向上凸的单调递增序列', linestyle='-.', linewidth=2)
+
+plt.plot(concave_seq_weak, label='向弱凹度的单调递增序列', linestyle='--', linewidth=2)
+plt.plot(concave_seq_strong, label='向强凹度的单调递增序列', linestyle='--', linewidth=2)
+
+plt.plot(convex_inverse_seq, label='反比例下凹', linestyle='--', linewidth=2)
+# 添加图表元素
+plt.title('三种DAC序列对比分析', fontsize=14)
+plt.xlabel('序列索引', fontsize=12)
+plt.ylabel('数值', fontsize=12)
+plt.grid(True, alpha=0.3)
+plt.legend(loc='best')
+plt.tight_layout()
+
+# 显示图表
+plt.show()
