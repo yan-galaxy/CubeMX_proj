@@ -7,14 +7,14 @@ rct6_bmp\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h
 rct6_bmp\main.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h
 rct6_bmp\main.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h
 rct6_bmp\main.o: ../Drivers/CMSIS/Include/core_cm3.h
-rct6_bmp\main.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+rct6_bmp\main.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
 rct6_bmp\main.o: ../Drivers/CMSIS/Include/cmsis_version.h
 rct6_bmp\main.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 rct6_bmp\main.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 rct6_bmp\main.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h
 rct6_bmp\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h
 rct6_bmp\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-rct6_bmp\main.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+rct6_bmp\main.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
 rct6_bmp\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h
 rct6_bmp\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h
 rct6_bmp\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h
@@ -32,8 +32,8 @@ rct6_bmp\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd.h
 rct6_bmp\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h
 rct6_bmp\main.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h
 rct6_bmp\main.o: ../MDK-ARM/BMP280.h
-rct6_bmp\main.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-rct6_bmp\main.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+rct6_bmp\main.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdio.h
+rct6_bmp\main.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\math.h
 rct6_bmp\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h
 rct6_bmp\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 rct6_bmp\main.o: ../Core/Inc/FreeRTOSConfig.h
@@ -52,6 +52,6 @@ rct6_bmp\main.o: ../Core/Inc/spi.h
 rct6_bmp\main.o: ../USB_DEVICE/App/usb_device.h
 rct6_bmp\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h
 rct6_bmp\main.o: ../USB_DEVICE/Target/usbd_conf.h
-rct6_bmp\main.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-rct6_bmp\main.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+rct6_bmp\main.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
+rct6_bmp\main.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
 rct6_bmp\main.o: ../Core/Inc/gpio.h

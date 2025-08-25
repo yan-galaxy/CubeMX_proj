@@ -114,6 +114,8 @@ void StartDefaultTask(void const * argument)
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 		sprintf(usb_buff,"PB2 adc_value:%d\r\n",adc_value[0]);
 		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
+//		for(uint16_t i =0; i<500;i++)
+//		user_delaynus_tim(1000);
 		osDelay(500);
 	}
   /* USER CODE END StartDefaultTask */
@@ -121,6 +123,14 @@ void StartDefaultTask(void const * argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
-
+void user_delaynus_tim(uint16_t nus)
+{
+	
+	LL_TIM_SetCounter(TIM7, 0);
+	while (LL_TIM_GetCounter(TIM7) < nus)
+	{
+		;// Optionally, add a timeout condition here to avoid an infinite loop
+	}
+}
 /* USER CODE END Application */
 

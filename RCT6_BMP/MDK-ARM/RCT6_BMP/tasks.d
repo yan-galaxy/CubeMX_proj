@@ -1,9 +1,9 @@
 rct6_bmp\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/tasks.c
-rct6_bmp\tasks.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-rct6_bmp\tasks.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+rct6_bmp\tasks.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
+rct6_bmp\tasks.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
 rct6_bmp\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-rct6_bmp\tasks.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-rct6_bmp\tasks.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+rct6_bmp\tasks.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
+rct6_bmp\tasks.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
 rct6_bmp\tasks.o: ../Core/Inc/FreeRTOSConfig.h
 rct6_bmp\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 rct6_bmp\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

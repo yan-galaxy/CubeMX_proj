@@ -394,11 +394,6 @@
           <GroupName>Application/User/Core</GroupName>
           <Files>
             <File>
-              <FileName>BMP280.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\BMP280.c</FilePath>
-            </File>
-            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/main.c</FilePath>
@@ -585,6 +580,11 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>BMP280.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BMP280.c</FilePath>
             </File>
           </Files>
         </Group>
