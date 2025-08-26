@@ -22,43 +22,12 @@ Dialog DLL:      TCM.DLL V1.53.0.0
  
 <h2>Project:</h2>
 C:\Users\galaxy\Desktop\CubeMX_proj\G431_BMP8x8\MDK-ARM\G431_BMP8x8.uvprojx
-Project File Date:  08/25/2025
+Project File Date:  08/26/2025
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\software\study\keil\ARM\ARMCC\Bin'
 Build target 'G431_BMP8x8'
-compiling app_freertos.c...
-../Core/Src/app_freertos.c(167): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(DS_GPIO_Port,DS_Pin,0);
-../Core/Src/app_freertos.c(168): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,0);
-../Core/Src/app_freertos.c(169): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,0);
-../Core/Src/app_freertos.c(199): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(DS_GPIO_Port,DS_Pin,DS);//输入 DS
-../Core/Src/app_freertos.c(201): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,1);//数据载入
-../Core/Src/app_freertos.c(203): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,0);
-../Core/Src/app_freertos.c(204): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,1);//数据输出 此时真实输出为DS指定的电平
-../Core/Src/app_freertos.c(206): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,0);
-../Core/Src/app_freertos.c(212): warning:  #188-D: enumerated type mixed with another type
-  		HAL_GPIO_WritePin(DS_GPIO_Port,DS_Pin, ((DS_8>>i) & 0x01) );//输入 DS
-../Core/Src/app_freertos.c(214): warning:  #188-D: enumerated type mixed with another type
-  		HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,1);//数据载入
-../Core/Src/app_freertos.c(216): warning:  #188-D: enumerated type mixed with another type
-  		HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,0);
-../Core/Src/app_freertos.c(218): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,1);//数据输出 此时真实输出为DS_8指定的8通道电平
-../Core/Src/app_freertos.c(220): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,0);
-../Core/Src/app_freertos.c: 13 warnings, 0 errors
-linking...
-Program Size: Code=30208 RO-data=732 RW-data=512 ZI-data=12720  
-FromELF: creating hex file...
-"G431_BMP8x8\G431_BMP8x8.axf" - 0 Error(s), 13 Warning(s).
+"G431_BMP8x8\G431_BMP8x8.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -82,7 +51,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:08
+Build Time Elapsed:  00:00:00
 </pre>
 </body>
 </html>

@@ -8,29 +8,59 @@
 static HAL_StatusTypeDef BMP280_SPI_Write(BMP280_Device *dev, uint8_t reg_addr, uint8_t data) {
 
 	uint8_t txData[2] = {reg_addr & 0x7F, data};  // 写操作地址最高位为0
-    
-	Input_74HC595_CH8(0xFF & (~( 0x01<<(7-dev->cs_index) )) 	);//CS置 低 电平
+					   
+	Input_74HC595_CH64(0xFFFFFFFFFFFFFFFF & (~( (unsigned long long)(0x0000000000000001)<<(63-dev->cs_index) )) 	);//CS置 低 电平
+//	Input_74HC595_CH8(0xFF & (~( 0x01<<(7-dev->cs_index) )) 	);//CS置 低 电平
 //    HAL_GPIO_WritePin(dev->cs_port, dev->cs_pin, GPIO_PIN_RESET);
+	
     HAL_StatusTypeDef status = HAL_SPI_Transmit(dev->hspi, txData, 2, 100);
+	
 //    HAL_GPIO_WritePin(dev->cs_port, dev->cs_pin, GPIO_PIN_SET);
-	Input_74HC595_CH8(0xFF);//CS置 高 电平
+//	Input_74HC595_CH8(0xFF);//CS置 高 电平
+	Input_74HC595_CH64(0xFFFFFFFFFFFFFFFF);//CS置 高 电平
     
+//	HAL_StatusTypeDef status=0;
     return status;
 }
-
+//一次赋值八个片选，选中的那个为0，其余为1。效率低
 static HAL_StatusTypeDef BMP280_SPI_Read(BMP280_Device *dev, uint8_t reg_addr, uint8_t *data, uint16_t len) {
     uint8_t tx_buf[1];
     tx_buf[0] = reg_addr | 0x80;  // 设置最高位为1（读操作）
     
-	Input_74HC595_CH8(0xFF & (~( 0x01<<(7-dev->cs_index) )) 	);//CS置 低 电平
+	Input_74HC595_CH64(0xFFFFFFFFFFFFFFFF & (~( (unsigned long long)(0x0000000000000001)<<(63-dev->cs_index) )) 	);//CS置 低 电平
+//	Input_74HC595_CH8(0xFF & (~( 0x01<<(7-dev->cs_index) )) 	);//CS置 低 电平
 //    HAL_GPIO_WritePin(dev->cs_port, dev->cs_pin, GPIO_PIN_RESET);
+	
     HAL_SPI_Transmit(dev->hspi, tx_buf, 1, 100);
     HAL_StatusTypeDef status = HAL_SPI_Receive(dev->hspi, data, len, 100);
+	
 //    HAL_GPIO_WritePin(dev->cs_port, dev->cs_pin, GPIO_PIN_SET);
-	Input_74HC595_CH8(0xFF);//CS置 高 电平
+//	Input_74HC595_CH8(0xFF);//CS置 高 电平
+	Input_74HC595_CH64(0xFFFFFFFFFFFFFFFF);//CS置 高 电平
     
+//	HAL_StatusTypeDef status=0;
     return status;
 }
+
+//移位寄存器一位一位移动
+static HAL_StatusTypeDef BMP280_SPI_Read_optimized(BMP280_Device *dev,uint8_t dev_index, uint8_t reg_addr, uint8_t *data, uint16_t len) {
+
+    uint8_t tx_buf[1];
+    tx_buf[0] = reg_addr | 0x80;  // 设置最高位为1（读操作）
+	
+	
+    if(dev_index==0)
+		Input_74HC595(0);//CS置 低 电平
+	else
+		Input_74HC595(1);//CS置 高 电平
+	
+    HAL_SPI_Transmit(dev->hspi, tx_buf, 1, 100);
+    HAL_StatusTypeDef status = HAL_SPI_Receive(dev->hspi, data, len, 100);
+	
+//	HAL_StatusTypeDef status=0;
+    return status;
+}
+
 
 /* 初始化BMP280 HAL_StatusTypeDef */
 HAL_StatusTypeDef BMP280_Init(BMP280_Device *dev) {
@@ -117,9 +147,10 @@ HAL_StatusTypeDef BMP280_ReadCalibrationParams(BMP280_Device *dev) {
 }
 
 /* 读取压力和温度数据并计算 */
-HAL_StatusTypeDef BMP280_ReadPressureTemperature(BMP280_Device *dev) {
+HAL_StatusTypeDef BMP280_ReadPressureTemperature(BMP280_Device *dev,uint8_t dev_index) {
     uint8_t data[6];
-    HAL_StatusTypeDef status = BMP280_SPI_Read(dev, BMP280_PRESSURE_MSB, data, 6);
+//    HAL_StatusTypeDef status = BMP280_SPI_Read(dev, BMP280_PRESSURE_MSB, data, 6);
+	HAL_StatusTypeDef status = BMP280_SPI_Read_optimized(dev,dev_index, BMP280_PRESSURE_MSB, data, 6);
     
     if (status != HAL_OK) {
         return HAL_ERROR;

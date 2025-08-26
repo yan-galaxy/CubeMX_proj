@@ -104,7 +104,7 @@ HAL_StatusTypeDef BMP280_SoftReset(BMP280_Device *dev);
 HAL_StatusTypeDef BMP280_SetMode(BMP280_Device *dev, uint8_t osrs_t, uint8_t osrs_p, uint8_t mode);
 HAL_StatusTypeDef BMP280_SetConfig(BMP280_Device *dev, uint8_t filter, uint8_t t_standby);
 HAL_StatusTypeDef BMP280_ReadCalibrationParams(BMP280_Device *dev);
-HAL_StatusTypeDef BMP280_ReadPressureTemperature(BMP280_Device *dev);
+HAL_StatusTypeDef BMP280_ReadPressureTemperature(BMP280_Device *dev,uint8_t dev_index);
 float BMP280_CalculateAltitude(float pressure, float sea_level_pressure);
 
 #endif /* BMP280_H */

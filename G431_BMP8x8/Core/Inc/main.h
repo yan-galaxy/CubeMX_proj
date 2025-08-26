@@ -71,6 +71,7 @@ void Error_Handler(void);
 void user_delaynus_tim(uint16_t nus);
 void Input_74HC595(uint8_t DS);
 void Input_74HC595_CH8(uint8_t DS_8);
+void Input_74HC595_CH64(uint64_t DS_64);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

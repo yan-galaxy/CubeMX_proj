@@ -46,7 +46,7 @@
 "g431_bmp8x8\stream_buffer.o"
 "g431_bmp8x8\tasks.o"
 "g431_bmp8x8\timers.o"
-"g431_bmp8x8\cmsis_os.o"
+"g431_bmp8x8\cmsis_os2.o"
 "g431_bmp8x8\heap_4.o"
 "g431_bmp8x8\port.o"
 "g431_bmp8x8\usbd_core.o"

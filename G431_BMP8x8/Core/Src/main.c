@@ -98,7 +98,8 @@ int main(void)
 	LL_TIM_EnableCounter(TIM7);//Enable TIM7
   /* USER CODE END 2 */
 
-  /* Call init function for freertos objects (in freertos.c) */
+  /* Init scheduler */
+  osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
 
   /* Start scheduler */
