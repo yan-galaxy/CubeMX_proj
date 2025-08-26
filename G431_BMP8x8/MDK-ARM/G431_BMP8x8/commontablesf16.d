@@ -1,0 +1,13 @@
+g431_bmp8x8\commontablesf16.o: C:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Source\CommonTables\CommonTablesF16.c
+g431_bmp8x8\commontablesf16.o: C:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Source\CommonTables\arm_common_tables_f16.c
+g431_bmp8x8\commontablesf16.o: C:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Include\arm_math_types_f16.h
+g431_bmp8x8\commontablesf16.o: C:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Include\arm_math_types.h
+g431_bmp8x8\commontablesf16.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
+g431_bmp8x8\commontablesf16.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+g431_bmp8x8\commontablesf16.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
+g431_bmp8x8\commontablesf16.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
+g431_bmp8x8\commontablesf16.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\math.h
+g431_bmp8x8\commontablesf16.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\float.h
+g431_bmp8x8\commontablesf16.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\limits.h
+g431_bmp8x8\commontablesf16.o: C:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Source\CommonTables\arm_const_structs_f16.c
+g431_bmp8x8\commontablesf16.o: C:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Source\CommonTables\arm_mve_tables_f16.c

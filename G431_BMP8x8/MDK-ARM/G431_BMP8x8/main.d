@@ -57,7 +57,9 @@ g431_bmp8x8\main.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
 g431_bmp8x8\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 g431_bmp8x8\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 g431_bmp8x8\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
-g431_bmp8x8\main.o: ../MDK-ARM/BMP280.h
+g431_bmp8x8\main.o: ../Drivers/CMSIS/DSP/Include/arm_math.h
+g431_bmp8x8\main.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\math.h
+g431_bmp8x8\main.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\float.h
 g431_bmp8x8\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
 g431_bmp8x8\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 g431_bmp8x8\main.o: ../Core/Inc/FreeRTOSConfig.h

@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "BMP280.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -67,6 +67,11 @@ const osThreadAttr_t ledTask_attributes = {
   .name = "ledTask",
   .priority = (osPriority_t) osPriorityLow,
   .stack_size = 64 * 4
+};
+/* Definitions for bmpEvent */
+osEventFlagsId_t bmpEventHandle;
+const osEventFlagsAttr_t bmpEvent_attributes = {
+  .name = "bmpEvent"
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -120,6 +125,10 @@ void MX_FREERTOS_Init(void) {
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
+  /* Create the event(s) */
+  /* creation of bmpEvent */
+  bmpEventHandle = osEventFlagsNew(&bmpEvent_attributes);
+
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
   /* USER CODE END RTOS_EVENTS */
@@ -133,6 +142,28 @@ void MX_FREERTOS_Init(void) {
   * @retval None
   */
 BMP280_Device bmp_dev[64];
+Float32_union bmp_press_f_1[66];//64+2 帧头4字节 帧尾4字节
+Float32_union bmp_press_f_2[66];//64+2 帧头4字节 帧尾4字节
+volatile Float32_union* bmp_press_send_p=bmp_press_f_1;
+volatile Float32_union* bmp_press_store_p=bmp_press_f_2;
+
+//采集完成之后需要进行缓存切换
+void exchange_res_p(void)
+{
+	static uint8_t state=1;//第一次运行该函数前 采集的数据存到bmp_press_f_2   第一次运行该函数后状态变为0，发送的指针指向bmp_press_f_1  之后循环往复
+	state=!state;//状态翻转
+	
+	if(state)
+	{
+		bmp_press_send_p=bmp_press_f_1;
+		bmp_press_store_p=bmp_press_f_2;
+	}
+	else
+	{
+		bmp_press_send_p=bmp_press_f_2;
+		bmp_press_store_p=bmp_press_f_1;
+	}
+}
 
 uint16_t adc_value[10];
 /* USER CODE END Header_StartDefaultTask */
@@ -144,6 +175,32 @@ void StartDefaultTask(void *argument)
 	
 	TickType_t xLastWakeTime;
 	xLastWakeTime = xTaskGetTickCount();
+	
+	bmp_press_f_1[0].byte[0]=0x55;//帧头
+	bmp_press_f_1[0].byte[1]=0xAA;
+	bmp_press_f_1[0].byte[2]=0xBB;
+	bmp_press_f_1[0].byte[3]=0xCC;
+	for(uint16_t i=0;i<64;i++)
+	{
+		bmp_press_f_1[1+i].f32=i*1.5f;
+	}
+	bmp_press_f_1[65].byte[0]=0xAA;//帧尾
+	bmp_press_f_1[65].byte[1]=0x55;
+	bmp_press_f_1[65].byte[2]=0x66;
+	bmp_press_f_1[65].byte[3]=0x77;
+	
+	bmp_press_f_2[0].byte[0]=0x55;//帧头
+	bmp_press_f_2[0].byte[1]=0xAA;
+	bmp_press_f_2[0].byte[2]=0xBB;
+	bmp_press_f_2[0].byte[3]=0xCC;
+	for(uint16_t i=0;i<64;i++)
+	{
+		bmp_press_f_2[1+i].f32=i*1.5f+1.0f;
+	}
+	bmp_press_f_2[65].byte[0]=0xAA;//帧尾
+	bmp_press_f_2[65].byte[1]=0x55;
+	bmp_press_f_2[65].byte[2]=0x66;
+	bmp_press_f_2[65].byte[3]=0x77;
 	
 	for(dev_index=0;dev_index<64;dev_index++)
 	{
@@ -163,30 +220,38 @@ void StartDefaultTask(void *argument)
 
 //	// 发送任务通知给BMPTask
 //    xTaskNotifyGive(bmpTaskHandle);
+	osEventFlagsSet(bmpEventHandle, 1<<0);
 	
 	
   /* Infinite loop */
 	for(;;)
 	{
 		
-		sprintf(usb_buff,"PB2 adc_value:%d\r\n",adc_value[0]);
+//		sprintf(usb_buff,"PB2 adc_value:%d\r\n",adc_value[0]);		
+//		for(dev_index=0;dev_index<64;dev_index++)
+//		{
+//		/* 读取压力和温度 */
+//			if (bmp_dev[dev_index].receive_error_flag == HAL_OK) {
+//				sprintf(usb_buff+strlen(usb_buff),"dev[%2d],温度:%.2f °C,压力:%.5fkPa,海拔:%.2fm\r\n",
+//				dev_index, 
+//				bmp_dev[dev_index].temperature, 
+////				bmp_press_store_p[1+dev_index].f32,
+//				bmp_dev[dev_index].pressure, 
+//				bmp_dev[dev_index].altitude);
+//			} else {
+//				sprintf(usb_buff+strlen(usb_buff),"dev[%2d]读取数据失败,receive_error_flag:%d\r\n",dev_index,bmp_dev[dev_index].receive_error_flag);
+//			}
+//		}
+//		sprintf(usb_buff+strlen(usb_buff),"------------------------\r\n");
+//		sprintf(usb_buff+strlen(usb_buff), "SPI:%u us Temp:%u us Press:%u us\r\n", 
+//           t_spi, t_temp, t_press);
+//		sprintf(usb_buff+strlen(usb_buff),"strlen(usb_buff):%d\r\n",strlen(usb_buff));
+////		sprintf(usb_buff+strlen(usb_buff),"test:0x%llX\r\n",(0xFFFFFFFFFFFFFFFF & (~( (unsigned long long)(0x0000000000000001)<<(63-2) ))) );
 //		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
 		
-		for(dev_index=0;dev_index<64;dev_index++)
-		{
-		/* 读取压力和温度 */
-			if (BMP280_ReadPressureTemperature(&(bmp_dev[dev_index]),dev_index) == HAL_OK) {
-				sprintf(usb_buff+strlen(usb_buff),"dev[%2d],温度:%.2f °C,压力:%.2fkPa,海拔:%.2fm\r\n",dev_index, bmp_dev[dev_index].temperature, bmp_dev[dev_index].pressure, bmp_dev[dev_index].altitude);
-			} else {
-				sprintf(usb_buff+strlen(usb_buff),"dev[%2d]读取数据失败\r\n",dev_index);
-			}
-		}
-		sprintf(usb_buff+strlen(usb_buff),"------------------------\r\n");
-		sprintf(usb_buff+strlen(usb_buff),"strlen(usb_buff):%d\r\n",strlen(usb_buff));
-//		sprintf(usb_buff+strlen(usb_buff),"test:0x%llX\r\n",(0xFFFFFFFFFFFFFFFF & (~( (unsigned long long)(0x0000000000000001)<<(63-2) ))) );
-		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
 		
-		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(100));
+		
+		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(500));
 //		osDelay(50);
 	}
   /* USER CODE END StartDefaultTask */
@@ -203,7 +268,8 @@ void StartDefaultTask(void *argument)
 void BMPTask(void *argument)
 {
   /* USER CODE BEGIN BMPTask */
-	
+	uint8_t dev_index=0;
+	HAL_StatusTypeDef error_flag=0;
 	
 	
 	TickType_t xLastWakeTime;
@@ -216,24 +282,24 @@ void BMPTask(void *argument)
 	
 //	// 等待StartDefaultTask的通知，永久阻塞直到收到通知
 //    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+	osEventFlagsWait(bmpEventHandle, 1<<0, osFlagsWaitAll, portMAX_DELAY);
 	
+	xLastWakeTime = xTaskGetTickCount();
   /* Infinite loop */
 	for(;;)
 	{
 		
+		for(dev_index=0;dev_index<64;dev_index++)
+		{
+			
+			/* 读取压力和温度 */
+			bmp_dev[dev_index].receive_error_flag = BMP280_ReadPressureTemperature(&(bmp_dev[dev_index]),dev_index,bmp_press_store_p);
 		
-//		Input_74HC595(0);
-//		user_delaynus_tim(200);
-//		Input_74HC595(1);
-//		user_delaynus_tim(300);
+		}
+		exchange_res_p();
+		CDC_Transmit_FS((uint8_t *)bmp_press_send_p, 264);
 		
-		
-//		Input_74HC595_CH8(0xAA);
-//		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(2));
-//		Input_74HC595_CH8(0x55);
-//		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(1));
-		
-		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(500));
+		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(15));
 	}
   /* USER CODE END BMPTask */
 }
@@ -254,7 +320,7 @@ void LEDTask(void *argument)
 	for(;;)
 	{
 		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
-		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(500));
+		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(200));
 	}
   /* USER CODE END LEDTask */
 }
@@ -309,5 +375,6 @@ void user_delaynus_tim(uint16_t nus)
 		;// Optionally, add a timeout condition here to avoid an infinite loop
 	}
 }	
+
 /* USER CODE END Application */
 

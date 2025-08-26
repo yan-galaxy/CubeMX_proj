@@ -3,6 +3,7 @@
 #define BMP280_H
 
 #include "stm32g4xx_hal.h"
+#include "main.h"
 
 /* BMP280寄存器地址定义 */
 #define BMP280_DIG_T1_LSB                  0x88
@@ -95,6 +96,7 @@ typedef struct {
     float temperature;
     float pressure;
     float altitude;
+	HAL_StatusTypeDef receive_error_flag;
 } BMP280_Device;
 
 /* 函数声明 */
@@ -104,7 +106,7 @@ HAL_StatusTypeDef BMP280_SoftReset(BMP280_Device *dev);
 HAL_StatusTypeDef BMP280_SetMode(BMP280_Device *dev, uint8_t osrs_t, uint8_t osrs_p, uint8_t mode);
 HAL_StatusTypeDef BMP280_SetConfig(BMP280_Device *dev, uint8_t filter, uint8_t t_standby);
 HAL_StatusTypeDef BMP280_ReadCalibrationParams(BMP280_Device *dev);
-HAL_StatusTypeDef BMP280_ReadPressureTemperature(BMP280_Device *dev,uint8_t dev_index);
+HAL_StatusTypeDef BMP280_ReadPressureTemperature(BMP280_Device *dev,uint8_t dev_index,volatile Float32_union* press_data_store_p);
 float BMP280_CalculateAltitude(float pressure, float sea_level_pressure);
 
 #endif /* BMP280_H */

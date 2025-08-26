@@ -92,10 +92,14 @@ int main(void)
   MX_USB_Device_Init();
   MX_TIM7_Init();
   MX_SPI1_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   LL_TIM_SetCounter(TIM7, 0);
 //	LL_TIM_EnableIT_UPDATE(TIM7);//start TIM7 IRQ
 	LL_TIM_EnableCounter(TIM7);//Enable TIM7
+	
+	LL_TIM_SetCounter(TIM2, 0);
+	LL_TIM_EnableCounter(TIM2);//Enable TIM2
   /* USER CODE END 2 */
 
   /* Init scheduler */

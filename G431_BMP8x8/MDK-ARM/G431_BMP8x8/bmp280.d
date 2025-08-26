@@ -35,7 +35,6 @@ g431_bmp8x8\bmp280.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi.h
 g431_bmp8x8\bmp280.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h
 g431_bmp8x8\bmp280.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h
 g431_bmp8x8\bmp280.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h
-g431_bmp8x8\bmp280.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\math.h
 g431_bmp8x8\bmp280.o: ../Core/Inc/main.h
 g431_bmp8x8\bmp280.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h
 g431_bmp8x8\bmp280.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_bus.h
@@ -59,3 +58,6 @@ g431_bmp8x8\bmp280.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
 g431_bmp8x8\bmp280.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 g431_bmp8x8\bmp280.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 g431_bmp8x8\bmp280.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
+g431_bmp8x8\bmp280.o: ../Drivers/CMSIS/DSP/Include/arm_math.h
+g431_bmp8x8\bmp280.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\math.h
+g431_bmp8x8\bmp280.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\float.h

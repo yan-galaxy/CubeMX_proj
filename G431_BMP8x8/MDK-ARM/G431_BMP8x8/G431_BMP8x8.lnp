@@ -38,6 +38,7 @@
 "g431_bmp8x8\stm32g4xx_ll_tim.o"
 "g431_bmp8x8\stm32g4xx_ll_gpio.o"
 "g431_bmp8x8\stm32g4xx_ll_dma.o"
+"..\Drivers\CMSIS\DSP\Lib\ARM\arm_cortexM4lf_math.lib"
 "g431_bmp8x8\system_stm32g4xx.o"
 "g431_bmp8x8\croutine.o"
 "g431_bmp8x8\event_groups.o"

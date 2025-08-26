@@ -45,18 +45,22 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
 #include "stdio.h"
-#include "BMP280.h"
+#include "arm_math.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+typedef union {
+    float    f32;     // 32 位浮点数（占 4 字节）
+    uint8_t  byte[4]; // 拆分为 4 个字节（字节序取决于 STM32 的小端模式）
+} Float32_union;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 //extern ADC_HandleTypeDef hadc2;
 extern SPI_HandleTypeDef hspi1;
+extern uint32_t t_start, t_spi, t_temp, t_press;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

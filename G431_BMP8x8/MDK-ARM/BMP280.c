@@ -1,8 +1,7 @@
 /* BMP280.c - 功能实现 */
 #include "BMP280.h"
 #include <math.h>
-#include "main.h"
-//#include "cmsis_os.h"
+
 
 /* SPI读写辅助函数 */
 static HAL_StatusTypeDef BMP280_SPI_Write(BMP280_Device *dev, uint8_t reg_addr, uint8_t data) {
@@ -12,6 +11,12 @@ static HAL_StatusTypeDef BMP280_SPI_Write(BMP280_Device *dev, uint8_t reg_addr, 
 	Input_74HC595_CH64(0xFFFFFFFFFFFFFFFF & (~( (unsigned long long)(0x0000000000000001)<<(63-dev->cs_index) )) 	);//CS置 低 电平
 //	Input_74HC595_CH8(0xFF & (~( 0x01<<(7-dev->cs_index) )) 	);//CS置 低 电平
 //    HAL_GPIO_WritePin(dev->cs_port, dev->cs_pin, GPIO_PIN_RESET);
+	
+//	// 等待发送缓冲区为空
+//	while (!LL_SPI_IsActiveFlag_TXE(dev->spi));
+//	LL_SPI_TransmitData8(dev->spi, txData[0]);
+//	while (!LL_SPI_IsActiveFlag_TXE(dev->spi));
+//	LL_SPI_TransmitData8(dev->spi, txData[1]);
 	
     HAL_StatusTypeDef status = HAL_SPI_Transmit(dev->hspi, txData, 2, 100);
 	
@@ -31,6 +36,18 @@ static HAL_StatusTypeDef BMP280_SPI_Read(BMP280_Device *dev, uint8_t reg_addr, u
 //	Input_74HC595_CH8(0xFF & (~( 0x01<<(7-dev->cs_index) )) 	);//CS置 低 电平
 //    HAL_GPIO_WritePin(dev->cs_port, dev->cs_pin, GPIO_PIN_RESET);
 	
+//	while (!LL_SPI_IsActiveFlag_TXE(dev->spi));
+//	LL_SPI_TransmitData8(dev->spi, tx_buf[0]);
+//	for(uint16_t i = 0; i < len; i++) {
+//		
+//		uint16_t timeout = 10000; 
+//		while (!LL_SPI_IsActiveFlag_RXNE(dev->spi)) {
+//			if(timeout-- == 0) {
+//				return HAL_TIMEOUT;
+//			}
+//		}
+//		data[i] = LL_SPI_ReceiveData8(dev->spi);
+//	}
     HAL_SPI_Transmit(dev->hspi, tx_buf, 1, 100);
     HAL_StatusTypeDef status = HAL_SPI_Receive(dev->hspi, data, len, 100);
 	
@@ -53,6 +70,19 @@ static HAL_StatusTypeDef BMP280_SPI_Read_optimized(BMP280_Device *dev,uint8_t de
 		Input_74HC595(0);//CS置 低 电平
 	else
 		Input_74HC595(1);//CS置 高 电平
+	
+//	while (!LL_SPI_IsActiveFlag_TXE(dev->spi));
+//	LL_SPI_TransmitData8(dev->spi, tx_buf[0]);
+//	for(uint16_t i = 0; i < len; i++) {
+//		
+//		uint16_t timeout = 10000; 
+//		while (!LL_SPI_IsActiveFlag_RXNE(dev->spi)) {
+//			if(timeout-- == 0) {
+//				return HAL_TIMEOUT;
+//			}
+//		}
+//		data[i] = LL_SPI_ReceiveData8(dev->spi);
+//	}
 	
     HAL_SPI_Transmit(dev->hspi, tx_buf, 1, 100);
     HAL_StatusTypeDef status = HAL_SPI_Receive(dev->hspi, data, len, 100);
@@ -96,8 +126,9 @@ HAL_StatusTypeDef BMP280_Init(BMP280_Device *dev) {
 
 /* 读取芯片ID */
 HAL_StatusTypeDef BMP280_ReadChipID(BMP280_Device *dev) {
-    uint8_t data,status;
-	status=BMP280_SPI_Read(dev, BMP280_CHIP_ID, &data, 1);
+    uint8_t data;
+	HAL_StatusTypeDef status;
+	status = BMP280_SPI_Read(dev, BMP280_CHIP_ID, &data, 1);
 	dev->chip_id = data;
     return status;
 }
@@ -146,15 +177,27 @@ HAL_StatusTypeDef BMP280_ReadCalibrationParams(BMP280_Device *dev) {
     return HAL_OK;
 }
 
+uint32_t t_start, t_spi, t_temp, t_press;
 /* 读取压力和温度数据并计算 */
-HAL_StatusTypeDef BMP280_ReadPressureTemperature(BMP280_Device *dev,uint8_t dev_index) {
+HAL_StatusTypeDef BMP280_ReadPressureTemperature(BMP280_Device *dev,uint8_t dev_index,volatile Float32_union* press_data_store_p) {
     uint8_t data[6];
+	// 添加计时变量
+    
+	
+	LL_TIM_SetCounter(TIM2, 0);
+	// 开始时间
+    t_start = LL_TIM_GetCounter(TIM2);
+	
+	
 //    HAL_StatusTypeDef status = BMP280_SPI_Read(dev, BMP280_PRESSURE_MSB, data, 6);
 	HAL_StatusTypeDef status = BMP280_SPI_Read_optimized(dev,dev_index, BMP280_PRESSURE_MSB, data, 6);
     
     if (status != HAL_OK) {
-        return HAL_ERROR;
+        return status;
     }
+	
+	// 测量SPI读取耗时
+	t_spi = LL_TIM_GetCounter(TIM2) - t_start;
     
     /* 组合20位压力和温度数据 */
     int32_t adc_p = ((int32_t)data[0] << 12) | ((int32_t)data[1] << 4) | (data[2] >> 4);
@@ -167,39 +210,44 @@ HAL_StatusTypeDef BMP280_ReadPressureTemperature(BMP280_Device *dev,uint8_t dev_
            ((int32_t)dev->dig_T3)) >> 14;
     dev->t_fine = var1 + var2;
     dev->temperature = (dev->t_fine * 5 + 128) >> 8;
-    dev->temperature /= 100.0;  // 转换为°C
+    dev->temperature /= 100.0f;  // 转换为°C
     
     /* 修复压力计算*/
-	double var1_p,var2_p,p;
+	float var1_p,var2_p,p;
     
-    var1_p = ((double)dev->t_fine/2.0) - 64000.0;
-	var2_p = var1_p * var1_p * ((double)dev->dig_P6) / 32768.0;
-	var2_p = var2_p + var1_p * ((double)dev->dig_P5) * 2.0;
-	var2_p = (var2_p/4.0)+(((double)dev->dig_P4) * 65536.0);
-	var1_p = (((double)dev->dig_P3) * var1_p * var1_p /524288.0 + ((double)dev->dig_P2)* var1_p) / 524288.0;
-	var1_p = (1.0 + var1_p / 32768.0) * ((double)dev->dig_P1);
+    var1_p = ((float)dev->t_fine/2.0f) - 64000.0f;
+	var2_p = var1_p * var1_p * ((float)dev->dig_P6) / 32768.0f;
+	var2_p = var2_p + var1_p * ((float)dev->dig_P5) * 2.0f;
+	var2_p = (var2_p/4.0f)+(((float)dev->dig_P4) * 65536.0f);
+	var1_p = (((float)dev->dig_P3) * var1_p * var1_p /524288.0f + ((float)dev->dig_P2)* var1_p) / 524288.0f;
+	var1_p = (1.0f + var1_p / 32768.0f) * ((float)dev->dig_P1);
 	
 	if (var1_p == 0) {
         return HAL_ERROR;  // 避免除零错误
     }
     
-    p = (1048576.0 - (double)adc_p);
-	p = (p -(var2_p/4096.0)) * 6250.0 / var1_p;
-	var1_p = ((double)dev->dig_P9) * p * p /2147483648.0;
-	var2_p = p * ((double)dev->dig_P8) / 32768.0;
-	p = p +(var1_p + var2_p + ((double)dev->dig_P7)) /16.0;
+    p = (1048576.0f - (float)adc_p);
+	p = (p -(var2_p/4096.0f)) * 6250.0f / var1_p;
+	var1_p = ((float)dev->dig_P9) * p * p /2147483648.0f;
+	var2_p = p * ((float)dev->dig_P8) / 32768.0f;
+	p = p +(var1_p + var2_p + ((float)dev->dig_P7)) /16.0f;
     
-    dev->pressure = (float)p / 100.0;  // 转换为hPa
+    dev->pressure = (float)p / 100.0f;  // 转换为hPa
     
     /* 计算海拔（保持不变） */
-    dev->altitude = 44330.0 * (1.0 - pow(dev->pressure / 1013.25, 0.1902949f));
+    dev->altitude = 44330.0f * (1.0f - pow(dev->pressure / 1013.25f, 0.1902949f));//arm_pow_f32 pow
 	
-	dev->pressure/=10.0;// 转换为kPa
+	
+	dev->pressure/=10.0f;// 转换为kPa
+	
+	press_data_store_p[1+dev_index].f32 =  dev->pressure;
+	// 测量压力计算耗时
+	t_press = LL_TIM_GetCounter(TIM2) - t_spi;
     
     return HAL_OK;
 }
 
 /* 计算海拔 */
 float BMP280_CalculateAltitude(float pressure, float sea_level_pressure) {
-    return 44330.0 * (1.0 - pow(pressure / sea_level_pressure, 0.1902949f));
+    return 44330.0f * (1.0f - pow(pressure / sea_level_pressure, 0.1902949f));
 }
