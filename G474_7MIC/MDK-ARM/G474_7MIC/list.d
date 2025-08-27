@@ -1,0 +1,12 @@
+g474_7mic\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/list.c
+g474_7mic\list.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
+g474_7mic\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+g474_7mic\list.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
+g474_7mic\list.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+g474_7mic\list.o: ../Core/Inc/FreeRTOSConfig.h
+g474_7mic\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+g474_7mic\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+g474_7mic\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+g474_7mic\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+g474_7mic\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+g474_7mic\list.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
