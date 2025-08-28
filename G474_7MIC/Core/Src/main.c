@@ -98,7 +98,11 @@ int main(void)
   MX_ADC3_Init();
   MX_ADC4_Init();
   MX_ADC5_Init();
+  MX_TIM7_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
+
+  
 //	LL_TIM_SetCounter(TIM2, 0);
 //	LL_TIM_EnableCounter(TIM2);//Enable TIM2
 //	uint32_t t_start=0, t_end=0;
@@ -107,7 +111,8 @@ int main(void)
 //	volatile float c = 0;
   /* USER CODE END 2 */
 
-  /* Call init function for freertos objects (in freertos.c) */
+  /* Init scheduler */
+  osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
 
   /* Start scheduler */

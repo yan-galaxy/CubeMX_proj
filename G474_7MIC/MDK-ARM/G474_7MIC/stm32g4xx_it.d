@@ -36,6 +36,17 @@ g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.
 g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h
 g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h
 g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h
+g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h
+g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_bus.h
+g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_cortex.h
+g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_rcc.h
+g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_system.h
+g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_utils.h
+g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_pwr.h
+g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h
+g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dma.h
+g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_dmamux.h
+g474_7mic\stm32g4xx_it.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_exti.h
 g474_7mic\stm32g4xx_it.o: ../USB_Device/App/usbd_cdc_if.h
 g474_7mic\stm32g4xx_it.o: ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h
 g474_7mic\stm32g4xx_it.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
