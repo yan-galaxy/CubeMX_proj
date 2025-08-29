@@ -1,4 +1,4 @@
-# routine_acquisition_npz_wave.py (修复版)
+
 import sys
 import numpy as np
 from PyQt5.QtWidgets import QApplication, QMainWindow, QSplitter
@@ -31,7 +31,7 @@ class SerialWorker(QThread):
         self.normalization_low = normalization_low
         self.normalization_high = normalization_high
 
-        self.save_dir = "BMP_raw_data_8x8"
+        self.save_dir = "7MIC_raw_data"
         self.raw_data_queue = Queue()
         self.writer_thread = None
         self.is_saving = False
@@ -42,7 +42,7 @@ class SerialWorker(QThread):
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.npz_path = os.path.join(self.save_dir, f"raw_data_8x8_{timestamp}.npz")
+        self.npz_path = os.path.join(self.save_dir, f"mic_{timestamp}.npz")
         self.is_saving = True
         self.writer_thread = threading.Thread(target=self.write_raw_data_to_file, daemon=True)
         self.writer_thread.start()
@@ -63,7 +63,7 @@ class SerialWorker(QThread):
         print('正在保存缓冲区数据到npz文件')
         if len(self.data_buffer) > 0:
             metadata = {
-                'description': 'BMP280气压计采集8x8数据',
+                'description': '7MIC采集 10KHz',
                 'format_version': '1.0',
                 'normalization_range': [self.normalization_low, self.normalization_high],
                 'timestamp': datetime.now().isoformat()
@@ -86,11 +86,18 @@ class SerialWorker(QThread):
                             frame = self.buffer[start_index:end_index + len(self.FRAME_TAIL)]
                             payload = frame[len(self.FRAME_HEADER):-len(self.FRAME_TAIL)]
                             parsed = np.frombuffer(payload, dtype=np.uint16)
-
-                            if len(parsed) == 100:
+                            
+                            if len(parsed) == 700:
+                                # parsed = parsed[:100]
+                                # parsed = parsed[100:200]
+                                # parsed = parsed[200:300]
+                                # parsed = parsed[300:400]
+                                # parsed = parsed[400:500]
+                                # parsed = parsed[500:600]
+                                # parsed = parsed[600:]
                                 self.raw_data_queue.put(parsed.copy())
 
-                                print("接收到数据帧:",parsed)
+                                # print("接收到数据帧:",parsed)
                                 # parsed = parsed.flatten()
 
                                 if self.matrix_flag == 0:
@@ -127,113 +134,61 @@ class SerialWorker(QThread):
                 self.ser.close()
                 print('串口关闭')
 
-class RoutineWaveformVisualizer:
+class MultiChannelWaveformVisualizer:
     def __init__(self, layout):
         self.layout = layout
-        self.plot = pg.PlotItem(title="某通道波形")
-        self.plot.setLabels(left='数值', bottom='帧编号')
-        self.plot.showGrid(x=True, y=True)
-        self.plot.setYRange(0, 4095)
-        self.layout.addItem(self.plot, 0, 0)
-
-        self.curve = self.plot.plot(pen='y')
-        self.show_data = [0] * 3000
+        self.plots = []
+        self.curves = []
+        self.show_data = []
+        
+        # 为7个麦克风创建独立的波形显示
+        for i in range(7):
+            plot = pg.PlotItem(title=f"麦克风 {i+1}")
+            plot.setLabels(left='数值', bottom='帧编号')
+            plot.showGrid(x=True, y=True)
+            plot.setYRange(0, 4095)
+            
+            curve = plot.plot(pen=pg.intColor(i))  # 使用不同颜色区分
+            show_data = [0] * 1000  # 显示3000个点
+            
+            self.plots.append(plot)
+            self.curves.append(curve)
+            self.show_data.append(show_data)
+            # 将每个图放在2行4列的网格中
+            self.layout.addItem(plot, i // 4, i % 4)
 
     def update_plot(self, new_row):
-        if len(new_row) == 100:
-            new_data = new_row
-            self.show_data = self.show_data[len(new_data):] + new_data
-
-            x_data = np.arange(len(self.show_data))
-            y_data = np.array(self.show_data)
-            self.curve.setData(x_data, y_data)
-            self.plot.setTitle(f"单通道波形 - 第 {len(self.show_data)} 帧")
-
-class MatrixVisualizer:
-    def __init__(self, layout, interplotation=False, rotation_angle=0, flip_horizontal=False, flip_vertical=False):
-        self.layout = layout
-        self.interplotation = interplotation
-        self.rotation_angle = rotation_angle
-        self.flip_horizontal = flip_horizontal
-        self.flip_vertical = flip_vertical
-
-        self.image_item = pg.ImageItem()
-        self.plot = pg.PlotItem(title="8x8传感器数据矩阵")
-        self.plot.addItem(self.image_item)
-        self.plot.setLabels(left='Y轴', bottom='X轴')
-        self.layout.addItem(self.plot, 0, 0)
-
-        self.color_map = pg.colormap.get('viridis')
-        self.image_item.setColorMap(self.color_map)
-
-        # self.data = np.zeros((10, 10))
-        self.data = np.zeros((8, 8))  # 8x8的初始数据
-        self.fps_label = pg.LabelItem(justify='left')
-        self.layout.addItem(self.fps_label, 1, 0)
-
-        self.frame_count = 0
-        self.start_time = QtCore.QTime.currentTime()
-
-    def receive_data(self, new_row):
-        if len(new_row) == 64:
-            self.data = np.array(new_row).reshape(8, 8)
-
-            if self.rotation_angle == 90:
-                self.data = np.rot90(self.data, 1)
-            elif self.rotation_angle == 180:
-                self.data = np.rot90(self.data, 2)
-            elif self.rotation_angle == 270:
-                self.data = np.rot90(self.data, 3)
-
-            if self.flip_horizontal:
-                self.data = np.fliplr(self.data)
-            if self.flip_vertical:
-                self.data = np.flipud(self.data)
-
-            if self.interplotation:
-                interpolated_data = zoom(self.data, (5, 5), order=3)
-                self.data = interpolated_data
-
-            self.image_item.setImage(self.data, levels=(0.0, 1.0))
-            self.frame_count += 1
-
-    def update_fps(self):
-        current_time = QtCore.QTime.currentTime()
-        if self.start_time.msecsTo(current_time) >= 1000:
-            fps = self.frame_count
-            self.fps_label.setText(f"FPS: {fps}")
-            self.frame_count = 0
-            self.start_time = current_time
+        if len(new_row) == 700:
+            # 每100个数据点中取前7个，分别对应7个麦克风
+            for mic in range(7):
+                mic_data = new_row[mic*100:(mic+1)*100]
+                
+                # 更新显示数据
+                self.show_data[mic] = self.show_data[mic][len(mic_data):] + mic_data
+                
+                # 更新图形
+                x_data = np.arange(len(self.show_data[mic]))
+                y_data = np.array(self.show_data[mic])
+                self.curves[mic].setData(x_data, y_data)
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("图像与波形双视图")
+        self.setWindowTitle("7麦克风波形显示")
         self.resize(1500, 800)
 
         self.central_widget = QSplitter()
         self.setCentralWidget(self.central_widget)
 
-        # 创建图像显示组件
-        self.image_layout = pg.GraphicsLayoutWidget() # False True
-        self.image_visualizer = MatrixVisualizer(self.image_layout, interplotation=False, rotation_angle=0, flip_horizontal=False, flip_vertical=True)
-        self.central_widget.addWidget(self.image_layout)
-
-        # 创建波形显示组件
+        # 创建波形显示组件（7个麦克风）
         self.waveform_layout = pg.GraphicsLayoutWidget()
-        self.waveform_visualizer = RoutineWaveformVisualizer(self.waveform_layout)
+        self.waveform_visualizer = MultiChannelWaveformVisualizer(self.waveform_layout)
         self.central_widget.addWidget(self.waveform_layout)
 
         # 初始化串口线程
         self.worker = SerialWorker()
-        self.worker.data_ready.connect(self.image_visualizer.receive_data)
         self.worker.waveform_ready.connect(self.waveform_visualizer.update_plot)
         self.worker.start()
-
-        # 设置定时器更新FPS
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.image_visualizer.update_fps)
-        self.timer.start(200)
 
     def closeEvent(self, event):
         self.hide()

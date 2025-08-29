@@ -49,9 +49,14 @@
 #define EVENT_ALL_FULL (EVENT_ADC1_DMA_FULL | EVENT_ADC2_DMA_FULL | \
                         EVENT_ADC3_DMA_FULL | EVENT_ADC4_DMA_FULL | EVENT_ADC5_DMA_FULL)
 						
+// 2. 组合标志：所有ADC的半满事件（用于同步等待）
+#define EVENT_345_HALF (EVENT_ADC3_DMA_HALF | EVENT_ADC4_DMA_HALF | EVENT_ADC5_DMA_HALF)
+// 3. 组合标志：所有ADC的全满事件
+#define EVENT_345_FULL (EVENT_ADC3_DMA_FULL | EVENT_ADC4_DMA_FULL | EVENT_ADC5_DMA_FULL)
+						
 						
 // 数据帧结构定义：2（帧头）+5×100（5路ADC数据）+2（帧尾）=504个Word_union
-#define ADC_DATA_CNT  100    // 每路ADC单次发送数据量
+#define ADC_DATA_CNT  100    // 每路ADC通道单次发送数据量
 #define FRAME_HEAD_CNT 2    // 帧头数量
 #define FRAME_TAIL_CNT 2    // 帧尾数量
 #define TOTAL_WORD_CNT (FRAME_HEAD_CNT + 5*ADC_DATA_CNT + FRAME_TAIL_CNT)
@@ -163,8 +168,8 @@ uint16_t ADC4_value[200];//MIC3
 uint16_t ADC5_value[200];//MIC1
 
 
-volatile Word_union mic_data_1[104];
-volatile Word_union mic_data_2[104];
+volatile Word_union mic_data_1[704];
+volatile Word_union mic_data_2[704];
 volatile Word_union* mic_send_p=mic_data_1;
 volatile Word_union* mic_store_p=mic_data_2;
 
@@ -203,27 +208,27 @@ void StartDefaultTask(void *argument)
 	mic_data_1[0].byte[1]=0xAA;
 	mic_data_1[1].byte[0]=0xBB;
 	mic_data_1[1].byte[1]=0xCC;
-	for(uint16_t i=0;i<100;i++)
+	for(uint16_t i=0;i<700;i++)
 	{
 		mic_data_1[2+i].word16=i*1+1;
 	}
-	mic_data_1[102].byte[0]=0xAA;//帧尾
-	mic_data_1[102].byte[1]=0x55;
-	mic_data_1[103].byte[0]=0x66;
-	mic_data_1[103].byte[1]=0x77;
+	mic_data_1[702].byte[0]=0xAA;//帧尾
+	mic_data_1[702].byte[1]=0x55;
+	mic_data_1[703].byte[0]=0x66;
+	mic_data_1[703].byte[1]=0x77;
 	
 	mic_data_2[0].byte[0]=0x55;//帧头
 	mic_data_2[0].byte[1]=0xAA;
 	mic_data_2[1].byte[0]=0xBB;
 	mic_data_2[1].byte[1]=0xCC;
-	for(uint16_t i=0;i<100;i++)
+	for(uint16_t i=0;i<700;i++)
 	{
 		mic_data_2[2+i].word16=i*2+2;
 	}
-	mic_data_2[102].byte[0]=0xAA;//帧尾
-	mic_data_2[102].byte[1]=0x55;
-	mic_data_2[103].byte[0]=0x66;
-	mic_data_2[103].byte[1]=0x77;
+	mic_data_2[702].byte[0]=0xAA;//帧尾
+	mic_data_2[702].byte[1]=0x55;
+	mic_data_2[703].byte[0]=0x66;
+	mic_data_2[703].byte[1]=0x77;
 	
 	HAL_ADCEx_Calibration_Start(&hadc1,ADC_SINGLE_ENDED);
 	HAL_ADCEx_Calibration_Start(&hadc2,ADC_SINGLE_ENDED);
@@ -251,29 +256,71 @@ void StartDefaultTask(void *argument)
 	TickType_t xLastWakeTime;
 	xLastWakeTime = xTaskGetTickCount();
 	uint32_t ulReceivedEvents;          // 接收的事件标志
+	
+	LL_TIM_SetCounter(TIM7, 0);
   /* Infinite loop */
 	for(;;)
 	{
-		LL_TIM_SetCounter(TIM7, 0);
+		// 等待：所有ADC半满 或 所有ADC全满（任意一组满足即响应）
+		ulReceivedEvents = osEventFlagsWait(
+		  adc_dma_EventHandle,            // 事件组句柄（你的原有定义）
+		  EVENT_ALL_HALF | EVENT_ALL_FULL, // 等待的事件组合
+		  osFlagsWaitAny,                 // 任意事件满足即返回
+		  osWaitForever                    // 永久等待（直到事件触发）
+		);
+
 		t_start = LL_TIM_GetCounter(TIM7);
 		
+		if (ulReceivedEvents & EVENT_ALL_HALF)
+		{
+			// 复制ADC5半满数据（0~99）
+			  for(uint16_t i=0; i<100; i++) {
+				mic_store_p[FRAME_HEAD_CNT + i].word16 = ADC5_value[i];
+				mic_store_p[FRAME_HEAD_CNT + 100 + i].word16 = ADC3_value[i];
+				mic_store_p[FRAME_HEAD_CNT + 200 + i].word16 = ADC4_value[i];
+				mic_store_p[FRAME_HEAD_CNT + 300 + i].word16 = ADC1_value[1+i*2];
+				mic_store_p[FRAME_HEAD_CNT + 400 + i].word16 = ADC2_value[i*2];
+				mic_store_p[FRAME_HEAD_CNT + 500 + i].word16 = ADC2_value[1+i*2];
+				mic_store_p[FRAME_HEAD_CNT + 600 + i].word16 = ADC1_value[i*2];
+			  }
+			  // 清除所有半满事件标志（避免重复处理）
+			osEventFlagsClear(adc_dma_EventHandle, EVENT_ALL_HALF);
+		}
+		else if (ulReceivedEvents & EVENT_ALL_FULL)
+		{
+			// 复制ADC5全满数据（100~199）
+			  for(uint16_t i=0; i<100; i++) {
+				mic_store_p[FRAME_HEAD_CNT + i].word16 = ADC5_value[i+100];
+				mic_store_p[FRAME_HEAD_CNT + 100 + i].word16 = ADC3_value[i+100];
+				mic_store_p[FRAME_HEAD_CNT + 200 + i].word16 = ADC4_value[i+100];
+				mic_store_p[FRAME_HEAD_CNT + 300 + i].word16 = ADC1_value[1+i*2+200];
+				mic_store_p[FRAME_HEAD_CNT + 400 + i].word16 = ADC2_value[i*2+200];
+				mic_store_p[FRAME_HEAD_CNT + 500 + i].word16 = ADC2_value[1+i*2+200];
+				mic_store_p[FRAME_HEAD_CNT + 600 + i].word16 = ADC1_value[i*2+200];
+			  }
+			  // 清除所有全满事件标志
+			osEventFlagsClear(adc_dma_EventHandle, EVENT_ALL_FULL);
+		}//测试得整个赋值过程80us
+		t_string = LL_TIM_GetCounter(TIM7)-t_start;
 		
+//		sprintf(usb_buff2,"t_send:%.1f us,t_send2:%.1f us,t_string:%.1f us,CDC_result:%u,callback_p:%p,hdma5_callback_p:%p\r\n",t_send/1.0,t_send2/1.0,t_string/1.0,CDC_result,callback_p,hdma_adc5.XferCpltCallback);
+//		CDC_Transmit_FS((uint8_t *)usb_buff2,strlen(usb_buff2));
+//		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
+		
+		exchange_res_p();//切换缓存区
+		CDC_Transmit_FS((uint8_t *)mic_send_p->byte,1408);
+		
+		usb_buff[0]=0;
+
+//		osDelay(1);
+		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(10));
+	}
+
+/*
+	
 //		sprintf(usb_buff,"%d,%d,%d,%d,%d,%d,%d\r\n",
 //		adc_value_struct.IN1_MIC1,adc_value_struct.IN5_MIC2,adc_value_struct.IN3_MIC3,
 //		adc_value_struct.IN12_MIC4,adc_value_struct.IN4_MIC5,adc_value_struct.IN13_MIC6,adc_value_struct.IN2_MIC7);
-		
-//		sprintf(usb_buff,"%d,%d,%d,%d,%d,%d,%d\r\n%d,%d,%d,%d,%d,%d,%d\r\n%d,%d,%d,%d,%d,%d,%d\r\n%d,%d,%d,%d,%d,%d,%d\r\n%d,%d,%d,%d,%d,%d,%d\r\n%d,%d,%d,%d,%d,%d,%d\r\n%d,%d,%d,%d,%d,%d,%d\r\n%d,%d,%d,%d,%d,%d,%d\r\n%d,%d,%d,%d,%d,%d,%d\r\n%d,%d,%d,%d,%d,%d,%d\r\n",
-//			ADC5_value[0],ADC3_value[0],ADC4_value[0],ADC1_value[ 1],ADC2_value[ 0],ADC2_value[ 1],ADC1_value[ 0],
-//			ADC5_value[1],ADC3_value[1],ADC4_value[1],ADC1_value[ 3],ADC2_value[ 2],ADC2_value[ 3],ADC1_value[ 2],
-//			ADC5_value[2],ADC3_value[2],ADC4_value[2],ADC1_value[ 5],ADC2_value[ 4],ADC2_value[ 5],ADC1_value[ 4],
-//			ADC5_value[3],ADC3_value[3],ADC4_value[3],ADC1_value[ 7],ADC2_value[ 6],ADC2_value[ 7],ADC1_value[ 6],
-//			ADC5_value[4],ADC3_value[4],ADC4_value[4],ADC1_value[ 9],ADC2_value[ 8],ADC2_value[ 9],ADC1_value[ 8],
-//			ADC5_value[5],ADC3_value[5],ADC4_value[5],ADC1_value[11],ADC2_value[10],ADC2_value[11],ADC1_value[10],
-//			ADC5_value[6],ADC3_value[6],ADC4_value[6],ADC1_value[13],ADC2_value[12],ADC2_value[13],ADC1_value[12],
-//			ADC5_value[7],ADC3_value[7],ADC4_value[7],ADC1_value[15],ADC2_value[14],ADC2_value[15],ADC1_value[14],
-//			ADC5_value[8],ADC3_value[8],ADC4_value[8],ADC1_value[17],ADC2_value[16],ADC2_value[17],ADC1_value[16],
-//			ADC5_value[9],ADC3_value[9],ADC4_value[9],ADC1_value[19],ADC2_value[18],ADC2_value[19],ADC1_value[18]
-//		);
 		
 		
 //		sprintf(usb_buff + strlen((char *)usb_buff),"%d\r\n%d\r\n%d\r\n%d\r\n%d\r\n%d\r\n%d\r\n%d\r\n%d\r\n%d\r\n",
@@ -288,52 +335,9 @@ void StartDefaultTask(void *argument)
 //			ADC5_value[8],
 //			ADC5_value[9]
 //		);
-		// 等待：所有ADC半满 或 所有ADC全满（任意一组满足即响应）
-		ulReceivedEvents = osEventFlagsWait(
-		  adc_dma_EventHandle,            // 事件组句柄（你的原有定义）
-		  EVENT_ADC5_DMA_HALF | EVENT_ADC5_DMA_FULL, // 等待的事件组合
-		  osFlagsWaitAny,                 // 任意事件满足即返回
-		  osWaitForever                    // 永久等待（直到事件触发）
-		);
-
-
-		if (ulReceivedEvents & EVENT_ADC5_DMA_HALF)
-		{
-			// 复制ADC5半满数据（0~99）
-			  for(uint16_t i=0; i<100; i++) {
-				mic_store_p[FRAME_HEAD_CNT + i].word16 = ADC5_value[i];
-			  }
-			  // 清除所有半满事件标志（避免重复处理）
-			osEventFlagsClear(adc_dma_EventHandle, EVENT_ALL_HALF);
-		}
-		else if (ulReceivedEvents & EVENT_ADC5_DMA_FULL)
-		{
-			// 复制ADC5全满数据（100~199）
-			  for(uint16_t i=0; i<100; i++) {
-				mic_store_p[FRAME_HEAD_CNT + i].word16 = ADC5_value[100 + i];
-			  }
-			  // 清除所有全满事件标志
-			osEventFlagsClear(adc_dma_EventHandle, EVENT_ALL_FULL);
-		}
-		
-		
-		t_string = LL_TIM_GetCounter(TIM7)-t_start;
-		
-//		sprintf(usb_buff2,"t_send:%.1f us,t_send2:%.1f us,t_string:%.1f us,CDC_result:%u,callback_p:%p,hdma5_callback_p:%p\r\n",t_send/1.0,t_send2/1.0,t_string/1.0,CDC_result,callback_p,hdma_adc5.XferCpltCallback);
-		
-//		CDC_Transmit_FS((uint8_t *)usb_buff2,strlen(usb_buff2));
-//		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
-		
-		exchange_res_p();//切换缓存区
-		CDC_Transmit_FS((uint8_t *)mic_send_p->byte,208);
-		
-		usb_buff[0]=0;
-
-//		osDelay(1);
-		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(10));
-	}
-
-/*
+	
+	
+	
 //	//t_send:8.0 us,t_send2:530.7 us,t_string:477.5 us
 //	sprintf(usb_buff2,"t_send:%.1f us,t_send2:%.1f us,t_string:%.1f us,CDC_result:%u\r\n",t_send/10.0,t_send2/10.0,t_string/10.0,CDC_result);
 
@@ -395,11 +399,19 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 	EventGroupHandle_t xEventGroup = (EventGroupHandle_t)adc_dma_EventHandle; // 转换句柄类型
 	if(hadc == & hadc1)
 	{
-		
+		xEventGroupSetBitsFromISR(
+		  xEventGroup,          // 事件组句柄（转换后）
+		  EVENT_ADC1_DMA_FULL,  // 要设置的事件标志
+		  &xHigherPriorityTaskWoken  // 输出参数：是否需要切换任务
+		);
 	}
 	else if(hadc == & hadc2)
 	{
-		
+		xEventGroupSetBitsFromISR(
+		  xEventGroup,          // 事件组句柄（转换后）
+		  EVENT_ADC2_DMA_FULL,  // 要设置的事件标志
+		  &xHigherPriorityTaskWoken  // 输出参数：是否需要切换任务
+		);
 	}
 	else if(hadc == & hadc3)
 	{
@@ -434,11 +446,19 @@ void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc)
 	EventGroupHandle_t xEventGroup = (EventGroupHandle_t)adc_dma_EventHandle; // 转换句柄类型
 	if(hadc == & hadc1)
 	{
-		
+		xEventGroupSetBitsFromISR(
+		  xEventGroup,          // 事件组句柄（转换后）
+		  EVENT_ADC1_DMA_HALF,  // 要设置的事件标志
+		  &xHigherPriorityTaskWoken  // 输出参数：是否需要切换任务
+		);
 	}
 	else if(hadc == & hadc2)
 	{
-		
+		xEventGroupSetBitsFromISR(
+		  xEventGroup,          // 事件组句柄（转换后）
+		  EVENT_ADC2_DMA_HALF,  // 要设置的事件标志
+		  &xHigherPriorityTaskWoken  // 输出参数：是否需要切换任务
+		);
 	}
 	else if(hadc == & hadc3)
 	{

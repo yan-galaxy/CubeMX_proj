@@ -3,7 +3,7 @@
 <title>Static Call Graph - [G474_7MIC\G474_7MIC.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image G474_7MIC\G474_7MIC.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Aug 28 23:21:07 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Aug 29 11:25:45 2025
 <BR><P>
 <H3>Maximum Stack Usage =       4576 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -707,7 +707,7 @@ Global Symbols
 <LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_ADC1_Init
 </UL>
 
-<P><STRONG><a name="[9a]"></a>HAL_ADC_ConvCpltCallback</STRONG> (Thumb, 100 bytes, Stack size 16 bytes, app_freertos.o(i.HAL_ADC_ConvCpltCallback))
+<P><STRONG><a name="[9a]"></a>HAL_ADC_ConvCpltCallback</STRONG> (Thumb, 124 bytes, Stack size 16 bytes, app_freertos.o(i.HAL_ADC_ConvCpltCallback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = HAL_ADC_ConvCpltCallback &rArr; xEventGroupSetBitsFromISR &rArr; xTimerPendFunctionCallFromISR &rArr; xQueueGenericSendFromISR &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xEventGroupSetBitsFromISR
@@ -715,7 +715,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC_DMAConvCplt
 </UL>
 
-<P><STRONG><a name="[9c]"></a>HAL_ADC_ConvHalfCpltCallback</STRONG> (Thumb, 100 bytes, Stack size 16 bytes, app_freertos.o(i.HAL_ADC_ConvHalfCpltCallback))
+<P><STRONG><a name="[9c]"></a>HAL_ADC_ConvHalfCpltCallback</STRONG> (Thumb, 124 bytes, Stack size 16 bytes, app_freertos.o(i.HAL_ADC_ConvHalfCpltCallback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = HAL_ADC_ConvHalfCpltCallback &rArr; xEventGroupSetBitsFromISR &rArr; xTimerPendFunctionCallFromISR &rArr; xQueueGenericSendFromISR &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xEventGroupSetBitsFromISR
@@ -1440,7 +1440,7 @@ Global Symbols
 <P><STRONG><a name="[17]"></a>NMI_Handler</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32g4xx_it.o(i.NMI_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32g474xx.o(RESET)
 </UL>
-<P><STRONG><a name="[8b]"></a>StartDefaultTask</STRONG> (Thumb, 510 bytes, Stack size 4416 bytes, app_freertos.o(i.StartDefaultTask))
+<P><STRONG><a name="[8b]"></a>StartDefaultTask</STRONG> (Thumb, 782 bytes, Stack size 4416 bytes, app_freertos.o(i.StartDefaultTask))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4576<LI>Call Chain = StartDefaultTask &rArr; osEventFlagsClear &rArr; xEventGroupClearBitsFromISR &rArr; xTimerPendFunctionCallFromISR &rArr; xQueueGenericSendFromISR &rArr; prvCopyDataToQueue &rArr; xTaskPriorityDisinherit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[128]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGetTickCount
