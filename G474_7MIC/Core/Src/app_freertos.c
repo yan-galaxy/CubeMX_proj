@@ -160,7 +160,6 @@ void MX_FREERTOS_Init(void) {
   * @param  argument: Not used
   * @retval None
   */
-Adc_IN_Struct adc_value_struct;
 uint16_t ADC1_value[400];//MIC7 MIC4
 uint16_t ADC2_value[400];//MIC5 MIC6
 uint16_t ADC3_value[200];//MIC2
@@ -191,7 +190,6 @@ void exchange_res_p(void)
 	}
 }
 
-uint32_t * callback_p;
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
 {
@@ -239,11 +237,6 @@ void StartDefaultTask(void *argument)
 	osDelay(100);
 	
 	//要关闭ADC的连续转换，不然不受定时器触发的约束，一直转换
-//	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)(&(adc_value_struct.IN2_MIC7)), 2);
-//	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)(&(adc_value_struct.IN4_MIC5)), 2);
-//	HAL_ADC_Start_DMA(&hadc3, (uint32_t *)(&(adc_value_struct.IN5_MIC2)), 1);
-//	HAL_ADC_Start_DMA(&hadc4, (uint32_t *)(&(adc_value_struct.IN3_MIC3)), 1);
-//	HAL_ADC_Start_DMA(&hadc5, (uint32_t *)(&(adc_value_struct.IN1_MIC1)), 1);
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)ADC1_value, 400);
 	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)ADC2_value, 400);
 	HAL_ADC_Start_DMA(&hadc3, (uint32_t *)ADC3_value, 200);
@@ -264,14 +257,14 @@ void StartDefaultTask(void *argument)
 		// 等待：所有ADC半满 或 所有ADC全满（任意一组满足即响应）
 		ulReceivedEvents = osEventFlagsWait(
 		  adc_dma_EventHandle,            // 事件组句柄（你的原有定义）
-		  EVENT_ALL_HALF | EVENT_ALL_FULL, // 等待的事件组合
+		  EVENT_ALL_HALF | EVENT_ALL_FULL, // 等待的事件组合      EVENT_ALL_HALF | EVENT_ALL_FULL  EVENT_ADC5_DMA_HALF | EVENT_ADC5_DMA_FULL
 		  osFlagsWaitAny,                 // 任意事件满足即返回
 		  osWaitForever                    // 永久等待（直到事件触发）
 		);
 
 		t_start = LL_TIM_GetCounter(TIM7);
 		
-		if (ulReceivedEvents & EVENT_ALL_HALF)
+		if (ulReceivedEvents & EVENT_ALL_HALF)//EVENT_ADC5_DMA_HALF  EVENT_ALL_HALF
 		{
 			// 复制ADC5半满数据（0~99）
 			  for(uint16_t i=0; i<100; i++) {
@@ -286,7 +279,7 @@ void StartDefaultTask(void *argument)
 			  // 清除所有半满事件标志（避免重复处理）
 			osEventFlagsClear(adc_dma_EventHandle, EVENT_ALL_HALF);
 		}
-		else if (ulReceivedEvents & EVENT_ALL_FULL)
+		else if (ulReceivedEvents & EVENT_ALL_FULL)//EVENT_ADC5_DMA_FULL  EVENT_ALL_FULL
 		{
 			// 复制ADC5全满数据（100~199）
 			  for(uint16_t i=0; i<100; i++) {

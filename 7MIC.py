@@ -141,21 +141,34 @@ class MultiChannelWaveformVisualizer:
         self.curves = []
         self.show_data = []
         
+        # 定义每个麦克风的位置 (行, 列)
+        positions = [
+            (0, 0),  # MIC 1
+            (1, 0),  # MIC 2
+            (2, 0),  # MIC 3
+            (1, 1),  # MIC 4
+            (2, 2),  # MIC 5
+            (1, 2),  # MIC 6
+            (0, 2),  # MIC 7
+        ]
+    
         # 为7个麦克风创建独立的波形显示
         for i in range(7):
-            plot = pg.PlotItem(title=f"麦克风 {i+1}")
+            plot = pg.PlotItem(title=f"MIC {i+1}")
             plot.setLabels(left='数值', bottom='帧编号')
             plot.showGrid(x=True, y=True)
             plot.setYRange(0, 4095)
             
             curve = plot.plot(pen=pg.intColor(i))  # 使用不同颜色区分
-            show_data = [0] * 1000  # 显示3000个点
+            show_data = [0] * 1000  # 显示1000个点
             
             self.plots.append(plot)
             self.curves.append(curve)
             self.show_data.append(show_data)
-            # 将每个图放在2行4列的网格中
-            self.layout.addItem(plot, i // 4, i % 4)
+            
+            # 使用预定义的位置
+            row, col = positions[i]
+            self.layout.addItem(plot, row, col)
 
     def update_plot(self, new_row):
         if len(new_row) == 700:
@@ -174,7 +187,7 @@ class MultiChannelWaveformVisualizer:
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("7麦克风波形显示")
+        self.setWindowTitle("7MIC波形显示")
         self.resize(1500, 800)
 
         self.central_widget = QSplitter()
