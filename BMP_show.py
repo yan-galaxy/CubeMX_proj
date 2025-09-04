@@ -11,7 +11,7 @@ from queue import Queue
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 数据就绪信号
     
-    def __init__(self, port='COM6', normalization_ranges=None):
+    def __init__(self, port='COM7', normalization_ranges=None):
         super().__init__()
         self.port = port         # 串口号
         self.baudrate = 115200   # 波特率
@@ -46,6 +46,7 @@ class SerialWorker(QThread):
                             
                             if len(payload) == 16:  # 16字节数据(4 float)
                                 parsed = np.frombuffer(payload, dtype='<f4')  # 显式指定小端序
+                                print(parsed)
                                 parsed = parsed[::-1]  # 全部反转
                                 # 新增：每个通道单独归一化
                                 normalized = []

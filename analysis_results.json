@@ -1,0 +1,25 @@
+{
+    "true_params": {
+        "v_jump_amp": 2.5,
+        "v_jump_time": 30,
+        "decay_amp": 1.8,
+        "tau": 25,
+        "baseline": 0.3
+    },
+    "fit_params": {
+        "delta": {
+            "amplitude": 0.7104406224898581,
+            "time_point": 20.0,
+            "error_amp": 71.58237510040568,
+            "error_time": 1.0
+        },
+        "exponential": {
+            "amplitude": 1.8104605651907628,
+            "tau": 24.569352011304748,
+            "baseline": 0.0041553847090856815,
+            "error_amp": 0.5811425105979318,
+            "error_tau": 0.04306479886952524
+        }
+    },
+    "method": "Combined Delta and Exponential Model"
+}
