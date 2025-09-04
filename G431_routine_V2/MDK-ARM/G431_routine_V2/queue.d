@@ -1,9 +1,9 @@
 g431_routine_v2\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/queue.c
-g431_routine_v2\queue.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-g431_routine_v2\queue.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+g431_routine_v2\queue.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
+g431_routine_v2\queue.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\string.h
 g431_routine_v2\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
-g431_routine_v2\queue.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-g431_routine_v2\queue.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+g431_routine_v2\queue.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
+g431_routine_v2\queue.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
 g431_routine_v2\queue.o: ../Core/Inc/FreeRTOSConfig.h
 g431_routine_v2\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 g431_routine_v2\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h

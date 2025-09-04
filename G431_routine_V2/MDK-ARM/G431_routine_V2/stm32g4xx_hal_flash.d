@@ -6,7 +6,7 @@ g431_routine_v2\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32
 g431_routine_v2\stm32g4xx_hal_flash.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h
 g431_routine_v2\stm32g4xx_hal_flash.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h
 g431_routine_v2\stm32g4xx_hal_flash.o: ../Drivers/CMSIS/Include/core_cm4.h
-g431_routine_v2\stm32g4xx_hal_flash.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+g431_routine_v2\stm32g4xx_hal_flash.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
 g431_routine_v2\stm32g4xx_hal_flash.o: ../Drivers/CMSIS/Include/cmsis_version.h
 g431_routine_v2\stm32g4xx_hal_flash.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 g431_routine_v2\stm32g4xx_hal_flash.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -14,7 +14,7 @@ g431_routine_v2\stm32g4xx_hal_flash.o: ../Drivers/CMSIS/Include/mpu_armv7.h
 g431_routine_v2\stm32g4xx_hal_flash.o: ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h
 g431_routine_v2\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h
 g431_routine_v2\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-g431_routine_v2\stm32g4xx_hal_flash.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+g431_routine_v2\stm32g4xx_hal_flash.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
 g431_routine_v2\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h
 g431_routine_v2\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h
 g431_routine_v2\stm32g4xx_hal_flash.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h
