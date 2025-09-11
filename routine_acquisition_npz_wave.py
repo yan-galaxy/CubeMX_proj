@@ -30,7 +30,9 @@ class FilterHandler:
         
         # 设计低通滤波器
         normal_low_cutoff = low_cutoff / self.nyquist
-        self.b_low, self.a_low = signal.butter(order, normal_low_cutoff, 
+        # self.b_low, self.a_low = signal.butter(order, normal_low_cutoff, 
+        #                                       btype='low', analog=False)
+        self.b_low, self.a_low = signal.bessel(order, normal_low_cutoff, 
                                               btype='low', analog=False)
         
         # 初始化滤波器状态变量
@@ -52,7 +54,7 @@ class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 用于图像更新
     waveform_ready = pyqtSignal(list)  # 用于波形更新
 
-    def __init__(self, port='COM9', normalization_low=0, normalization_high=2500):#2500
+    def __init__(self, port='COM9', normalization_low=0, normalization_high=100):#2500
         super().__init__()
         self.port = port
         self.baudrate = 460800
@@ -66,11 +68,11 @@ class SerialWorker(QThread):
         self.init_frames = []  # 用于存储初始化帧
         self.init_frame_count = 0  # 初始化帧计数器
         self.max_init_frames = 100  # 最大初始化帧数
-        self.dead_value = 0  # 可视化死点值
+        self.dead_value = 30  # 可视化死点值
 
         # 初始化滤波器（100个通道，对应10x10矩阵）
         self.filter_handlers = {
-            i: FilterHandler(fs=100.0, low_cutoff=5.0, order=1)
+            i: FilterHandler(fs=100.0, low_cutoff=5.0, order=8)
             for i in range(100)
         }
         self.filters_initialized = False  # 滤波器初始化标志
@@ -99,7 +101,7 @@ class SerialWorker(QThread):
         while self.is_saving:
             if not self.raw_data_queue.empty():
                 data = self.raw_data_queue.get()
-                self.data_buffer.append(data.tolist())
+                # self.data_buffer.append(data.tolist())
             else:
                 self.msleep(100)
 
@@ -109,14 +111,14 @@ class SerialWorker(QThread):
         if self.writer_thread and self.writer_thread.is_alive():
             self.writer_thread.join()
         print('正在保存缓冲区数据到npz文件')
-        if len(self.data_buffer) > 0:
-            metadata = {
-                'description': 'INCRMA原始传感器数据',
-                'format_version': '1.0',
-                'normalization_range': [self.normalization_low, self.normalization_high],
-                'timestamp': datetime.now().isoformat()
-            }
-            np.savez_compressed(self.npz_path, data=np.array(self.data_buffer), **metadata)
+        # if len(self.data_buffer) > 0:
+        #     metadata = {
+        #         'description': 'INCRMA原始传感器数据',
+        #         'format_version': '1.0',
+        #         'normalization_range': [self.normalization_low, self.normalization_high],
+        #         'timestamp': datetime.now().isoformat()
+        #     }
+        #     np.savez_compressed(self.npz_path, data=np.array(self.data_buffer), **metadata)
         print('保存完毕')
 
     def run(self):
@@ -276,7 +278,7 @@ class MainWindow(QMainWindow):
 
         # 创建图像显示组件
         self.image_layout = pg.GraphicsLayoutWidget()
-        self.image_visualizer = MatrixVisualizer(self.image_layout, interplotation=False, rotation_angle=0, flip_horizontal=True, flip_vertical=False)
+        self.image_visualizer = MatrixVisualizer(self.image_layout, interplotation=True, rotation_angle=0, flip_horizontal=True, flip_vertical=True)
         self.central_widget.addWidget(self.image_layout)
 
         # 创建波形显示组件
