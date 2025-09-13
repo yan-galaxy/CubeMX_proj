@@ -9,7 +9,7 @@ from serial.tools import list_ports  # 跨平台串口检测
 from queue import Queue
 from PyQt5.QtCore import QThread, pyqtSignal
 from scipy.ndimage import zoom
-from scipy import signal
+from scipy import signal,ndimage
 import os
 import threading
 from datetime import datetime
@@ -54,7 +54,7 @@ class SerialWorker(QThread):
     waveform_ready = pyqtSignal(list)  # 用于波形更新
     error_signal = pyqtSignal(str)  # 串口错误信号（跨平台错误提示）
 
-    def __init__(self, port, normalization_low=0, normalization_high=1000):#2500
+    def __init__(self, port, normalization_low=0, normalization_high=700):#2500
         super().__init__()
         self.port = port  # 外部传入选择的串口（不再硬编码）
         self.baudrate = 460800
@@ -68,7 +68,7 @@ class SerialWorker(QThread):
         self.init_frames = []  # 用于存储初始化帧
         self.init_frame_count = 0  # 初始化帧计数器
         self.max_init_frames = 100  # 最大初始化帧数
-        self.dead_value = 30  # 可视化死点值
+        self.dead_value = 50  # 可视化死点值
 
         # 初始化滤波器（100个通道，对应10x10矩阵）
         self.filter_handlers = {
@@ -258,7 +258,10 @@ class MatrixVisualizer:
                 self.data = np.flipud(self.data)
 
             if self.interplotation:
-                interpolated_data = zoom(self.data, (5, 5), order=3)
+                interpolated_data = zoom(self.data, (7, 7), order=3)
+                # 添加高斯模糊处理
+                self.gaussian_sigma = 0.5
+                interpolated_data = ndimage.gaussian_filter(interpolated_data, sigma=self.gaussian_sigma)
                 self.data = interpolated_data
 
             self.image_item.setImage(self.data, levels=(0.0, 1.0))
@@ -362,7 +365,7 @@ class MainWindow(QMainWindow):
 
         # 创建图像显示组件
         self.image_layout = pg.GraphicsLayoutWidget()
-        self.image_visualizer = MatrixVisualizer(self.image_layout, interplotation=True, rotation_angle=0, flip_horizontal=True, flip_vertical=True)
+        self.image_visualizer = MatrixVisualizer(self.image_layout, interplotation=True, rotation_angle=0, flip_horizontal=False, flip_vertical=False)
         self.central_widget.addWidget(self.image_layout)
 
         # 创建波形显示组件
