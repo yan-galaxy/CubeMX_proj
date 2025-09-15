@@ -365,7 +365,7 @@ class MainWindow(QMainWindow):
 
         # 创建图像显示组件
         self.image_layout = pg.GraphicsLayoutWidget()
-        self.image_visualizer = MatrixVisualizer(self.image_layout, interplotation=True, rotation_angle=0, flip_horizontal=False, flip_vertical=False)
+        self.image_visualizer = MatrixVisualizer(self.image_layout, interplotation=False, rotation_angle=0, flip_horizontal=False, flip_vertical=False)
         self.central_widget.addWidget(self.image_layout)
 
         # 创建波形显示组件
