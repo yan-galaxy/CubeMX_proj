@@ -65,7 +65,7 @@ class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 用于图像更新
     waveform_ready = pyqtSignal(list)  # 用于波形更新
 
-    def __init__(self, port='COM5', normalization_low=0, normalization_high=0.7):
+    def __init__(self, port='COM13', normalization_low=0, normalization_high=0.7):
         super().__init__()
         self.port = port
         self.baudrate = 460800

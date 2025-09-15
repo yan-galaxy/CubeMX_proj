@@ -1,4 +1,3 @@
-# BMP_show.py - 四通道传感器可视化（增强版）
 import sys
 import numpy as np
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QHBoxLayout, QVBoxLayout, QGraphicsDropShadowEffect
