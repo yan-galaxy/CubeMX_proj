@@ -204,7 +204,7 @@ void StartDefaultTask(void *argument)
 	bmp_press_f_2[65].byte[3]=0x77;
 	
 	
-	for(dev_index=0;dev_index<2;dev_index++)
+	for(dev_index=0;dev_index<3;dev_index++)
 	{
 		bmp_dev[dev_index].hspi = &hspi1;
 		bmp_dev[dev_index].cs_index = dev_index;

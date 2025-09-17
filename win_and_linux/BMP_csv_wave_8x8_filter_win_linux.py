@@ -274,7 +274,7 @@ class RoutineWaveformVisualizer:
 
     def update_plot(self, new_row):
         if len(new_row) == 64:
-            center_sum = new_row[0]  # 使用第4个通道（索引3）的滤波后数据
+            center_sum = new_row[2]  # 使用第4个通道（索引3）的滤波后数据
             new_data = [center_sum]
             self.show_data = self.show_data[len(new_data):] + new_data
 
