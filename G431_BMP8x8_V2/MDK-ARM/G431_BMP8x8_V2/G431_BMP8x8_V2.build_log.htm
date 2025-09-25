@@ -28,49 +28,49 @@ Project File Date:  09/15/2025
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\software\study\keil\ARM\ARMCC\Bin'
 Build target 'G431_BMP8x8_V2'
 compiling app_freertos.c...
-../Core/Src/app_freertos.c(277): warning:  #188-D: enumerated type mixed with another type
-  	HAL_StatusTypeDef error_flag=0;
-../Core/Src/app_freertos.c(283): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(DS_GPIO_Port,DS_Pin,0);
-../Core/Src/app_freertos.c(284): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,0);
 ../Core/Src/app_freertos.c(285): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,0);
-../Core/Src/app_freertos.c(277): warning:  #177-D: variable "error_flag"  was declared but never referenced
   	HAL_StatusTypeDef error_flag=0;
-../Core/Src/app_freertos.c(337): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(DS_GPIO_Port,DS_Pin,DS);//输入 DS
-../Core/Src/app_freertos.c(339): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,1);//数据载入
-../Core/Src/app_freertos.c(341): warning:  #188-D: enumerated type mixed with another type
+../Core/Src/app_freertos.c(291): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(DS_GPIO_Port,DS_Pin,0);
+../Core/Src/app_freertos.c(292): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,0);
+../Core/Src/app_freertos.c(293): warning:  #188-D: enumerated type mixed with another type
   	HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,0);
-../Core/Src/app_freertos.c(342): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,1);//数据输出 此时真实输出为DS指定的电平
-../Core/Src/app_freertos.c(344): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,0);
+../Core/Src/app_freertos.c(285): warning:  #177-D: variable "error_flag"  was declared but never referenced
+  	HAL_StatusTypeDef error_flag=0;
+../Core/Src/app_freertos.c(345): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(DS_GPIO_Port,DS_Pin,DS);//输入 DS
+../Core/Src/app_freertos.c(347): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,1);//数据载入
+../Core/Src/app_freertos.c(349): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,0);
 ../Core/Src/app_freertos.c(350): warning:  #188-D: enumerated type mixed with another type
-  		HAL_GPIO_WritePin(DS_GPIO_Port,DS_Pin, ((DS_8>>i) & 0x01) );//输入 DS
+  	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,1);//数据输出 此时真实输出为DS指定的电平
 ../Core/Src/app_freertos.c(352): warning:  #188-D: enumerated type mixed with another type
-  		HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,1);//数据载入
-../Core/Src/app_freertos.c(354): warning:  #188-D: enumerated type mixed with another type
-  		HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,0);
-../Core/Src/app_freertos.c(356): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,1);//数据输出 此时真实输出为DS_8指定的8通道电平
-../Core/Src/app_freertos.c(358): warning:  #188-D: enumerated type mixed with another type
   	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,0);
-../Core/Src/app_freertos.c(364): warning:  #188-D: enumerated type mixed with another type
-  		HAL_GPIO_WritePin(DS_GPIO_Port,DS_Pin, ((DS_64>>i) & 0x0000000000000001) );//输入 DS
-../Core/Src/app_freertos.c(366): warning:  #188-D: enumerated type mixed with another type
+../Core/Src/app_freertos.c(358): warning:  #188-D: enumerated type mixed with another type
+  		HAL_GPIO_WritePin(DS_GPIO_Port,DS_Pin, ((DS_8>>i) & 0x01) );//输入 DS
+../Core/Src/app_freertos.c(360): warning:  #188-D: enumerated type mixed with another type
   		HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,1);//数据载入
-../Core/Src/app_freertos.c(368): warning:  #188-D: enumerated type mixed with another type
+../Core/Src/app_freertos.c(362): warning:  #188-D: enumerated type mixed with another type
   		HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,0);
-../Core/Src/app_freertos.c(370): warning:  #188-D: enumerated type mixed with another type
+../Core/Src/app_freertos.c(364): warning:  #188-D: enumerated type mixed with another type
   	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,1);//数据输出 此时真实输出为DS_8指定的8通道电平
+../Core/Src/app_freertos.c(366): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,0);
 ../Core/Src/app_freertos.c(372): warning:  #188-D: enumerated type mixed with another type
+  		HAL_GPIO_WritePin(DS_GPIO_Port,DS_Pin, ((DS_64>>i) & 0x0000000000000001) );//输入 DS
+../Core/Src/app_freertos.c(374): warning:  #188-D: enumerated type mixed with another type
+  		HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,1);//数据载入
+../Core/Src/app_freertos.c(376): warning:  #188-D: enumerated type mixed with another type
+  		HAL_GPIO_WritePin(SHCP_GPIO_Port,SHCP_Pin,0);
+../Core/Src/app_freertos.c(378): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,1);//数据输出 此时真实输出为DS_8指定的8通道电平
+../Core/Src/app_freertos.c(380): warning:  #188-D: enumerated type mixed with another type
   	HAL_GPIO_WritePin(STCP_GPIO_Port,STCP_Pin,0);
 ../Core/Src/app_freertos.c: 20 warnings, 0 errors
 linking...
-Program Size: Code=32668 RO-data=836 RW-data=568 ZI-data=23904  
+Program Size: Code=32732 RO-data=836 RW-data=568 ZI-data=23904  
 FromELF: creating hex file...
 "G431_BMP8x8_V2\G431_BMP8x8_V2.axf" - 0 Error(s), 20 Warning(s).
 
@@ -96,7 +96,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:04
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

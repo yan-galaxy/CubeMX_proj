@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QSplitter, QDialog, 
-                             QVBoxLayout, QComboBox, QPushButton, QMessageBox)
+                             QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QMessageBox, QWidget, QLabel)
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore
 import serial
@@ -261,27 +261,76 @@ class SerialSelectionDialog(QDialog):
 
 
 class RoutineWaveformVisualizer:
-    def __init__(self, layout):
-        self.layout = layout
-        self.plot = pg.PlotItem(title="某通道波形")
+    def __init__(self, parent_widget):
+        self.parent_widget = parent_widget
+        self.selected_channel = 0  # 默认选择通道0
+
+        # 设置边框样式 - 黑色边框和背景
+        self.parent_widget.setStyleSheet("""
+            QWidget {
+                background-color: black;
+                border: 2px solid black;
+            }
+        """)
+        
+        # 创建一个垂直布局来包含所有控件
+        self.main_layout = QVBoxLayout()
+        self.parent_widget.setLayout(self.main_layout)
+        
+        # 创建绘图区域
+        self.plot_widget = pg.PlotWidget()
+        self.plot = self.plot_widget.getPlotItem()
+        self.plot.setTitle(f"通道 {self.selected_channel+1} 波形")
         self.plot.setLabels(left='数值', bottom='帧编号')
         self.plot.showGrid(x=True, y=True)
-        self.plot.setYRange(99.5, 105.0)
-        self.layout.addItem(self.plot, 0, 0)
+        self.plot.setYRange(99.5, 130.0)
+        self.main_layout.addWidget(self.plot_widget)
+
+        # 创建包含控件的水平布局
+        self.control_layout = QHBoxLayout()
+        
+        # 添加通道选择标签和下拉框
+        self.channel_selector = QComboBox()
+        self.channel_selector.addItems([f"通道 {i+1}" for i in range(64)])
+        self.channel_selector.setCurrentIndex(self.selected_channel)
+        self.channel_selector.currentIndexChanged.connect(self.change_channel)
+        self.channel_selector.setStyleSheet("""
+            QComboBox {
+                color: white; 
+                background-color: #222222;
+                border: 1px solid #555555;
+                padding: 2px;
+                min-width: 80px;
+            }
+            QComboBox QAbstractItemView {
+                background-color: #222222;
+                color: white;
+            }
+        """)
+        self.control_layout.addWidget(self.channel_selector)
+        self.control_layout.addStretch()  # 添加弹性空间
+        
+        self.main_layout.addLayout(self.control_layout)
 
         self.curve = self.plot.plot(pen='y')
-        self.show_data = [0] * 300
+        self.show_data = [0] * 400
+
+    def change_channel(self, index):
+        """更改显示的通道"""
+        self.selected_channel = index
+        self.plot.setTitle(f"通道 {self.selected_channel+1} 波形")
 
     def update_plot(self, new_row):
         if len(new_row) == 64:
-            center_sum = new_row[2]  # 使用第4个通道（索引3）的滤波后数据
-            new_data = [center_sum]
+            # 使用选定通道的数据
+            channel_data = new_row[self.selected_channel]
+            new_data = [channel_data]
             self.show_data = self.show_data[len(new_data):] + new_data
 
             x_data = np.arange(len(self.show_data))
             y_data = np.array(self.show_data)
             self.curve.setData(x_data, y_data)
-            self.plot.setTitle(f"单通道波形 - 第 {len(self.show_data)} 帧")
+            self.plot.setTitle(f"通道 {self.selected_channel+1} 波形")
 
 class MatrixVisualizer:
     def __init__(self, layout, interplotation=False, rotation_angle=0, flip_horizontal=False, flip_vertical=False):
@@ -373,7 +422,7 @@ class MainWindow(QMainWindow):
         self.central_widget.addWidget(self.image_layout)
 
         # 创建波形显示组件
-        self.waveform_layout = pg.GraphicsLayoutWidget()
+        self.waveform_layout = QWidget()
         self.waveform_visualizer = RoutineWaveformVisualizer(self.waveform_layout)
         self.central_widget.addWidget(self.waveform_layout)
 

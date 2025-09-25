@@ -173,6 +173,7 @@ void StartDefaultTask(void *argument)
 	char usb_buff[4096]={0};
 	uint8_t dev_index=0;
 	uint8_t init_state=0;
+	uint8_t error_flag = 0;
 	
 	TickType_t xLastWakeTime;
 	xLastWakeTime = xTaskGetTickCount();
@@ -204,24 +205,31 @@ void StartDefaultTask(void *argument)
 	bmp_press_f_2[65].byte[3]=0x77;
 	
 	
-	for(dev_index=0;dev_index<3;dev_index++)
+	do
 	{
-		bmp_dev[dev_index].hspi = &hspi1;
-		bmp_dev[dev_index].cs_index = dev_index;
-		
-		do
+		error_flag = 0;
+		for(dev_index=0;dev_index<16;dev_index++)
 		{
+			bmp_dev[dev_index].hspi = &hspi1;
+			bmp_dev[dev_index].cs_index = dev_index;
+			
 			init_state = BMP280_Init(&(bmp_dev[dev_index]));
 			if(init_state != HAL_OK)
 			{
-				sprintf(usb_buff,"dev[%d]初始化失败,init_state:%d\r\n",dev_index,init_state);
+				sprintf(usb_buff,"dev[%d]初始化失败,第%d个气压计,init_state:%d\r\n",dev_index,dev_index+1,init_state);
 				CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
-//				break;
 				vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(500));
+				error_flag = 1;
 			}
 		}
-		while(init_state != HAL_OK);
-	}
+		
+		if(error_flag)
+		{	
+			sprintf(usb_buff,"\r\n\r\n\r\n");
+			CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
+			vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(2000));
+		}
+	}while(error_flag == 1);
 
 //	// 发送任务通知给BMPTask
 //    xTaskNotifyGive(bmpTaskHandle);
