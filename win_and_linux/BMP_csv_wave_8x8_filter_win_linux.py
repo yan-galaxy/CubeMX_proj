@@ -68,7 +68,7 @@ class SerialWorker(QThread):
     waveform_ready = pyqtSignal(list)  # 用于波形更新
     error_signal = pyqtSignal(str)  # 串口错误信号（跨平台错误提示）
 
-    def __init__(self, port, normalization_low=0.0, normalization_high=4.0):
+    def __init__(self, port, normalization_low=0.0, normalization_high=15.0):
         super().__init__()
         self.port = port
         self.baudrate = 460800
@@ -98,7 +98,7 @@ class SerialWorker(QThread):
         self.normalization_low = normalization_low
         self.normalization_high = normalization_high
 
-        self.save_dir = "BMP_raw_data_8x8"
+        self.save_dir = "数据文件"
         self.raw_data_queue = Queue()
         self.writer_thread = None
         self.is_saving = False
@@ -112,7 +112,7 @@ class SerialWorker(QThread):
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.csv_path = os.path.join(self.save_dir, f"raw_data_8x8_{timestamp}.csv")
+        self.csv_path = os.path.join(self.save_dir, f"data_{timestamp}.csv")
         
         # 初始化 CSV 文件并写入表头
         self.csv_file = open(self.csv_path, 'w', newline='')
@@ -301,7 +301,7 @@ class RoutineWaveformVisualizer:
         self.plot.setLabels(left='数值', bottom='帧编号')
         self.plot.showGrid(x=True, y=True)
         # self.plot.setYRange(90.5, 120.0)
-        self.plot.setYRange(-1.0, 20.0)
+        self.plot.setYRange(-1.0, 30.0)
         self.main_layout.addWidget(self.plot_widget)
 
         # 创建包含控件的水平布局
@@ -399,7 +399,7 @@ class MatrixVisualizer:
         self.flip_vertical = flip_vertical
 
         self.image_item = pg.ImageItem()
-        self.plot = pg.PlotItem(title="8x8传感器数据矩阵（滤波后）")
+        self.plot = pg.PlotItem(title="8x8传感器数据矩阵")
         self.plot.addItem(self.image_item)
         self.plot.setLabels(left='Y轴', bottom='X轴')
         self.layout.addItem(self.plot, 0, 0)
@@ -471,7 +471,7 @@ class MainWindow(QMainWindow):
             self.selected_port = None
 
     def init_main_ui(self):
-        self.setWindowTitle("图像与波形双视图（带滤波）")
+        self.setWindowTitle("图像与波形双视图")
         self.resize(1500, 800)
 
         self.central_widget = QSplitter()

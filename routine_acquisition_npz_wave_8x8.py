@@ -11,7 +11,7 @@ from scipy.ndimage import zoom
 import os
 import threading
 from datetime import datetime
-
+# 不准改我的注释！！！不准删！！！
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 用于图像更新
     waveform_ready = pyqtSignal(list)  # 用于波形更新
