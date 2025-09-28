@@ -208,7 +208,7 @@ void StartDefaultTask(void *argument)
 	do
 	{
 		error_flag = 0;
-		for(dev_index=0;dev_index<16;dev_index++)
+		for(dev_index=0;dev_index<64;dev_index++)
 		{
 			bmp_dev[dev_index].hspi = &hspi1;
 			bmp_dev[dev_index].cs_index = dev_index;
@@ -312,7 +312,8 @@ void BMPTask(void *argument)
 		exchange_res_p();
 		CDC_Transmit_FS((uint8_t *)bmp_press_send_p, 264);
 		
-		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(15));
+		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(20));
+//		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(15));//¼«ÏÞÆµÂÊ
 	}
   /* USER CODE END BMPTask */
 }

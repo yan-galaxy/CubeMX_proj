@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QSplitter, QDialog, 
-                             QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QMessageBox, QWidget, QLabel)
+                             QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QMessageBox, QWidget, QLabel, QTabWidget, QScrollArea)
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore
 import serial
@@ -9,11 +9,12 @@ from serial.tools import list_ports  # 跨平台串口检测
 from queue import Queue
 from PyQt5.QtCore import QThread, pyqtSignal
 from scipy.ndimage import zoom
-from scipy import signal  # 导入信号处理模块
+from scipy import signal,ndimage  # 导入信号处理模块
 import os
 import threading
 from datetime import datetime
 
+# 不准修改我的注释！！！不准删！！！
 class FilterHandler:
     """滤波器处理类，封装高通和低通滤波的相关方法"""
     
@@ -67,7 +68,7 @@ class SerialWorker(QThread):
     waveform_ready = pyqtSignal(list)  # 用于波形更新
     error_signal = pyqtSignal(str)  # 串口错误信号（跨平台错误提示）
 
-    def __init__(self, port, normalization_low=0, normalization_high=0.7):
+    def __init__(self, port, normalization_low=0.0, normalization_high=4.0):
         super().__init__()
         self.port = port
         self.baudrate = 460800
@@ -77,6 +78,16 @@ class SerialWorker(QThread):
         self.FRAME_HEADER = b'\x55\xAA\xBB\xCC'
         self.FRAME_TAIL = b'\xAA\x55\x66\x77'
         
+        # 添加初始化帧相关变量
+        self.init_frames = []  # 用于存储初始化帧
+        self.init_frame_count = 0  # 初始化帧计数器
+        self.max_init_frames = 50  # 最大初始化帧数
+        self.matrix_init = None  # 初始化矩阵
+        self.dead_value = 0.2  # 死点值
+        # 用于存储最近帧数据的缓冲区
+        self.recent_frames = []  # 存储最近的帧数据用于校准
+        self.max_recent_frames = 50  # 最多存储50帧
+
         # 初始化滤波器（64个通道）
         self.filter_handlers = {
             i: FilterHandler(fs=66.7, high_cutoff=0.2, low_cutoff=10.0, order=1)
@@ -135,6 +146,11 @@ class SerialWorker(QThread):
         if self.csv_file:
             self.csv_file.close()
 
+    def reset_initialization(self):
+        """重置初始化相关变量，以便重新计算初始值"""
+        self.matrix_init = np.mean(self.recent_frames, axis=0)
+        # print("已重置初始值计算，将重新收集前%d帧用于计算新的初始值" % self.max_init_frames)
+
     def run(self):
         try:
             self.ser = serial.Serial(self.port, self.baudrate, timeout=1)
@@ -155,39 +171,39 @@ class SerialWorker(QThread):
                                 # 保存原始数据到CSV
                                 self.raw_data_queue.put(parsed.copy())
 
-                                # 初始化滤波器（使用第一个数据点）
-                                if not self.filters_initialized:
-                                    for i in range(64):
-                                        self.filter_handlers[i].initialize_states(parsed[i])
-                                    self.filters_initialized = True
-                                
-                                # 对每个通道进行滤波处理
-                                filtered_results = []
-                                waveform_data = []
-                                for i in range(64):
-                                    # 高通滤波
-                                    hp_val = self.filter_handlers[i].apply_high_pass(parsed[i])
-                                    
-                                    # 不处理
-                                    abs_val = hp_val
-                                    # # 取绝对值
-                                    # abs_val = np.abs(hp_val)
-                                    # # 只保留正数部分，负数置为0
-                                    # abs_val = np.maximum(hp_val, 0)
+                                # 将当前帧添加到recent_frames缓冲区用于校准
+                                self.recent_frames.append(parsed.copy())
+                                # 如果recent_frames超过最大长度，则移除最旧的帧
+                                if len(self.recent_frames) > self.max_recent_frames:
+                                    self.recent_frames.pop(0)
 
-                                    # 低通滤波
-                                    lp_val = self.filter_handlers[i].apply_low_pass(abs_val)
-                                    filtered_results.append(lp_val)
-                                    # waveform_data.append(lp_val)  # 波形数据使用低通滤波结果
-                                    waveform_data.append(parsed[i])  # 波形数据使用原始数据
-                                
-                                # 处理显示数据（裁剪和归一化）
-                                clipped_result = np.clip(filtered_results, self.normalization_low, self.normalization_high)
-                                normalized_result = (clipped_result - self.normalization_low) / (self.normalization_high - self.normalization_low)
-                                
-                                # 发送数据到界面显示
-                                self.waveform_ready.emit(waveform_data)  # 发送滤波后的波形数据
-                                self.data_ready.emit(normalized_result.tolist())  # 发送归一化后的图像数据
+                                # 收集前max_init_frames帧用于初始化
+                                if self.init_frame_count < self.max_init_frames:
+                                    self.init_frames.append(parsed.copy())
+                                    self.init_frame_count += 1
+                                    
+                                    # 当收集到足够的帧时，计算平均值作为matrix_init
+                                    if self.init_frame_count == self.max_init_frames:
+                                        self.matrix_init = np.mean(self.init_frames, axis=0)
+                                        print(f"初始化完成，使用{self.max_init_frames}帧计算初始值")
+                                        
+                                # 如果已经完成初始化，进行数据处理
+                                elif self.matrix_init is not None:
+                                    # 直接使用原始数据，不进行滤波处理
+                                    raw_results = []
+                                    for i in range(64):
+                                        raw_results.append(parsed[i])
+                                    
+                                    # 使用matrix_init进行归零处理
+                                    zeroed_results = np.array(raw_results) - self.matrix_init
+                                    deaded_results = zeroed_results - self.dead_value
+                                    clipped_result = np.clip(deaded_results, self.normalization_low, self.normalization_high)
+                                    normalized_result = (clipped_result - self.normalization_low) / (self.normalization_high - self.normalization_low)
+                                    
+                                    # 发送数据到界面显示
+                                    # self.waveform_ready.emit(raw_results)  # 发送原始波形数据
+                                    self.waveform_ready.emit(zeroed_results.tolist())  # 发送归零后的波形数据
+                                    self.data_ready.emit(normalized_result.tolist())  # 发送归一化后的图像数据
                             
                             self.buffer = self.buffer[end_index + len(self.FRAME_TAIL):]
                             start_index = self.buffer.find(self.FRAME_HEADER)
@@ -263,7 +279,8 @@ class SerialSelectionDialog(QDialog):
 class RoutineWaveformVisualizer:
     def __init__(self, parent_widget):
         self.parent_widget = parent_widget
-        self.selected_channel = 0  # 默认选择通道0
+        self.selected_group = 0  # 默认选择第1组(通道1-8)
+        self.reset_callback = None  # 重置回调函数
 
         # 设置边框样式 - 黑色边框和背景
         self.parent_widget.setStyleSheet("""
@@ -280,57 +297,98 @@ class RoutineWaveformVisualizer:
         # 创建绘图区域
         self.plot_widget = pg.PlotWidget()
         self.plot = self.plot_widget.getPlotItem()
-        self.plot.setTitle(f"通道 {self.selected_channel+1} 波形")
+        self.plot.setTitle(f"通道组 {self.selected_group+1} (通道 {self.selected_group*8+1}-{self.selected_group*8+8})")
         self.plot.setLabels(left='数值', bottom='帧编号')
         self.plot.showGrid(x=True, y=True)
-        self.plot.setYRange(99.5, 130.0)
+        # self.plot.setYRange(90.5, 120.0)
+        self.plot.setYRange(-1.0, 20.0)
         self.main_layout.addWidget(self.plot_widget)
 
         # 创建包含控件的水平布局
         self.control_layout = QHBoxLayout()
         
-        # 添加通道选择标签和下拉框
-        self.channel_selector = QComboBox()
-        self.channel_selector.addItems([f"通道 {i+1}" for i in range(64)])
-        self.channel_selector.setCurrentIndex(self.selected_channel)
-        self.channel_selector.currentIndexChanged.connect(self.change_channel)
-        self.channel_selector.setStyleSheet("""
+        # 添加组选择标签和下拉框
+        self.group_selector = QComboBox()
+        self.group_selector.addItems([f"组 {i+1} (通道 {i*8+1}-{i*8+8})" for i in range(8)])
+        self.group_selector.setCurrentIndex(self.selected_group)
+        self.group_selector.currentIndexChanged.connect(self.change_group)
+        self.group_selector.setStyleSheet("""
             QComboBox {
                 color: white; 
                 background-color: #222222;
                 border: 1px solid #555555;
                 padding: 2px;
-                min-width: 80px;
+                min-width: 150px;
             }
             QComboBox QAbstractItemView {
                 background-color: #222222;
                 color: white;
             }
         """)
-        self.control_layout.addWidget(self.channel_selector)
+        self.control_layout.addWidget(self.group_selector)
+        
+        # 添加重新计算初始值按钮
+        self.reset_button = QPushButton("校准")
+        self.reset_button.clicked.connect(self.on_reset_clicked)
+        self.reset_button.setStyleSheet("""
+            QPushButton {
+                color: white;
+                background-color: #222222;
+                border: 1px solid #555555;
+                padding: 2px 10px;
+                min-width: 100px;
+            }
+            QPushButton:hover {
+                background-color: #333333;
+            }
+        """)
+        self.control_layout.addWidget(self.reset_button)
         self.control_layout.addStretch()  # 添加弹性空间
         
         self.main_layout.addLayout(self.control_layout)
 
-        self.curve = self.plot.plot(pen='y')
-        self.show_data = [0] * 400
+        # 为8个通道创建曲线
+        self.curves = []
+        colors = ['y', 'c', 'm', 'r', 'g', 'b', 'w', 'orange']  # 8种不同颜色
+        for i in range(8):
+            curve = self.plot.plot(pen=colors[i % len(colors)], name=f'通道 {i+1}')
+            self.curves.append(curve)
+        
+        # 为每个通道创建数据缓冲区
+        self.show_data = [[0] * 400 for _ in range(8)]
 
-    def change_channel(self, index):
-        """更改显示的通道"""
-        self.selected_channel = index
-        self.plot.setTitle(f"通道 {self.selected_channel+1} 波形")
+    def set_reset_callback(self, callback):
+        """设置重置回调函数"""
+        self.reset_callback = callback
+
+    def on_reset_clicked(self):
+        """处理重置按钮点击事件"""
+        if self.reset_callback:
+            self.reset_callback()
+
+    def change_group(self, index):
+        """更改显示的通道组"""
+        self.selected_group = index
+        self.plot.setTitle(f"通道组 {self.selected_group+1} (通道 {self.selected_group*8+1}-{self.selected_group*8+8})")
 
     def update_plot(self, new_row):
         if len(new_row) == 64:
-            # 使用选定通道的数据
-            channel_data = new_row[self.selected_channel]
-            new_data = [channel_data]
-            self.show_data = self.show_data[len(new_data):] + new_data
+            # 获取当前组的8个通道数据
+            start_channel = self.selected_group * 8
+            group_data = new_row[start_channel:start_channel+8]
+            
+            # 更新每个通道的数据缓冲区
+            for i in range(8):
+                channel_data = group_data[i]
+                self.show_data[i] = self.show_data[i][1:] + [channel_data]
+                
+                # 更新曲线显示
+                x_data = np.arange(len(self.show_data[i]))
+                y_data = np.array(self.show_data[i])
+                self.curves[i].setData(x_data, y_data)
+            
+            self.plot.setTitle(f"通道组 {self.selected_group+1} (通道 {self.selected_group*8+1}-{self.selected_group*8+8})")
 
-            x_data = np.arange(len(self.show_data))
-            y_data = np.array(self.show_data)
-            self.curve.setData(x_data, y_data)
-            self.plot.setTitle(f"通道 {self.selected_channel+1} 波形")
 
 class MatrixVisualizer:
     def __init__(self, layout, interplotation=False, rotation_angle=0, flip_horizontal=False, flip_vertical=False):
@@ -374,6 +432,9 @@ class MatrixVisualizer:
 
             if self.interplotation:
                 interpolated_data = zoom(self.data, (5, 5), order=3)
+                # 添加高斯模糊处理
+                self.gaussian_sigma = 0.5
+                interpolated_data = ndimage.gaussian_filter(interpolated_data, sigma=self.gaussian_sigma)
                 self.data = interpolated_data
 
             self.image_item.setImage(self.data, levels=(0.0, 1.0))
@@ -418,12 +479,14 @@ class MainWindow(QMainWindow):
 
         # 创建图像显示组件
         self.image_layout = pg.GraphicsLayoutWidget()
-        self.image_visualizer = MatrixVisualizer(self.image_layout, interplotation=False, rotation_angle=0, flip_horizontal=False, flip_vertical=True)
+        self.image_visualizer = MatrixVisualizer(self.image_layout, interplotation=True, rotation_angle=270, flip_horizontal=False, flip_vertical=True)
         self.central_widget.addWidget(self.image_layout)
 
         # 创建波形显示组件
         self.waveform_layout = QWidget()
         self.waveform_visualizer = RoutineWaveformVisualizer(self.waveform_layout)
+        # 设置重置回调函数
+        self.waveform_visualizer.set_reset_callback(self.reset_initial_value)
         self.central_widget.addWidget(self.waveform_layout)
 
         # 初始化串口线程
@@ -438,6 +501,10 @@ class MainWindow(QMainWindow):
         self.timer.timeout.connect(self.image_visualizer.update_fps)
         self.timer.start(200)
 
+    def reset_initial_value(self):
+        """重新计算初始值"""
+        if self.worker:
+            self.worker.reset_initialization()
     def show_serial_error(self, error_msg):
         """显示串口错误提示（可视化弹窗）"""
         QMessageBox.critical(self, "串口错误", error_msg)
