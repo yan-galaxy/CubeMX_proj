@@ -94,7 +94,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   unsigned char test_buf[]="hello world\r\n";
   unsigned char speed_test[10240];
-  for(uint32_t i=0;i<10240;i++)
+  for(uint16_t i=0;i<10240;i++)
   {
 		speed_test[i]=i;
   }
