@@ -110,7 +110,7 @@ class SerialWorker(QThread):
         self.is_saving = False
         if self.writer_thread and self.writer_thread.is_alive():
             self.writer_thread.join()
-        print('正在保存缓冲区数据到npz文件')
+        # print('正在保存缓冲区数据到npz文件')
         # if len(self.data_buffer) > 0:
         #     metadata = {
         #         'description': 'INCRMA原始传感器数据',

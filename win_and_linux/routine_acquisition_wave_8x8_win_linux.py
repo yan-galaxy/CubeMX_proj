@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QSplitter, QDialog, 
-                             QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QMessageBox, QWidget)
+                             QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QMessageBox, QWidget, QLabel)
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore
 import serial
@@ -12,6 +12,7 @@ from scipy.ndimage import zoom
 import os
 import threading
 from datetime import datetime
+import csv
 
 # 不准改我的注释！！！不准删！！！
 class SerialWorker(QThread):
@@ -43,7 +44,7 @@ class SerialWorker(QThread):
         self.normalization_high = normalization_high
 
         self.save_dir = "Routine_acq_raw_data_8x8"
-        self.raw_data_queue = Queue()
+        self.data_queue = Queue()
         self.writer_thread = None
         self.is_saving = False
         self.data_buffer = []
@@ -53,33 +54,86 @@ class SerialWorker(QThread):
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.npz_path = os.path.join(self.save_dir, f"raw_data_8x8_{timestamp}.npz")
+        # // Deleted: self.npz_path = os.path.join(self.save_dir, f"raw_data_8x8_{timestamp}.npz")
+        self.csv_path = os.path.join(self.save_dir, f"raw_data_8x8_{timestamp}.csv")
         self.is_saving = True
         self.writer_thread = threading.Thread(target=self.write_raw_data_to_file, daemon=True)
         self.writer_thread.start()
 
     def write_raw_data_to_file(self):
-        while self.is_saving:
-            if not self.raw_data_queue.empty():
-                data = self.raw_data_queue.get()
-                self.data_buffer.append(data.tolist())
-            else:
-                self.msleep(100)
+        # with open(self.csv_path, 'w', newline='') as csvfile:
+        #     writer = csv.writer(csvfile)
+        #     # 写入8x8矩阵的列标题
+        #     headers = []
+        #     for i in range(8):
+        #         for j in range(8):
+        #             headers.append(f"point{8*i+j}")
+        #     writer.writerow(headers)
+            
+        #     while self.is_saving:
+        #         if not self.data_queue.empty():
+        #             # 现在接收的是10帧的数组，形状为(10, 8, 8)
+        #             mapped_frames = self.data_queue.get()
+        #             # 将10帧数据展平为(10, 64)的形状
+        #             flattened_data = mapped_frames.reshape(10, 64)
+        #             # 将所有帧数据写入CSV（不使用循环）
+        #             writer.writerows(flattened_data.tolist())
+        #         else:
+        #             self.msleep(100)
+
+        # 新的按组顺序保存数据到CSV的逻辑
+        with open(self.csv_path, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            
+            # 创建按组排列的列标题
+            headers = []
+            # 预计算索引映射关系
+            index_mapping = []
+            for i in range(16):  # 16组
+                row = 3 - i // 4  # 行号 (0-3)
+                col = 3 - i % 4   # 列号 (0-3)
+                # 每组四个点的索引
+                idx1 = (row * 2 + 1) * 8 + (col + 1) * 2 - 1    # 左上
+                idx2 = (row * 2 + 1) * 8 + (col + 1) * 2 - 2    # 右上
+                idx3 = (row * 2 + 0) * 8 + (col + 1) * 2 - 1    # 左下
+                idx4 = (row * 2 + 0) * 8 + (col + 1) * 2 - 2    # 右下
+                
+                headers.extend([f"group{i+1}_p1", f"group{i+1}_p2", f"group{i+1}_p3", f"group{i+1}_p4"])
+                
+                index_mapping.extend([idx1, idx2, idx3, idx4])
+
+            writer.writerow(headers)
+            
+            while self.is_saving:
+                if not self.data_queue.empty():
+                    # 接收10帧的数组，形状为(10, 8, 8)
+                    mapped_frames = self.data_queue.get()
+                    # 将数据重塑为(10, 64)
+                    flattened_data = mapped_frames.reshape(10, 64)
+                    
+                    # 使用向量化操作重新排列数据，避免使用循环
+                    # 构建索引数组进行高级索引
+                    grouped_data = flattened_data[:, index_mapping]
+                    
+                    # 将重新排列的数据写入CSV
+                    writer.writerows(grouped_data.tolist())
+                else:
+                    self.msleep(100)
 
     def stop(self):
         self.running = False
         self.is_saving = False
         if self.writer_thread and self.writer_thread.is_alive():
             self.writer_thread.join()
-        print('正在保存缓冲区数据到npz文件')
-        if len(self.data_buffer) > 0:
-            metadata = {
-                'description': '常规采集8x8传感器数据',
-                'format_version': '1.0',
-                'normalization_range': [self.normalization_low, self.normalization_high],
-                'timestamp': datetime.now().isoformat()
-            }
-            np.savez_compressed(self.npz_path, data=np.array(self.data_buffer), **metadata)
+        # print('正在保存缓冲区数据到npz文件')
+        # // Deleted: if len(self.data_buffer) > 0:
+        # // Deleted:     metadata = {
+        # // Deleted:         'description': '常规采集8x8传感器数据',
+        # // Deleted:         'format_version': '1.0',
+        # // Deleted:         'normalization_range': [self.normalization_low, self.normalization_high],
+        # // Deleted:         'timestamp': datetime.now().isoformat()
+        # // Deleted:     }
+        # // Deleted:     np.savez_compressed(self.npz_path, data=np.array(self.data_buffer), **metadata)
         print('保存完毕')
 
     def reset_initialization(self):
@@ -106,12 +160,9 @@ class SerialWorker(QThread):
                             parsed = np.frombuffer(payload, dtype=np.uint16)
 
                             if len(parsed) == 1000:
-                                self.raw_data_queue.put(parsed.copy())
+                                
                                 frames = parsed.reshape(10, 100)
-                                average = np.mean(frames, axis=0).reshape(10, 10)
-                                average = average[2:, 2:]
-                                matrix_8x8 = average
-
+                                
                                 # 更新的映射表，之前的每个小圆的左右反了
                                 mapping = [
                                     [(0,1), (0,0), (0,5), (0,4), (1,1), (1,0), (1,5), (1,4)],
@@ -124,14 +175,24 @@ class SerialWorker(QThread):
                                     [(6,2), (6,3), (6,6), (6,7), (7,2), (7,3), (7,6), (7,7)],
                                 ]
 
-                                # 创建目标8x8矩阵
-                                target_matrix = np.zeros((8, 8))
-
-                                for i in range(8):
-                                    for j in range(8):
-                                        x, y = mapping[i][j]
-                                        target_matrix[i][j] = matrix_8x8[x][y]
-
+                                # 创建目标8x8矩阵 (使用向量化操作替代循环)
+                                # 提取映射坐标
+                                src_coords = [(x, y) for row in mapping for x, y in row]
+                                src_x_coords = [coord[0] for coord in src_coords]
+                                src_y_coords = [coord[1] for coord in src_coords]
+                                
+                                # 对所有10帧数据进行映射处理（不使用循环）
+                                frames_data = frames.reshape(10, 10, 10)
+                                frames_data = frames_data[:, 2:, 2:]  # 裁剪为8x8
+                                
+                                # 使用高级索引一次性处理所有帧的映射
+                                mapped_frames = frames_data[:, src_x_coords, src_y_coords].reshape(10, 8, 8)
+                                
+                                # 将完整的10帧映射数据发送给CSV线程
+                                self.data_queue.put(mapped_frames.copy())
+                                
+                                # 计算平均值用于显示
+                                target_matrix = np.mean(mapped_frames, axis=0)
                                 average = target_matrix.flatten()
 
                                 # 将当前帧添加到recent_frames缓冲区用于校准
@@ -175,10 +236,11 @@ class SerialWorker(QThread):
                 self.ser.close()
                 print('串口关闭')
 
+
 class RoutineWaveformVisualizer:
     def __init__(self, parent_widget):
         self.parent_widget = parent_widget
-        self.selected_group = 0  # 默认选择第1组(通道1-8)
+        self.selected_group = 0  # 默认选择第1组
         self.reset_callback = None  # 重置回调函数
 
         # 设置边框样式 - 黑色边框和背景
@@ -196,7 +258,7 @@ class RoutineWaveformVisualizer:
         # 创建绘图区域
         self.plot_widget = pg.PlotWidget()
         self.plot = self.plot_widget.getPlotItem()
-        self.plot.setTitle(f"通道组 {self.selected_group+1} (通道 {self.selected_group*8+1}-{self.selected_group*8+8})")
+        self.plot.setTitle(f"组 {self.selected_group+1} (Row {(self.selected_group//4)+1} Col {(self.selected_group%4)+1})")
         self.plot.setLabels(left='数值', bottom='帧编号')
         self.plot.showGrid(x=True, y=True)
         self.plot.setYRange(-1.0, 4095.0)
@@ -207,7 +269,12 @@ class RoutineWaveformVisualizer:
         
         # 添加组选择标签和下拉框
         self.group_selector = QComboBox()
-        self.group_selector.addItems([f"组 {i+1} (通道 {i*8+1}-{i*8+8})" for i in range(8)])
+        group_names = []
+        for i in range(16):
+            row = (i // 4) + 1
+            col = (i % 4) + 1
+            group_names.append(f"组 {i+1} (Row {row} Col {col})")
+        self.group_selector.addItems(group_names)
         self.group_selector.setCurrentIndex(self.selected_group)
         self.group_selector.currentIndexChanged.connect(self.change_group)
         self.group_selector.setStyleSheet("""
@@ -245,15 +312,15 @@ class RoutineWaveformVisualizer:
         
         self.main_layout.addLayout(self.control_layout)
 
-        # 为8个通道创建曲线
+        # 为4个通道创建曲线
         self.curves = []
-        colors = ['y', 'c', 'm', 'r', 'g', 'b', 'w', 'orange']  # 8种不同颜色
-        for i in range(8):
+        colors = ['y', 'c', 'm', 'r']  # 4种不同颜色
+        for i in range(4):
             curve = self.plot.plot(pen=colors[i % len(colors)], name=f'通道 {i+1}')
             self.curves.append(curve)
         
         # 为每个通道创建数据缓冲区
-        self.show_data = [[0] * 400 for _ in range(8)]
+        self.show_data = [[0] * 400 for _ in range(4)]
 
     def set_reset_callback(self, callback):
         """设置重置回调函数"""
@@ -267,16 +334,34 @@ class RoutineWaveformVisualizer:
     def change_group(self, index):
         """更改显示的通道组"""
         self.selected_group = index
-        self.plot.setTitle(f"通道组 {self.selected_group+1} (通道 {self.selected_group*8+1}-{self.selected_group*8+8})")
+        row = (self.selected_group // 4) + 1
+        col = (self.selected_group % 4) + 1
+        self.plot.setTitle(f"组 {self.selected_group+1} (Row {row} Col {col})")
 
     def update_plot(self, new_row):
         if len(new_row) == 64:
-            # 获取当前组的8个通道数据
-            start_channel = self.selected_group * 8
-            group_data = new_row[start_channel:start_channel+8]
+            # 定义4x4组的映射关系，每组4个点
+            # i=0时idx1为63，idx2为62，idx3为55，idx4为54，此为第一行第一列的组
+            group_mapping = []
+            for i in range(16):
+                row = 3 - i // 4  # 行号 (0-3)
+                col = 3 - i % 4   # 列号 (0-3)
+                # 每组四个点的索引，按照8x8矩阵从左到右、从上到下排列
+                idx1 = (row * 2 +1) * 8 + (col+1) * 2 -1    # 左上
+                idx2 = (row * 2 +1) * 8 + (col+1) * 2 -2    # 右上
+                idx3 = (row * 2 +0) * 8 + (col+1) * 2 -1    # 左下
+                idx4 = (row * 2 +0) * 8 + (col+1) * 2 -2    # 右下
+                group_mapping.append([idx1, idx2, idx3, idx4])
+            
+            # 获取当前组的4个通道数据
+            group_indices = group_mapping[self.selected_group]
+            group_data = [new_row[i] for i in group_indices]
+
+            # group_data = [new_row[0],new_row[1],new_row[8],new_row[9]]
+            # group_data = [new_row[63],new_row[62],new_row[55],new_row[54]]
             
             # 更新每个通道的数据缓冲区
-            for i in range(8):
+            for i in range(4):
                 channel_data = group_data[i]
                 self.show_data[i] = self.show_data[i][1:] + [channel_data]
                 
@@ -285,7 +370,9 @@ class RoutineWaveformVisualizer:
                 y_data = np.array(self.show_data[i])
                 self.curves[i].setData(x_data, y_data)
             
-            self.plot.setTitle(f"通道组 {self.selected_group+1} (通道 {self.selected_group*8+1}-{self.selected_group*8+8})")
+            row = (self.selected_group // 4) + 1
+            col = (self.selected_group % 4) + 1
+            self.plot.setTitle(f"组 {self.selected_group+1} (Row {row} Col {col})")
 
 class MatrixVisualizer:
     def __init__(self, layout, interplotation=False, rotation_angle=0, flip_horizontal=False, flip_vertical=False):
@@ -308,12 +395,24 @@ class MatrixVisualizer:
         self.data = np.zeros((8, 8))  # 8x8的初始数据
         self.fps_label = pg.LabelItem(justify='left')
         self.layout.addItem(self.fps_label, 1, 0)
+        
+        # 添加运行时间标签
+        self.runtime_label = pg.LabelItem(justify='right')
+        self.layout.addItem(self.runtime_label, 1, 0)
 
         self.frame_count = 0
         self.start_time = QtCore.QTime.currentTime()
+        # 初始化运行时间
+        self.runtime_start_time = None
+        self.runtime_elapsed = 0
 
     def receive_data(self, new_row):
         if len(new_row) == 64:
+            # 设置运行时间起始点（仅在第一次接收数据时）
+            if self.runtime_start_time is None:
+                self.runtime_start_time = QtCore.QTime.currentTime()
+                self.runtime_elapsed = 0
+            
             self.data = np.array(new_row).reshape(8, 8)
 
             if self.rotation_angle == 90:
@@ -342,6 +441,14 @@ class MatrixVisualizer:
             self.fps_label.setText(f"FPS: {fps}")
             self.frame_count = 0
             self.start_time = current_time
+        
+        # 更新运行时间显示
+        if self.runtime_start_time is not None:
+            elapsed_ms = self.runtime_start_time.msecsTo(current_time)
+            total_seconds = (self.runtime_elapsed + elapsed_ms) // 1000
+            minutes = total_seconds // 60
+            seconds = total_seconds % 60
+            self.runtime_label.setText(f"运行时间: {minutes:02d}:{seconds:02d}")
 
 class SerialSelectionDialog(QDialog):
     """跨平台串口选择对话框（Windows/Ubuntu通用）"""
