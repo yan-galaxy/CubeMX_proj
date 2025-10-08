@@ -27,11 +27,26 @@ Project File Date:  08/28/2025
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\software\study\keil\ARM\ARMCC\Bin'
 Build target 'G474_7MIC'
-compiling tim.c...
+compiling app_freertos.c...
+../Core/Src/app_freertos.c(198): warning:  #550-D: variable "usb_buff"  was set but never used
+  	char usb_buff[4096]={0};
+../Core/Src/app_freertos.c(199): warning:  #177-D: variable "usb_buff2"  was declared but never referenced
+  	char usb_buff2[256]={0};
+../Core/Src/app_freertos.c(247): warning:  #550-D: variable "t_string"  was set but never used
+  	uint32_t t_start = 0, t_string = 0, t_send = 0, t_send2 = 0, t_end = 0;
+../Core/Src/app_freertos.c(247): warning:  #177-D: variable "t_send"  was declared but never referenced
+  	uint32_t t_start = 0, t_string = 0, t_send = 0, t_send2 = 0, t_end = 0;
+../Core/Src/app_freertos.c(247): warning:  #177-D: variable "t_send2"  was declared but never referenced
+  	uint32_t t_start = 0, t_string = 0, t_send = 0, t_send2 = 0, t_end = 0;
+../Core/Src/app_freertos.c(247): warning:  #177-D: variable "t_end"  was declared but never referenced
+  	uint32_t t_start = 0, t_string = 0, t_send = 0, t_send2 = 0, t_end = 0;
+../Core/Src/app_freertos.c(248): warning:  #177-D: variable "CDC_result"  was declared but never referenced
+  	uint8_t CDC_result = USBD_OK;
+../Core/Src/app_freertos.c: 7 warnings, 0 errors
 linking...
-Program Size: Code=43816 RO-data=712 RW-data=556 ZI-data=77428  
+Program Size: Code=43808 RO-data=712 RW-data=556 ZI-data=72948  
 FromELF: creating hex file...
-"G474_7MIC\G474_7MIC.axf" - 0 Error(s), 0 Warning(s).
+"G474_7MIC\G474_7MIC.axf" - 0 Error(s), 7 Warning(s).
 
 <h2>Software Packages used:</h2>
 

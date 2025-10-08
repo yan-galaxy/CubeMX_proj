@@ -160,15 +160,16 @@ void MX_FREERTOS_Init(void) {
   * @param  argument: Not used
   * @retval None
   */
-uint16_t ADC1_value[400];//MIC7 MIC4
-uint16_t ADC2_value[400];//MIC5 MIC6
-uint16_t ADC3_value[200];//MIC2
-uint16_t ADC4_value[200];//MIC3
-uint16_t ADC5_value[200];//MIC1
+#define PACK_FRAME 20
+uint16_t ADC1_value[PACK_FRAME*4];//MIC7 MIC4
+uint16_t ADC2_value[PACK_FRAME*4];//MIC5 MIC6
+uint16_t ADC3_value[PACK_FRAME*2];//MIC2
+uint16_t ADC4_value[PACK_FRAME*2];//MIC3
+uint16_t ADC5_value[PACK_FRAME*2];//MIC1
 
 
-volatile Word_union mic_data_1[704];
-volatile Word_union mic_data_2[704];
+volatile Word_union mic_data_1[PACK_FRAME*7+4];
+volatile Word_union mic_data_2[PACK_FRAME*7+4];
 volatile Word_union* mic_send_p=mic_data_1;
 volatile Word_union* mic_store_p=mic_data_2;
 
@@ -206,27 +207,27 @@ void StartDefaultTask(void *argument)
 	mic_data_1[0].byte[1]=0xAA;
 	mic_data_1[1].byte[0]=0xBB;
 	mic_data_1[1].byte[1]=0xCC;
-	for(uint16_t i=0;i<700;i++)
+	for(uint16_t i=0;i<PACK_FRAME*7;i++)
 	{
 		mic_data_1[2+i].word16=i*1+1;
 	}
-	mic_data_1[702].byte[0]=0xAA;//帧尾
-	mic_data_1[702].byte[1]=0x55;
-	mic_data_1[703].byte[0]=0x66;
-	mic_data_1[703].byte[1]=0x77;
+	mic_data_1[PACK_FRAME*7+2].byte[0]=0xAA;//帧尾
+	mic_data_1[PACK_FRAME*7+2].byte[1]=0x55;
+	mic_data_1[PACK_FRAME*7+3].byte[0]=0x66;
+	mic_data_1[PACK_FRAME*7+3].byte[1]=0x77;
 	
 	mic_data_2[0].byte[0]=0x55;//帧头
 	mic_data_2[0].byte[1]=0xAA;
 	mic_data_2[1].byte[0]=0xBB;
 	mic_data_2[1].byte[1]=0xCC;
-	for(uint16_t i=0;i<700;i++)
+	for(uint16_t i=0;i<PACK_FRAME*7;i++)
 	{
 		mic_data_2[2+i].word16=i*2+2;
 	}
-	mic_data_2[702].byte[0]=0xAA;//帧尾
-	mic_data_2[702].byte[1]=0x55;
-	mic_data_2[703].byte[0]=0x66;
-	mic_data_2[703].byte[1]=0x77;
+	mic_data_2[PACK_FRAME*7+2].byte[0]=0xAA;//帧尾
+	mic_data_2[PACK_FRAME*7+2].byte[1]=0x55;
+	mic_data_2[PACK_FRAME*7+3].byte[0]=0x66;
+	mic_data_2[PACK_FRAME*7+3].byte[1]=0x77;
 	
 	HAL_ADCEx_Calibration_Start(&hadc1,ADC_SINGLE_ENDED);
 	HAL_ADCEx_Calibration_Start(&hadc2,ADC_SINGLE_ENDED);
@@ -237,11 +238,11 @@ void StartDefaultTask(void *argument)
 	osDelay(100);
 	
 	//要关闭ADC的连续转换，不然不受定时器触发的约束，一直转换
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)ADC1_value, 400);
-	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)ADC2_value, 400);
-	HAL_ADC_Start_DMA(&hadc3, (uint32_t *)ADC3_value, 200);
-	HAL_ADC_Start_DMA(&hadc4, (uint32_t *)ADC4_value, 200);
-	HAL_ADC_Start_DMA(&hadc5, (uint32_t *)ADC5_value, 200);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)ADC1_value, PACK_FRAME*4);
+	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)ADC2_value, PACK_FRAME*4);
+	HAL_ADC_Start_DMA(&hadc3, (uint32_t *)ADC3_value, PACK_FRAME*2);
+	HAL_ADC_Start_DMA(&hadc4, (uint32_t *)ADC4_value, PACK_FRAME*2);
+	HAL_ADC_Start_DMA(&hadc5, (uint32_t *)ADC5_value, PACK_FRAME*2);
 	
 	uint32_t t_start = 0, t_string = 0, t_send = 0, t_send2 = 0, t_end = 0;
 	uint8_t CDC_result = USBD_OK;
@@ -267,14 +268,14 @@ void StartDefaultTask(void *argument)
 		if (ulReceivedEvents & EVENT_ALL_HALF)//EVENT_ADC5_DMA_HALF  EVENT_ALL_HALF
 		{
 			// 复制ADC5半满数据（0~99）
-			  for(uint16_t i=0; i<100; i++) {
+			  for(uint16_t i=0; i<PACK_FRAME; i++) {
 				mic_store_p[FRAME_HEAD_CNT + i].word16 = ADC5_value[i];
-				mic_store_p[FRAME_HEAD_CNT + 100 + i].word16 = ADC3_value[i];
-				mic_store_p[FRAME_HEAD_CNT + 200 + i].word16 = ADC4_value[i];
-				mic_store_p[FRAME_HEAD_CNT + 300 + i].word16 = ADC1_value[1+i*2];
-				mic_store_p[FRAME_HEAD_CNT + 400 + i].word16 = ADC2_value[i*2];
-				mic_store_p[FRAME_HEAD_CNT + 500 + i].word16 = ADC2_value[1+i*2];
-				mic_store_p[FRAME_HEAD_CNT + 600 + i].word16 = ADC1_value[i*2];
+				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*1 + i].word16 = ADC3_value[i];
+				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*2 + i].word16 = ADC4_value[i];
+				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*3 + i].word16 = ADC1_value[1+i*2];
+				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*4 + i].word16 = ADC2_value[i*2];
+				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*5 + i].word16 = ADC2_value[1+i*2];
+				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*6 + i].word16 = ADC1_value[i*2];
 			  }
 			  // 清除所有半满事件标志（避免重复处理）
 			osEventFlagsClear(adc_dma_EventHandle, EVENT_ALL_HALF);
@@ -282,18 +283,18 @@ void StartDefaultTask(void *argument)
 		else if (ulReceivedEvents & EVENT_ALL_FULL)//EVENT_ADC5_DMA_FULL  EVENT_ALL_FULL
 		{
 			// 复制ADC5全满数据（100~199）
-			  for(uint16_t i=0; i<100; i++) {
-				mic_store_p[FRAME_HEAD_CNT + i].word16 = ADC5_value[i+100];
-				mic_store_p[FRAME_HEAD_CNT + 100 + i].word16 = ADC3_value[i+100];
-				mic_store_p[FRAME_HEAD_CNT + 200 + i].word16 = ADC4_value[i+100];
-				mic_store_p[FRAME_HEAD_CNT + 300 + i].word16 = ADC1_value[1+i*2+200];
-				mic_store_p[FRAME_HEAD_CNT + 400 + i].word16 = ADC2_value[i*2+200];
-				mic_store_p[FRAME_HEAD_CNT + 500 + i].word16 = ADC2_value[1+i*2+200];
-				mic_store_p[FRAME_HEAD_CNT + 600 + i].word16 = ADC1_value[i*2+200];
+			  for(uint16_t i=0; i<PACK_FRAME; i++) {
+				mic_store_p[FRAME_HEAD_CNT + i].word16 = ADC5_value[i+PACK_FRAME];
+				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*1 + i].word16 = ADC3_value[i+PACK_FRAME];
+				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*2 + i].word16 = ADC4_value[i+PACK_FRAME];
+				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*3 + i].word16 = ADC1_value[1+i*2+PACK_FRAME*2];
+				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*4 + i].word16 = ADC2_value[i*2+PACK_FRAME*2];
+				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*5 + i].word16 = ADC2_value[1+i*2+PACK_FRAME*2];
+				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*6 + i].word16 = ADC1_value[i*2+PACK_FRAME*2];
 			  }
 			  // 清除所有全满事件标志
 			osEventFlagsClear(adc_dma_EventHandle, EVENT_ALL_FULL);
-		}//测试得整个赋值过程80us
+		}//PACK_FRAME为100时测试得整个赋值过程80us
 		t_string = LL_TIM_GetCounter(TIM7)-t_start;
 		
 //		sprintf(usb_buff2,"t_send:%.1f us,t_send2:%.1f us,t_string:%.1f us,CDC_result:%u,callback_p:%p,hdma5_callback_p:%p\r\n",t_send/1.0,t_send2/1.0,t_string/1.0,CDC_result,callback_p,hdma_adc5.XferCpltCallback);
@@ -301,12 +302,12 @@ void StartDefaultTask(void *argument)
 //		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
 		
 		exchange_res_p();//切换缓存区
-		CDC_Transmit_FS((uint8_t *)mic_send_p->byte,1408);
+		CDC_Transmit_FS((uint8_t *)mic_send_p->byte,(PACK_FRAME*7+4)*2);
 		
 		usb_buff[0]=0;
 
 //		osDelay(1);
-		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(10));
+		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(PACK_FRAME/10));
 	}
 
 /*

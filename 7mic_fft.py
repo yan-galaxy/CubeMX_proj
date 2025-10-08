@@ -4,7 +4,10 @@ import matplotlib.pyplot as plt
 from scipy.fft import fft, fftfreq
 from scipy import signal
 import os
+import tkinter as tk
+from tkinter import filedialog
 
+# 不准改我的注释！！！不准删！！！
 plt.rcParams["font.family"] = ["Microsoft YaHei", "SimHei"]
 plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
@@ -22,7 +25,7 @@ def read_7mic_csv_data(csv_path):
         print(f"读取CSV文件失败: {e}")
         return None
 
-def apply_filter(channel_data, filter_type, cutoff_freq, sampling_rate, order=1):
+def apply_filter(channel_data, filter_type, cutoff_freq, sampling_rate, order=2):
     """
     对通道数据应用滤波器
     
@@ -48,8 +51,11 @@ def apply_filter(channel_data, filter_type, cutoff_freq, sampling_rate, order=1)
     else:
         raise ValueError("filter_type 必须是 'lowpass' 或 'highpass'")
     
-    # 应用滤波器
-    filtered_data = signal.filtfilt(b, a, channel_data)
+    # 应用实时滤波器，并设置初始条件使滤波器从第一个数据点开始
+    zi = signal.lfilter_zi(b, a)
+    # 将初始状态设置为第一个数据点的值
+    zi = zi * channel_data[0]
+    filtered_data, _ = signal.lfilter(b, a, channel_data, zi=zi)
     return filtered_data
 
 def perform_channel_fft_analysis(data, channel_index, sampling_rate=10000):
@@ -180,35 +186,50 @@ def plot_single_channel_data_and_fft(csv_path, channel_index=0, sampling_rate=10
     plt.tight_layout()
     plt.show()
 
+def select_file_and_analyze():
+    """
+    通过可视化界面选择文件并进行分析
+    """
+    # 创建一个隐藏的根窗口
+    root = tk.Tk()
+    root.withdraw()  # 隐藏主窗口
+    
+    # 打开文件选择对话框
+    file_path = filedialog.askopenfilename(
+        title="选择CSV文件",
+        filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
+    )
+    
+    # 如果用户选择了文件
+    if file_path:
+        print(f"选择的文件: {file_path}")
+        
+        # 获取用户输入的其他参数
+        channel_to_analyze = int(input("请输入要分析的通道索引 (0-6): ") or "0")
+        sampling_rate = int(input("请输入采样率 (默认10000): ") or "10000")
+        
+        print("滤波器设置:")
+        print("1. 低通滤波器 (lowpass)")
+        print("2. 高通滤波器 (highpass)")
+        print("3. 不使用滤波器")
+        filter_choice = input("请选择滤波器类型 (1/2/3, 默认为1): ") or "1"
+        
+        filter_type = None
+        cutoff_freq = None
+        if filter_choice == "1":
+            filter_type = 'lowpass'
+            cutoff_freq = float(input("请输入截止频率 (Hz, 默认750): ") or "750")
+        elif filter_choice == "2":
+            filter_type = 'highpass'
+            cutoff_freq = float(input("请输入截止频率 (Hz, 默认750): ") or "750")
+        
+        # 进行分析
+        plot_single_channel_data_and_fft(file_path, channel_to_analyze, sampling_rate,
+                                       filter_type, cutoff_freq)
+    else:
+        print("未选择文件")
+
 # 直接在代码中指定文件路径和通道
 if __name__ == "__main__":
-    # 请修改为实际的CSV文件路径
-    csv_file_path = "7MIC_raw_data/mic_20250829_154152_实际麦克风触摸通道4.csv"  
-    # mic_实际麦克风触摸测试_1
-    # mic_20250829_153230_通道四100Hz
-    # mic_20250829_153438_通道四20Hz
-    # mic_20250829_153816_通道四7Hz
-    # mic_20250829_154152_实际麦克风触摸通道4
-    # mic_20250829_161425_通道四500mHz
-    
-    # 指定要分析的通道索引 (0-6 对应 MIC1-MIC7)
-    channel_to_analyze = 3  # 分析第一个通道 (MIC1)
-    
-    # 指定采样率
-    sampling_rate = 10000  # 根据实际采样率修改
-    
-    # 滤波器设置
-    # 可选: 'lowpass' (低通), 'highpass' (高通), None (不滤波)
-    filter_type = 'lowpass'  # 例如: 'highpass'
-    cutoff_freq = 750  # 例如: 100 (Hz)
-    # filter_type = None  # 例如: 'highpass'
-    # cutoff_freq = None  # 例如: 100 (Hz)
-    
-    # 检查文件是否存在
-    if not os.path.exists(csv_file_path):
-        print(f"文件不存在: {csv_file_path}")
-        print("请修改代码中的文件路径为实际存在的CSV文件路径")
-    else:
-        # 进行分析
-        plot_single_channel_data_and_fft(csv_file_path, channel_to_analyze, sampling_rate,
-                                       filter_type, cutoff_freq)
+    # 使用可视化界面选择文件
+    select_file_and_analyze()

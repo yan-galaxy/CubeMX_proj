@@ -160,6 +160,8 @@ void MX_FREERTOS_Init(void) {
   * @param  argument: Not used
   * @retval None
   */
+
+#define PACK_FRAME 100	
 uint16_t ADC1_value[2];//MIC7 MIC4
 uint16_t ADC2_value[2];//MIC5 MIC6
 uint16_t ADC3_value[1];//MIC2
@@ -167,8 +169,8 @@ uint16_t ADC4_value[1];//MIC3
 uint16_t ADC5_value[1];//MIC1
 
 
-volatile Word_union mic_data_1[704];
-volatile Word_union mic_data_2[704];
+volatile Word_union mic_data_1[PACK_FRAME*7+4];
+volatile Word_union mic_data_2[PACK_FRAME*7+4];
 volatile Word_union* mic_send_p=mic_data_1;
 volatile Word_union* mic_store_p=mic_data_2;
 
@@ -206,27 +208,27 @@ void StartDefaultTask(void *argument)
 	mic_data_1[0].byte[1]=0xAA;
 	mic_data_1[1].byte[0]=0xBB;
 	mic_data_1[1].byte[1]=0xCC;
-	for(uint16_t i=0;i<700;i++)
+	for(uint16_t i=0;i<PACK_FRAME*7;i++)
 	{
 		mic_data_1[2+i].word16=i*1+1;
 	}
-	mic_data_1[702].byte[0]=0xAA;//Ö¡Î²
-	mic_data_1[702].byte[1]=0x55;
-	mic_data_1[703].byte[0]=0x66;
-	mic_data_1[703].byte[1]=0x77;
+	mic_data_1[PACK_FRAME*7+2].byte[0]=0xAA;//Ö¡Î²
+	mic_data_1[PACK_FRAME*7+2].byte[1]=0x55;
+	mic_data_1[PACK_FRAME*7+3].byte[0]=0x66;
+	mic_data_1[PACK_FRAME*7+3].byte[1]=0x77;
 	
 	mic_data_2[0].byte[0]=0x55;//Ö¡Í·
 	mic_data_2[0].byte[1]=0xAA;
 	mic_data_2[1].byte[0]=0xBB;
 	mic_data_2[1].byte[1]=0xCC;
-	for(uint16_t i=0;i<700;i++)
+	for(uint16_t i=0;i<PACK_FRAME*7;i++)
 	{
 		mic_data_2[2+i].word16=i*2+2;
 	}
-	mic_data_2[702].byte[0]=0xAA;//Ö¡Î²
-	mic_data_2[702].byte[1]=0x55;
-	mic_data_2[703].byte[0]=0x66;
-	mic_data_2[703].byte[1]=0x77;
+	mic_data_2[PACK_FRAME*7+2].byte[0]=0xAA;//Ö¡Î²
+	mic_data_2[PACK_FRAME*7+2].byte[1]=0x55;
+	mic_data_2[PACK_FRAME*7+3].byte[0]=0x66;
+	mic_data_2[PACK_FRAME*7+3].byte[1]=0x77;
 	
 	HAL_ADCEx_Calibration_Start(&hadc1,ADC_SINGLE_ENDED);
 	HAL_ADCEx_Calibration_Start(&hadc2,ADC_SINGLE_ENDED);
@@ -257,18 +259,31 @@ void StartDefaultTask(void *argument)
 
 		t_start = LL_TIM_GetCounter(TIM7);
 		
-			// ¸´ÖÆADC5°ëÂúÊý¾Ý£¨0~99£©
-			  for(uint16_t i=0; i<100; i++) {
-				mic_store_p[FRAME_HEAD_CNT + i].word16 = ADC5_value[0];
-				mic_store_p[FRAME_HEAD_CNT + 100 + i].word16 = ADC3_value[0];
-				mic_store_p[FRAME_HEAD_CNT + 200 + i].word16 = ADC4_value[0];
-				mic_store_p[FRAME_HEAD_CNT + 300 + i].word16 = ADC1_value[1];
-				mic_store_p[FRAME_HEAD_CNT + 400 + i].word16 = ADC2_value[0];
-				mic_store_p[FRAME_HEAD_CNT + 500 + i].word16 = ADC2_value[1];
-				mic_store_p[FRAME_HEAD_CNT + 600 + i].word16 = ADC1_value[0];
-//				  vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(1));
-				user_delaynus_tim_until(100);
-			  }
+//		for(uint16_t i=0; i<100; i++) {
+//		mic_store_p[FRAME_HEAD_CNT + i].word16 = ADC5_value[0];
+//		mic_store_p[FRAME_HEAD_CNT + 100 + i].word16 = ADC3_value[0];
+//		mic_store_p[FRAME_HEAD_CNT + 200 + i].word16 = ADC4_value[0];
+//		mic_store_p[FRAME_HEAD_CNT + 300 + i].word16 = ADC1_value[1];
+//		mic_store_p[FRAME_HEAD_CNT + 400 + i].word16 = ADC2_value[0];
+//		mic_store_p[FRAME_HEAD_CNT + 500 + i].word16 = ADC2_value[1];
+//		mic_store_p[FRAME_HEAD_CNT + 600 + i].word16 = ADC1_value[0];
+
+//		user_delaynus_tim_until(100);//vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(1));
+//		}
+		for(uint16_t i=0; i<PACK_FRAME; i++) {
+		mic_store_p[FRAME_HEAD_CNT + i].word16 = ADC5_value[0];
+		mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*1 + i].word16 = ADC3_value[0];
+		mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*2 + i].word16 = ADC4_value[0];
+		mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*3 + i].word16 = ADC1_value[1];
+		mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*4 + i].word16 = ADC2_value[0];
+		mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*5 + i].word16 = ADC2_value[1];
+		mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*6 + i].word16 = ADC1_value[0];
+
+		user_delaynus_tim_until(100);//vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(1));
+		}
+
+			  
+			  
 		t_string = LL_TIM_GetCounter(TIM7)-t_start;
 		
 //		sprintf(usb_buff2,"t_send:%.1f us,t_send2:%.1f us,t_string:%.1f us,CDC_result:%u\r\n",t_send/1.0,t_send2/1.0,t_string/1.0,CDC_result);
@@ -280,7 +295,7 @@ void StartDefaultTask(void *argument)
 //		CDC_Transmit_FS((uint8_t *)usb_buff,strlen(usb_buff));
 		
 		exchange_res_p();//ÇÐ»»»º´æÇø
-		CDC_Transmit_FS((uint8_t *)mic_send_p->byte,1408);
+		CDC_Transmit_FS((uint8_t *)mic_send_p->byte,(PACK_FRAME*7+4)*2);
 		
 		usb_buff[0]=0;
 

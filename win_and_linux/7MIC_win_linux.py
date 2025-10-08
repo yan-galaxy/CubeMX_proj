@@ -14,6 +14,10 @@ import threading
 from datetime import datetime
 import time
 
+# 帧数配置宏定义 - 可以修改这个值来改变每次接收的帧数 (100、150、200等)
+FRAMES_PER_PACKET = 20
+
+# 不准改我的注释！！！不准删！！！
 class SerialSelectionDialog(QDialog):
     """跨平台串口选择对话框（Windows/Ubuntu通用）"""
     def __init__(self, parent=None):
@@ -153,18 +157,18 @@ class SerialWorker(QThread):
         # 获取数据
         raw_data = np.array(self.data_buffer)
         
-        # 确保数据是二维数组 (帧数, 700)
+        # 确保数据是二维数组 (帧数, FRAMES_PER_PACKET*7)
         if raw_data.ndim == 1:
-            # 如果是一维数组，重塑为(1, 700)
+            # 如果是一维数组，重塑为(1, FRAMES_PER_PACKET*7)
             raw_data = raw_data.reshape(1, -1)
         elif raw_data.ndim > 2:
             # 如果是更高维的数组，压平除最后一维外的所有维度
             raw_data = raw_data.reshape(-1, raw_data.shape[-1])
         
-        # 将数据重塑为 (帧数*100, 7) 的形式
+        # 将数据重塑为 (帧数*FRAMES_PER_PACKET, 7) 的形式
         # 每一列代表一个麦克风通道
         num_frames = raw_data.shape[0]
-        num_points_per_channel = 100
+        num_points_per_channel = FRAMES_PER_PACKET  # 每帧10个点
         num_channels = 7
         
         # 创建一个新的数组来存储重新排列的数据
@@ -211,7 +215,9 @@ class SerialWorker(QThread):
                             payload = frame[len(self.FRAME_HEADER):-len(self.FRAME_TAIL)]
                             parsed = np.frombuffer(payload, dtype=np.uint16)
                             
-                            if len(parsed) == 700:
+                            # 使用宏定义的帧数来检查数据长度
+                            expected_length = FRAMES_PER_PACKET * 7  # 帧数 * 通道数 * 每通道点数
+                            if len(parsed) == expected_length:
                                 # parsed = parsed[:100]
                                 # parsed = parsed[100:200]
                                 # parsed = parsed[200:300]
@@ -295,7 +301,8 @@ class MultiChannelWaveformVisualizer:
             plot.setYRange(0, 4095)
             
             curve = plot.plot(pen=pg.intColor(i))  # 使用不同颜色区分
-            show_data = [0] * 1000  # 显示1000个点
+            # 显示点数根据帧数动态调整
+            show_data = [0] * FRAMES_PER_PACKET * 10  # 显示FRAMES_PER_PACKET*100个点
             
             self.plots.append(plot)
             self.curves.append(curve)
@@ -306,10 +313,13 @@ class MultiChannelWaveformVisualizer:
             self.layout.addItem(plot, row, col)
 
     def update_plot(self, new_row):
-        if len(new_row) == 700:
-            # 每100个数据点中取前7个，分别对应7个麦克风
+        # 使用宏定义的帧数来检查数据长度
+        expected_length = FRAMES_PER_PACKET * 7  # 帧数 * 通道数 * 每通道点数
+        if len(new_row) == expected_length:
+            # 每个麦克风的数据点数根据帧数动态计算
+            points_per_channel = FRAMES_PER_PACKET
             for mic in range(7):
-                mic_data = new_row[mic*100:(mic+1)*100]
+                mic_data = new_row[mic*points_per_channel:(mic+1)*points_per_channel]
                 
                 # 更新显示数据
                 self.show_data[mic] = self.show_data[mic][len(mic_data):] + mic_data
@@ -344,7 +354,7 @@ class MainWindow(QMainWindow):
 
     def init_main_ui(self):
         """初始化主界面（图像+波形显示）"""
-        self.setWindowTitle("7MIC波形显示")
+        self.setWindowTitle(f"7MIC波形显示 (每次{FRAMES_PER_PACKET}个数据包)")
         self.resize(1500, 800)
 
         self.central_widget = QSplitter()
