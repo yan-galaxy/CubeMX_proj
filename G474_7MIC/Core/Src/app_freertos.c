@@ -160,7 +160,7 @@ void MX_FREERTOS_Init(void) {
   * @param  argument: Not used
   * @retval None
   */
-#define PACK_FRAME 20
+#define PACK_FRAME 100
 uint16_t ADC1_value[PACK_FRAME*4];//MIC7 MIC4
 uint16_t ADC2_value[PACK_FRAME*4];//MIC5 MIC6
 uint16_t ADC3_value[PACK_FRAME*2];//MIC2

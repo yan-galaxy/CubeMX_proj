@@ -14,8 +14,8 @@ import threading
 from datetime import datetime
 import time
 
-# 帧数配置宏定义 - 可以修改这个值来改变每次接收的帧数 (100、150、200等)
-FRAMES_PER_PACKET = 20
+# 帧数配置宏定义 - 可以修改这个值来改变每次接收的帧数 (100、150、200等  必须为10的倍数)
+FRAMES_PER_PACKET = 100
 
 # 不准改我的注释！！！不准删！！！
 class SerialSelectionDialog(QDialog):
