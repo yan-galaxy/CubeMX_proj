@@ -129,7 +129,7 @@ def plot_single_channel_data_and_fft(csv_path, channel_index=0, sampling_rate=10
     # 应用滤波器（如果指定）
     if filter_type and cutoff_freq:
         filtered_data = apply_filter(channel_data, filter_type, cutoff_freq, sampling_rate)
-        axes[0].plot(time, filtered_data, label=f'滤波后信号 ({filter_type} @ {cutoff_freq}Hz)', alpha=0.7)
+        axes[0].plot(time, filtered_data, label=f'滤波后信号 ({filter_type} @ {cutoff_freq}Hz)', alpha=0.9)
         filter_title = f" ({filter_type} @ {cutoff_freq}Hz)"
         # 用于FFT分析的数据
         fft_data = filtered_data
@@ -174,7 +174,7 @@ def plot_single_channel_data_and_fft(csv_path, channel_index=0, sampling_rate=10
         
         # 绘制滤波后信号FFT
         axes[1].plot(xf_filtered[freq_indices_filtered], yf_filtered[freq_indices_filtered], 
-                     label=f'滤波后信号FFT ({filter_type} @ {cutoff_freq}Hz)', alpha=0.7)
+                     label=f'滤波后信号FFT ({filter_type} @ {cutoff_freq}Hz)', alpha=0.9)
     
     axes[1].set_title(f'通道 {channel_index+1} FFT分析对比')
     axes[1].set_xlabel('频率 (Hz)')
