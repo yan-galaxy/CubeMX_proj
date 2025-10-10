@@ -120,8 +120,10 @@ def plot_single_channel_data_and_fft(csv_path, channel_index=0, sampling_rate=10
     # 获取通道数据
     channel_data = data.iloc[:, channel_index].values
 
-    time = time[:10000]
-    channel_data = channel_data[:10000]
+    start_index = 10000 * 8
+    valid_length = 10000 * 9
+    time = time[start_index:valid_length]
+    channel_data = channel_data[start_index:valid_length]
     
     # 绘制波形图（在同一幅子图中显示原始信号和滤波后信号）
     axes[0].plot(time, channel_data, label='原始信号', alpha=0.7)
@@ -129,7 +131,7 @@ def plot_single_channel_data_and_fft(csv_path, channel_index=0, sampling_rate=10
     # 应用滤波器（如果指定）
     if filter_type and cutoff_freq:
         filtered_data = apply_filter(channel_data, filter_type, cutoff_freq, sampling_rate)
-        axes[0].plot(time, filtered_data, label=f'滤波后信号 ({filter_type} @ {cutoff_freq}Hz)', alpha=0.9)
+        axes[0].plot(time, filtered_data, label=f'数字滤波后信号 ({filter_type} @ {cutoff_freq}Hz)', alpha=0.9)
         filter_title = f" ({filter_type} @ {cutoff_freq}Hz)"
         # 用于FFT分析的数据
         fft_data = filtered_data
@@ -138,7 +140,7 @@ def plot_single_channel_data_and_fft(csv_path, channel_index=0, sampling_rate=10
         # 用于FFT分析的数据
         fft_data = channel_data
     
-    axes[0].set_title(f'通道 {channel_index+1} 原始波形 vs 滤波后波形')
+    axes[0].set_title(f'通道 {channel_index+1} 原始波形 vs 数字滤波后波形')
     axes[0].set_xlabel('时间 (秒)')
     axes[0].set_ylabel('幅值')
     axes[0].grid(True)
@@ -174,7 +176,7 @@ def plot_single_channel_data_and_fft(csv_path, channel_index=0, sampling_rate=10
         
         # 绘制滤波后信号FFT
         axes[1].plot(xf_filtered[freq_indices_filtered], yf_filtered[freq_indices_filtered], 
-                     label=f'滤波后信号FFT ({filter_type} @ {cutoff_freq}Hz)', alpha=0.9)
+                     label=f'数字滤波后信号FFT ({filter_type} @ {cutoff_freq}Hz)', alpha=0.9)
     
     axes[1].set_title(f'通道 {channel_index+1} FFT分析对比')
     axes[1].set_xlabel('频率 (Hz)')
@@ -208,11 +210,11 @@ def select_file_and_analyze():
         channel_to_analyze = int(input("请输入要分析的通道索引 (0-6): ") or "0")
         sampling_rate = int(input("请输入采样率 (默认10000): ") or "10000")
         
-        print("滤波器设置:")
+        print("数字滤波器设置:")
         print("1. 低通滤波器 (lowpass)")
         print("2. 高通滤波器 (highpass)")
         print("3. 不使用滤波器")
-        filter_choice = input("请选择滤波器类型 (1/2/3, 默认为1): ") or "1"
+        filter_choice = input("请选择数字滤波器类型 (1/2/3, 默认为1): ") or "1"
         
         filter_type = None
         cutoff_freq = None
