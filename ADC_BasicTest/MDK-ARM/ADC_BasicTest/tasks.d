@@ -1,0 +1,16 @@
+adc_basictest\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/tasks.c
+adc_basictest\tasks.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+adc_basictest\tasks.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+adc_basictest\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+adc_basictest\tasks.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+adc_basictest\tasks.o: C:\Self_install_software\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+adc_basictest\tasks.o: ../Core/Inc/FreeRTOSConfig.h
+adc_basictest\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+adc_basictest\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+adc_basictest\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+adc_basictest\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+adc_basictest\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+adc_basictest\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+adc_basictest\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+adc_basictest\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
+adc_basictest\tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/stack_macros.h
