@@ -12,23 +12,11 @@ from matplotlib.widgets import CheckButtons
 
 try:
     # 尝试不同的编码方式读取第一个CSV文件（力传感器数据）
-    try:
-        force_data = pd.read_csv('20251014222347.csv', encoding='gbk')
-    except UnicodeDecodeError:
-        try:
-            force_data = pd.read_csv('20251014222347.csv', encoding='utf-8')
-        except UnicodeDecodeError:
-            force_data = pd.read_csv('20251014222347.csv', encoding='latin1')
+    force_data = pd.read_csv('20251014222347.csv')
     
     # 尝试不同的编码方式读取第二个CSV文件（8x8传感器原始数据）
-    try:
-        raw_data = pd.read_csv('raw_data_8x8_20251014_222344.csv', encoding='gbk')
-    except UnicodeDecodeError:
-        try:
-            raw_data = pd.read_csv('raw_data_8x8_20251014_222344.csv', encoding='utf-8')
-        except UnicodeDecodeError:
-            raw_data = pd.read_csv('raw_data_8x8_20251014_222344.csv', encoding='latin1')
-    
+    raw_data = pd.read_csv('raw_data_8x8_20251014_222344.csv')
+        
     force_data['Fz'] = -force_data['Fz']  # 反转Fz轴
     # 提取Fx, Fy, Fz数据
     fx_data = force_data['Fx']
@@ -265,178 +253,9 @@ try:
         for i, col_name in enumerate(group6_data.columns):
             aligned_data_df[col_name] = raw_group6_aligned[:, i]
         
-        aligned_data_df.to_csv('aligned_data.csv', index=False)
-        print("\n已将对齐后的原始数据保存到 'aligned_data.csv'")
+        # aligned_data_df.to_csv('aligned_data.csv', index=False)
+        # print("\n已将对齐后的原始数据保存到 'aligned_data.csv'")
         
-
-
-
-    # print("\n====== 开始使用原始数据进行传感器标定 ======")
-    
-    # # 提取原始数据并进行对齐（不使用归一化数据）
-    # # 首先需要获取原始力数据和原始group6数据的对齐版本
-    # if 'Fx' in force_data.columns and 'Fy' in force_data.columns and 'Fz' in force_data.columns:
-    #     # 获取原始力数据
-    #     raw_force_data = force_data[['Fx', 'Fy', 'Fz']].values
-        
-    #     # 获取原始group6数据
-    #     raw_group6_values = group6_data.values
-        
-    #     # 基于之前计算的时间差对齐原始数据
-    #     raw_force_aligned = None
-    #     raw_group6_aligned = None
-        
-    #     if time_diff >= 0:
-    #         # group6_p4数据滞后，向前平移
-    #         raw_force_aligned = raw_force_data[:aligned_length]
-    #         raw_group6_aligned = raw_group6_values[time_diff:time_diff+aligned_length]
-    #     else:
-    #         # 力传感器数据滞后，向前平移
-    #         raw_force_aligned = raw_force_data[-time_diff:-time_diff+aligned_length]
-    #         raw_group6_aligned = raw_group6_values[:aligned_length]
-        
-    #     # 确保对齐后的数据有效且有足够的传感器
-    #     if raw_force_aligned is not None and raw_group6_aligned is not None and raw_group6_aligned.shape[1] >= 4:
-    #         # 特征：四个压阻传感器的原始读数 (group6_p1到p4)
-    #         # 目标：Fx, Fy, Fz的原始力值
-    #         X_raw = raw_group6_aligned[:, :4]  # 只使用前4个传感器数据
-    #         y_raw = raw_force_aligned
-            
-    #         # 添加多项式特征（2次多项式）
-    #         def add_polynomial_features_raw(X, degree=2):
-    #             """添加多项式特征，包括交互项"""
-    #             n_samples, n_features = X.shape
-    #             features = [X]
-                
-    #             # 添加高阶项
-    #             for d in range(2, degree+1):
-    #                 features.append(X ** d)
-                
-    #             # 添加交互项 (两个不同特征的乘积)
-    #             for i in range(n_features):
-    #                 for j in range(i+1, n_features):
-    #                     features.append(X[:, i] * X[:, j])
-                
-    #             return np.column_stack(features)
-            
-    #         # 生成多项式特征
-    #         X_poly_raw = add_polynomial_features_raw(X_raw, degree=2)
-            
-    #         # 添加偏置项（常数项）
-    #         X_poly_raw = np.hstack([np.ones((X_poly_raw.shape[0], 1)), X_poly_raw])
-            
-    #         # 使用最小二乘法分别拟合Fx, Fy, Fz
-    #         def least_squares_fit_raw(X, y):
-    #             """使用最小二乘法求解线性回归系数: y = Xw"""
-    #             # w = (X^T X)^(-1) X^T y
-    #             # 添加微小扰动防止矩阵奇异
-    #             X_T_X = X.T @ X
-    #             X_T_X_reg = X_T_X + np.eye(X_T_X.shape[0]) * 1e-8
-    #             w = np.linalg.inv(X_T_X_reg) @ X.T @ y
-    #             return w
-            
-    #         # 分别拟合三个力分量
-    #         coefficients_raw = {}
-    #         for i, force_component in enumerate(['Fx', 'Fy', 'Fz']):
-    #             print(f"使用原始数据拟合 {force_component} 的标定模型...")
-    #             coefficients_raw[force_component] = least_squares_fit_raw(X_poly_raw, y_raw[:, i])
-            
-    #         # 使用拟合的模型进行预测
-    #         predictions_raw = {}
-    #         for force_component in ['Fx', 'Fy', 'Fz']:
-    #             predictions_raw[force_component] = X_poly_raw @ coefficients_raw[force_component]
-            
-    #         # 计算拟合误差
-    #         def calculate_error_raw(y_true, y_pred):
-    #             """计算均方误差和决定系数R²"""
-    #             mse = np.mean((y_true - y_pred) ** 2)
-    #             r2 = 1 - np.sum((y_true - y_pred) ** 2) / np.sum((y_true - np.mean(y_true)) ** 2)
-    #             return mse, r2
-            
-    #         # 打印每个分量的拟合误差
-    #         print("\n====== 原始数据拟合误差分析 ======")
-    #         for i, force_component in enumerate(['Fx', 'Fy', 'Fz']):
-    #             mse, r2 = calculate_error_raw(y_raw[:, i], predictions_raw[force_component])
-    #             print(f"{force_component} - 均方误差: {mse:.6f}, 决定系数R²: {r2:.6f}")
-            
-    #         # 可视化拟合结果
-    #         fig, axes = plt.subplots(3, 1, figsize=(15, 15))
-    #         fig.suptitle('原始力传感器实测值与压阻传感器预测值对比', fontsize=16)
-            
-    #         colors = ['blue', 'green', 'red']
-    #         for i, force_component in enumerate(['Fx', 'Fy', 'Fz']):
-    #             axes[i].plot(y_raw[:, i], label=f'实测 {force_component}', color=colors[i], alpha=0.7)
-    #             axes[i].plot(predictions_raw[force_component], label=f'预测 {force_component}', 
-    #                          color=colors[i], linestyle='--')
-    #             axes[i].set_title(f'{force_component} 拟合结果 (R² = {calculate_error_raw(y_raw[:, i], predictions_raw[force_component])[1]:.4f})')
-    #             axes[i].set_xlabel('样本索引')
-    #             axes[i].set_ylabel('力值')
-    #             axes[i].grid(True)
-    #             axes[i].legend()
-            
-    #         plt.tight_layout(rect=[0, 0, 1, 0.96])  # 为suptitle留出空间
-    #         plt.show()
-            
-    #         # 保存原始数据的标定系数
-    #         import json
-    #         calibration_data_raw = {
-    #             'coefficients': {k: v.tolist() for k, v in coefficients_raw.items()},
-    #             'feature_degree': 2
-    #         }
-            
-    #         with open('sensor_calibration_raw.json', 'w') as f:
-    #             json.dump(calibration_data_raw, f, indent=4)
-            
-    #         print("\n原始数据标定完成！标定系数已保存到 'sensor_calibration_raw.json'")
-            
-    #         # 展示标定方程形式
-    #         print("\n====== 原始数据标定方程形式 ======")
-    #         features = ['常数项']
-    #         sensors = ['group6_p1', 'group6_p2', 'group6_p3', 'group6_p4']
-            
-    #         # 添加一次项
-    #         features.extend([f'{s}' for s in sensors])
-    #         # 添加二次项
-    #         features.extend([f'{s}²' for s in sensors])
-    #         # 添加交互项
-    #         for i in range(4):
-    #             for j in range(i+1, 4):
-    #                 features.extend([f'{sensors[i]}×{sensors[j]}'])
-            
-    #         print(f"力值 = {features[0]} + " + " + ".join([f"w_{i}×{features[i]}" for i in range(1, len(features))]))
-    #         print("\n其中w_i为拟合得到的系数")
-            
-    #         # 提供一个使用标定方程进行预测的函数（基于原始数据）
-    #         def predict_force_raw(sensor_readings, component='Fx'):
-    #             """
-    #             使用原始数据标定方程预测力值
-    #             sensor_readings: 长度为4的列表，包含group6_p1到p4的原始读数
-    #             component: 要预测的力分量，'Fx', 'Fy'或'Fz'
-    #             """
-    #             # 构建多项式特征
-    #             X_predict = add_polynomial_features_raw(np.array(sensor_readings).reshape(1, -1), degree=2)
-    #             X_predict = np.hstack([np.ones((1, 1)), X_predict])  # 添加偏置项
-                
-    #             # 预测力值（直接使用原始尺度）
-    #             force_value = X_predict @ coefficients_raw[component]
-                
-    #             return float(force_value)
-            
-    #         print("\n====== 原始数据标定示例 ======")
-    #         # 使用第一个样本数据进行预测示例
-    #         sample_raw_readings = X_raw[0, :4]  # 前4个传感器的原始读数
-            
-    #         print(f"传感器原始读数示例: {sample_raw_readings}")
-    #         print(f"实际Fx值: {y_raw[0, 0]:.4f}")
-    #         print(f"预测Fx值: {predict_force_raw(sample_raw_readings, 'Fx'):.4f}")
-    #         print(f"实际Fy值: {y_raw[0, 1]:.4f}")
-    #         print(f"预测Fy值: {predict_force_raw(sample_raw_readings, 'Fy'):.4f}")
-    #         print(f"实际Fz值: {y_raw[0, 2]:.4f}")
-    #         print(f"预测Fz值: {predict_force_raw(sample_raw_readings, 'Fz'):.4f}")
-    #     else:
-    #         print("错误：没有足够的压阻传感器数据进行标定（至少需要4个）或对齐数据无效")
-    # else:
-    #     print("错误：力传感器数据中未找到Fx, Fy, Fz列")
 
 
 
