@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QSplitter, QDialog, 
-                             QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QMessageBox, QWidget, QLabel)
+                             QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QMessageBox, QWidget, QLabel, QCheckBox)
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore
 import serial
@@ -14,13 +14,16 @@ import threading
 from datetime import datetime
 import csv
 
+# 数据保存选项的宏定义
+SAVE_DATA_DEFAULT = True  # 默认保存数据
+
 # 不准改我的注释！！！不准删！！！
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 用于图像更新
     waveform_ready = pyqtSignal(list)  # 用于波形更新
     error_signal = pyqtSignal(str)  # 串口错误信号（跨平台错误提示）
 
-    def __init__(self, port, normalization_low=0, normalization_high=2000):
+    def __init__(self, port, save_data=True, normalization_low=0, normalization_high=2000):
         super().__init__()
         self.port = port  # 外部传入选择的串口（不再硬编码）
         self.baudrate = 460800
@@ -48,7 +51,9 @@ class SerialWorker(QThread):
         self.writer_thread = None
         self.is_saving = False
         self.data_buffer = []
-        self.init_raw_data_saving()
+        self.save_data = save_data
+        if self.save_data:
+            self.init_raw_data_saving()
 
     def init_raw_data_saving(self):
         if not os.path.exists(self.save_dir):
@@ -122,9 +127,10 @@ class SerialWorker(QThread):
 
     def stop(self):
         self.running = False
-        self.is_saving = False
-        if self.writer_thread and self.writer_thread.is_alive():
-            self.writer_thread.join()
+        if self.save_data:
+            self.is_saving = False
+            if self.writer_thread and self.writer_thread.is_alive():
+                self.writer_thread.join()
         # print('正在保存缓冲区数据到npz文件')
         # // Deleted: if len(self.data_buffer) > 0:
         # // Deleted:     metadata = {
@@ -189,7 +195,8 @@ class SerialWorker(QThread):
                                 mapped_frames = frames_data[:, src_x_coords, src_y_coords].reshape(10, 8, 8)
                                 
                                 # 将完整的10帧映射数据发送给CSV线程
-                                self.data_queue.put(mapped_frames.copy())
+                                if self.save_data:
+                                    self.data_queue.put(mapped_frames.copy())
                                 
                                 # 计算平均值用于显示
                                 target_matrix = np.mean(mapped_frames, axis=0)
@@ -455,8 +462,9 @@ class SerialSelectionDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("选择串口")
-        self.setFixedSize(300, 150)  # 固定窗口大小，避免跨平台布局错乱
+        self.setFixedSize(300, 200)  # 调整窗口大小以容纳新控件
         self.selected_port = None  # 存储用户选择的串口
+        self.save_data = SAVE_DATA_DEFAULT  # 存储用户是否选择保存数据
 
         # 1. 布局初始化
         self.layout = QVBoxLayout()
@@ -467,10 +475,15 @@ class SerialSelectionDialog(QDialog):
         self.port_combo.setPlaceholderText("请选择可用串口")
         self.layout.addWidget(self.port_combo)
 
-        # 3. 加载可用串口（跨平台）
+        # 3. 添加保存数据选项
+        self.save_data_checkbox = QCheckBox("保存数据到文件")
+        self.save_data_checkbox.setChecked(SAVE_DATA_DEFAULT)
+        self.layout.addWidget(self.save_data_checkbox)
+
+        # 4. 加载可用串口（跨平台）
         self.load_available_ports()
 
-        # 4. 按钮布局（确认/取消）
+        # 5. 按钮布局（确认/取消）
         self.button_layout = QVBoxLayout()
         self.confirm_btn = QPushButton("确认选择")
         self.cancel_btn = QPushButton("取消")
@@ -478,7 +491,7 @@ class SerialSelectionDialog(QDialog):
         self.button_layout.addWidget(self.cancel_btn)
         self.layout.addLayout(self.button_layout)
 
-        # 5. 按钮信号连接
+        # 6. 按钮信号连接
         self.confirm_btn.clicked.connect(self.on_confirm)
         self.cancel_btn.clicked.connect(self.reject)
 
@@ -504,12 +517,14 @@ class SerialSelectionDialog(QDialog):
     def on_confirm(self):
         """确认选择，保存串口并关闭对话框"""
         self.selected_port = self.port_combo.currentData()  # 获取真实端口名（如COM3 / /dev/ttyUSB0）
+        self.save_data = self.save_data_checkbox.isChecked()  # 获取是否保存数据的选项
         self.accept()  # 关闭对话框并返回QDialog.Accepted
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.worker = None  # 串口线程（需在选择串口后初始化）
+        self.save_data = SAVE_DATA_DEFAULT  # 是否保存数据
 
         # 1. 先显示串口选择对话框（必须先选串口，再初始化主界面）
         self.select_serial_port()
@@ -525,6 +540,7 @@ class MainWindow(QMainWindow):
         dialog = SerialSelectionDialog()
         if dialog.exec_() == QDialog.Accepted:
             self.selected_port = dialog.selected_port
+            self.save_data = dialog.save_data
         else:
             self.selected_port = None
 
@@ -549,7 +565,7 @@ class MainWindow(QMainWindow):
         self.central_widget.addWidget(self.waveform_layout)
 
         # 初始化串口线程（传入用户选择的端口）
-        self.worker = SerialWorker(port=self.selected_port)
+        self.worker = SerialWorker(port=self.selected_port, save_data=self.save_data)
         self.worker.data_ready.connect(self.image_visualizer.receive_data)
         self.worker.waveform_ready.connect(self.waveform_visualizer.update_plot)
         self.worker.error_signal.connect(self.show_serial_error)  # 绑定错误提示

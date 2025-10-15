@@ -1,3 +1,5 @@
 **/INCRMA_raw_data/*
 **/Routine_acq_raw_data/*
 **/Routine_acq_raw_data_8x8/*
+!**/Routine_acq_raw_data_8x8/8x8_data_calibration/
+!**/Routine_acq_raw_data_8x8/8x8_data_calibration/**
