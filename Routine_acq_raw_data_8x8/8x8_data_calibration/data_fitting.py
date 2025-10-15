@@ -220,10 +220,10 @@ for i, force_component in enumerate(['Fx', 'Fy', 'Fz']):
     print(f"训练 {force_component} 的MLP模型...")
     # 定义MLP模型，可根据需要调整参数
     mlp = MLPRegressor(
-        hidden_layer_sizes=(20, 20, 20),  # 两层隐藏层，分别有100和50个神经元
+        hidden_layer_sizes=(40, 30, 20),  # 两层隐藏层，分别有100和50个神经元
         activation='relu',             # 激活函数
         solver='adam',                 # 优化器
-        max_iter=5,                  # 最大迭代次数
+        max_iter=300,                  # 最大迭代次数
         random_state=42,               # 随机种子，保证结果可复现
         verbose=True                  # 打印训练过程
     )
@@ -238,24 +238,38 @@ predictions_mlp = {}
 
 start_time_mlp = time.perf_counter_ns()
 
-# 逐个样本进行预测以计算平均时间
-for i in range(num_samples):
-    sample_raw_readings = X_raw[i, :4].reshape(1, -1)  # 前4个传感器的原始读数
-    sample_scaled = scaler_X.transform(sample_raw_readings)  # 标准化
+# 使用矩阵运算一次性预测所有样本，提高效率
+X_scaled = scaler_X.transform(X_raw)  # 标准化所有样本
+for force_component in ['Fx', 'Fy', 'Fz']:
+    # 一次性预测所有样本
+    pred_scaled = mlp_models[force_component].predict(X_scaled)
     
-    for force_component in ['Fx', 'Fy', 'Fz']:
-        # 预测（得到标准化后的结果）
-        pred_scaled = mlp_models[force_component].predict(sample_scaled)
-        # 反标准化，得到原始尺度的预测值
-        # 修复：创建一个包含所有三个分量的数组，但只修改当前分量的值
-        temp_y = np.zeros((1, 3))
-        component_index = ['Fx', 'Fy', 'Fz'].index(force_component)
-        temp_y[0, component_index] = pred_scaled[0]
-        pred_original = scaler_y.inverse_transform(temp_y)[0, component_index]
+    # 反标准化预测结果
+    component_index = ['Fx', 'Fy', 'Fz'].index(force_component)
+    temp_y = np.zeros((len(pred_scaled), 3))
+    temp_y[:, component_index] = pred_scaled
+    pred_original = scaler_y.inverse_transform(temp_y)[:, component_index]
+    
+    predictions_mlp[force_component] = pred_original.tolist()
+
+# # 逐个样本进行预测以计算平均时间
+# for i in range(num_samples):
+#     sample_raw_readings = X_raw[i, :4].reshape(1, -1)  # 前4个传感器的原始读数
+#     sample_scaled = scaler_X.transform(sample_raw_readings)  # 标准化
+    
+#     for force_component in ['Fx', 'Fy', 'Fz']:
+#         # 预测（得到标准化后的结果）
+#         pred_scaled = mlp_models[force_component].predict(sample_scaled)
+#         # 反标准化，得到原始尺度的预测值
+#         # 修复：创建一个包含所有三个分量的数组，但只修改当前分量的值
+#         temp_y = np.zeros((1, 3))
+#         component_index = ['Fx', 'Fy', 'Fz'].index(force_component)
+#         temp_y[0, component_index] = pred_scaled[0]
+#         pred_original = scaler_y.inverse_transform(temp_y)[0, component_index]
         
-        if force_component not in predictions_mlp:
-            predictions_mlp[force_component] = []
-        predictions_mlp[force_component].append(float(pred_original))
+#         if force_component not in predictions_mlp:
+#             predictions_mlp[force_component] = []
+#         predictions_mlp[force_component].append(float(pred_original))
 
 end_time_mlp = time.perf_counter_ns()
 
@@ -268,19 +282,19 @@ print(f"MLP平均单次预测(Fx,Fy,Fz)时间: {average_prediction_time_mlp} 纳
 
 
 # 可视化最小二乘法与MLP的拟合结果对比
-fig, axes = plt.subplots(3, 1, figsize=(15, 10))
+fig, axes = plt.subplots(3, 1, figsize=(15, 9))
 fig.suptitle('最小二乘法与MLP神经网络预测结果对比', fontsize=16)
 
 colors = ['blue', 'green', 'red']
 for i, force_component in enumerate(['Fx', 'Fy', 'Fz']):
     # 实测值
-    axes[i].plot(y_raw[:, i], label=f'实测 {force_component}', color=colors[i], alpha=0.5)
+    axes[i].plot(y_raw[:, i], label=f'实测 {force_component}', color=colors[i], alpha=1.0)
     # 最小二乘法预测值
     axes[i].plot(predictions_raw[force_component], label=f'最小二乘法预测 {force_component}', 
-                 color=colors[i], linestyle='--')
+                 color=colors[i], linestyle='--', alpha=0.5)
     # MLP预测值
     axes[i].plot(predictions_mlp[force_component], label=f'MLP预测 {force_component}', 
-                 color='purple', linestyle='-.')
+                 color='purple', linestyle='-.', alpha=0.7)
     
     # 计算两种方法的R²
     ls_r2 = calculate_error_raw(y_raw[:, i], predictions_raw[force_component])[1]
@@ -316,3 +330,77 @@ print("\n====== 两种方法的预测时间对比 ======")
 print(f"最小二乘法平均单次预测时间: {average_prediction_time} 纳秒 ({average_prediction_time/1000000:.4f} 毫秒)")
 print(f"MLP神经网络平均单次预测时间: {average_prediction_time_mlp} 纳秒 ({average_prediction_time_mlp/1000000:.4f} 毫秒)")
 print(f"MLP相对最小二乘法的时间倍数: {average_prediction_time_mlp / average_prediction_time:.2f}x")
+
+
+
+
+# 新增：绘制真实值vs预测值散点图（最小二乘法第一排，MLP第二排）
+print("\n====== 绘制真实值与预测值散点对比图 ======")
+# 创建2行3列子图，适配6个散点图（3个力分量×2种方法）
+fig, axes = plt.subplots(2, 3, figsize=(15, 9))
+fig.suptitle('真实值 vs 预测值 散点对比（最小二乘法·上排 | MLP·下排）', fontsize=18)
+
+# 定义样式：颜色、标记、对角线样式
+ls_color = 'steelblue'    # 最小二乘法散点颜色
+mlp_color = 'darkorchid'  # MLP散点颜色
+diag_color = 'crimson'    # 完美预测对角线颜色
+point_size = 2           # 散点大小
+alpha = 0.2               # 散点透明度
+
+# 第一排：最小二乘法散点图（Fx、Fy、Fz）
+for i, force_component in enumerate(['Fx', 'Fy', 'Fz']):
+    # 获取当前子图（第一行第i列）
+    ax = axes[0, i]
+    # 提取真实值和预测值
+    y_true = y_raw[:, i]
+    y_pred_ls = predictions_raw[force_component]
+    # 计算R²（复用已有结果，避免重复计算）
+    ls_r2 = calculate_error_raw(y_true, y_pred_ls)[1]
+    
+    # 绘制散点图
+    ax.scatter(y_true, y_pred_ls, color=ls_color, s=point_size, alpha=alpha, label=f'最小二乘法')
+    # 绘制完美预测对角线（y=x）
+    min_val = min(min(y_true), min(y_pred_ls))
+    max_val = max(max(y_true), max(y_pred_ls))
+    ax.plot([min_val, max_val], [min_val, max_val], color=diag_color, linestyle='--', linewidth=2, label='完美预测 (y=x)')
+    
+    # 设置子图信息
+    ax.set_title(f'最小二乘法 - {force_component}\nR² = {ls_r2:.4f}', fontsize=14)
+    ax.set_xlabel('真实力值 (N)', fontsize=12)
+    ax.set_ylabel('预测力值 (N)', fontsize=12)
+    ax.grid(True, alpha=0.3)
+    ax.legend(fontsize=10)
+    # 保证横纵轴比例一致，避免视觉偏差
+    ax.axis('equal')
+
+# 第二排：MLP散点图（Fx、Fy、Fz）
+for i, force_component in enumerate(['Fx', 'Fy', 'Fz']):
+    # 获取当前子图（第二行第i列）
+    ax = axes[1, i]
+    # 提取真实值和预测值
+    y_true = y_raw[:, i]
+    y_pred_mlp = predictions_mlp[force_component]
+    # 计算R²（复用已有结果，避免重复计算）
+    mlp_r2 = r2_score(y_true, y_pred_mlp)
+    
+    # 绘制散点图
+    ax.scatter(y_true, y_pred_mlp, color=mlp_color, s=point_size, alpha=alpha, label=f'MLP神经网络')
+    # 绘制完美预测对角线（y=x）
+    min_val = min(min(y_true), min(y_pred_mlp))
+    max_val = max(max(y_true), max(y_pred_mlp))
+    ax.plot([min_val, max_val], [min_val, max_val], color=diag_color, linestyle='--', linewidth=2, label='完美预测 (y=x)')
+    
+    # 设置子图信息
+    ax.set_title(f'MLP神经网络 - {force_component}\nR² = {mlp_r2:.4f}', fontsize=14)
+    ax.set_xlabel('真实力值 (N)', fontsize=12)
+    ax.set_ylabel('预测力值 (N)', fontsize=12)
+    ax.grid(True, alpha=0.3)
+    ax.legend(fontsize=10)
+    # 保证横纵轴比例一致，避免视觉偏差
+    ax.axis('equal')
+
+# 调整子图间距，避免标题/标签重叠
+plt.tight_layout(rect=[0, 0, 1, 0.95])
+plt.show()
+
+print("散点对比图绘制完成！")
