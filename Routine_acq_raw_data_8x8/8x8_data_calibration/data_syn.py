@@ -6,16 +6,20 @@ from matplotlib.widgets import CheckButtons
 
 # 不准删我任何注释！！！！！！！一点都不准删除！！！！
 
+# 配置用于检测第一次急剧上升时刻的传感器列
+# 可选值: 'group6_p4', 'force_Fz', 或其他存在的列名
+ALIGNMENT_REFERENCE_COLUMN = 'group6_p3'
+
 # # 设置中文显示
 # plt.rcParams["font.family"] = ["Microsoft YaHei", "SimHei"]
 # plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
 try:
     # 尝试不同的编码方式读取第一个CSV文件（力传感器数据）
-    force_data = pd.read_csv('20251014222347.csv')
+    force_data = pd.read_csv('20251015203127.csv') # 20251014222347.csv 20251015203127.csv
     
     # 尝试不同的编码方式读取第二个CSV文件（8x8传感器原始数据）
-    raw_data = pd.read_csv('raw_data_8x8_20251014_222344.csv')
+    raw_data = pd.read_csv('raw_data_8x8_20251015_203130.csv')# raw_data_8x8_20251014_222344.csv raw_data_8x8_20251015_203130.csv
         
     force_data['Fz'] = -force_data['Fz']  # 反转Fz轴
     # 提取Fx, Fy, Fz数据
@@ -33,13 +37,14 @@ try:
         # 否则使用前4列作为默认数据
         group6_data = raw_data.iloc[:, :min(4, len(raw_data.columns))]
 
-    # 确保能找到group6_p4，如果找不到则使用group6的第一列
-    if 'group6_p4' in group6_data.columns:
-        group6_p4_data = group6_data['group6_p4']
-        print("已找到group6_p4数据列，将使用该列进行对齐")
+    # 确定用于对齐的列
+    if ALIGNMENT_REFERENCE_COLUMN in group6_data.columns:
+        alignment_ref_data = group6_data[ALIGNMENT_REFERENCE_COLUMN]
+        print(f"已找到{ALIGNMENT_REFERENCE_COLUMN}数据列，将使用该列进行对齐")
     else:
-        print("未找到group6_p4列，将使用group6的第一列进行对齐")
-        group6_p4_data = group6_data.iloc[:, 0]
+        print(f"未找到{ALIGNMENT_REFERENCE_COLUMN}列，将使用group6的第一列进行对齐")
+        alignment_ref_data = group6_data.iloc[:, 0]
+        ALIGNMENT_REFERENCE_COLUMN = group6_data.columns[0]
 
     # 对力传感器数据进行统一归一化（使用所有Fx, Fy, Fz中的最大最小值）
     force_combined = force_data[['Fx', 'Fy', 'Fz']].values
@@ -58,15 +63,16 @@ try:
     
     # 手动进行归一化
     normalized_group6_data = (raw_combined - raw_min) / (raw_max - raw_min)
-    # 单独归一化group6_p4用于检测上升沿
-    group6_p4_normalized = (group6_p4_data - raw_min) / (raw_max - raw_min)
+    
+    # 确定用于对齐的列的归一化数据
+    alignment_ref_normalized = (alignment_ref_data - raw_min) / (raw_max - raw_min)
 
     # 函数：检测信号第一次急剧上升的时刻
-    def detect_first_rise(data, threshold_factor=10, baseline_length=100):
+    def detect_first_rise(data, threshold_factor=5, baseline_length=100):
         """
         检测信号第一次急剧上升的时刻
         data: 输入数据（一维数组）
-        threshold_factor: 阈值因子，用于确定检测阈值
+        threshold_factor: 阈值因子，用于确定检测阈值  最初文件为10
         baseline_length: 用于计算基线的初始数据长度
         """
         # 计算一阶导数（反映变化率）
@@ -91,16 +97,16 @@ try:
             print("未检测到明显的急剧上升时刻，使用数据起始点对齐")
             return 0
     
-    # 检测Fz的第一次急剧上升时刻
+    # 检测力传感器Fz的第一次急剧上升时刻
     fz_rise_index = detect_first_rise(fz_normalized)
     print(f"Fz第一次急剧上升的时刻（采样点）: {fz_rise_index}")
     
-    # 检测group6_p4的第一次急剧上升时刻
-    group6_p4_rise_index = detect_first_rise(group6_p4_normalized)
-    print(f"group6_p4第一次急剧上升的时刻（采样点）: {group6_p4_rise_index}")
+    # 检测对齐参考列的第一次急剧上升时刻
+    alignment_ref_rise_index = detect_first_rise(alignment_ref_normalized)
+    print(f"{ALIGNMENT_REFERENCE_COLUMN}第一次急剧上升的时刻（采样点）: {alignment_ref_rise_index}")
     
     # 计算时间差
-    time_diff = group6_p4_rise_index - fz_rise_index
+    time_diff = alignment_ref_rise_index - fz_rise_index
     print(f"计算得到的时间差（采样点）: {time_diff}")
     
     # 根据时间差对齐数据
@@ -115,7 +121,7 @@ try:
     normalized_group6_aligned = None
     
     if time_diff >= 0:
-        # group6_p4数据滞后，向前平移
+        # 对齐参考列数据滞后，向前平移
         normalized_force_aligned = normalized_force_data[:aligned_length]
         normalized_group6_aligned = normalized_group6_data[time_diff:time_diff+aligned_length]
     else:
@@ -139,10 +145,10 @@ try:
     
     # 绘制对齐后的归一化8x8传感器数据
     for i in range(normalized_group6_aligned.shape[1]):
-        # 为group6_p4添加特殊标记
-        if group6_data.columns[i] == 'group6_p4' or (i == 0 and 'group6_p4' not in group6_data.columns):
+        # 为对齐参考列添加特殊标记
+        if group6_data.columns[i] == ALIGNMENT_REFERENCE_COLUMN:
             line, = ax.plot(normalized_group6_aligned[:, i], 
-                           label=f'{group6_data.columns[i]}', 
+                           label=f'{group6_data.columns[i]} (Alignment Ref)', 
                            linewidth=2.5, linestyle='-', color='darkorange')
         else:
             line, = ax.plot(normalized_group6_aligned[:, i], 
@@ -153,15 +159,25 @@ try:
     
     # 标记对齐参考点（第一次急剧上升的时刻）
     # 计算对齐后的上升时刻位置
-    fz_aligned_rise = fz_rise_index if fz_rise_index < len(normalized_force_aligned) else len(normalized_force_aligned) - 1
-    group6_p4_aligned_rise = group6_p4_rise_index - time_diff if (group6_p4_rise_index - time_diff) >= 0 and (group6_p4_rise_index - time_diff) < len(normalized_group6_aligned) else 0
+    if time_diff >= 0:
+        # group6数据滞后，需要在对齐后的数据中向后移动time_diff个点
+        fz_aligned_rise = fz_rise_index
+        alignment_ref_aligned_rise = alignment_ref_rise_index - time_diff
+    else:
+        # 力传感器数据滞后，需要在对齐后的数据中向后移动abs(time_diff)个点
+        fz_aligned_rise = fz_rise_index - (-time_diff)  # 即 fz_rise_index - abs(time_diff)
+        alignment_ref_aligned_rise = alignment_ref_rise_index
+    
+    # 确保索引在有效范围内
+    fz_aligned_rise = max(0, min(fz_aligned_rise, len(normalized_force_aligned) - 1))
+    alignment_ref_aligned_rise = max(0, min(alignment_ref_aligned_rise, len(normalized_group6_aligned) - 1))
     
     # 绘制对齐参考线（两条线应该重合）
-    ax.axvline(x=fz_aligned_rise, color='red', linestyle=':', linewidth=2, label='Alignment Reference')
-    ax.axvline(x=group6_p4_aligned_rise, color='red', linestyle='-', linewidth=1, alpha=0.5)
+    ax.axvline(x=fz_aligned_rise, color='red', linestyle=':', linewidth=2, label='Fz Rise Point')
+    ax.axvline(x=alignment_ref_aligned_rise, color='blue', linestyle='-.', linewidth=2, label=f'{ALIGNMENT_REFERENCE_COLUMN} Rise Point')
     
     # 设置图表属性
-    ax.set_title('Aligned Normalized Sensor Data\n(Aligned using first sharp rise of Fz and group6_p4)\n(Force data normalized together, Group6 data normalized together)')
+    ax.set_title(f'Aligned Normalized Sensor Data\n(Aligned using first sharp rise of Fz and {ALIGNMENT_REFERENCE_COLUMN})\n(Force data normalized together, Group6 data normalized together)')
     ax.set_xlabel('Sample Index')
     ax.set_ylabel('Normalized Value (0-1)')
     ax.grid(True)
@@ -236,7 +252,7 @@ try:
         raw_group6_aligned = None
         
         if time_diff >= 0:
-            # group6_p4数据滞后，向前平移
+            # 对齐参考列数据滞后，向前平移
             raw_force_aligned = raw_force_data[:aligned_length]
             raw_group6_aligned = raw_group6_values[time_diff:time_diff+aligned_length]
         else:
@@ -253,8 +269,8 @@ try:
         for i, col_name in enumerate(group6_data.columns):
             aligned_data_df[col_name] = raw_group6_aligned[:, i]
         
-        # aligned_data_df.to_csv('aligned_data.csv', index=False)
-        # print("\n已将对齐后的原始数据保存到 'aligned_data.csv'")
+        aligned_data_df.to_csv('aligned_data2.csv', index=False)
+        print("\n已将对齐后的原始数据保存到 'aligned_data2.csv'")
         
 
 
