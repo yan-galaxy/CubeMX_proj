@@ -20,49 +20,6 @@ import time
 # 数据保存选项的宏定义
 SAVE_DATA_DEFAULT = False  # 默认保存数据
 
-import platform
-import ctypes
-from ctypes import wintypes  # Windows
-if platform.system() == 'Linux':
-    import ctypes.util
-    # Linux 线程调度相关常量
-    libpthread = ctypes.CDLL(ctypes.util.find_library('pthread'))
-    SCHED_FIFO = 1  # 实时调度策略（先到先服务，适合高频任务）
-    SCHED_OTHER = 0  # 普通调度策略
-
-def set_thread_real_time_priority(thread_id=None, is_high_priority=True):
-    """
-    设置线程实时优先级：高频传感器（1000Hz）用高优先级，低频（100Hz）用中优先级
-    thread_id: 线程ID（默认当前线程）
-    is_high_priority: 是否高优先级（1000Hz→True，100Hz→False）
-    """
-    if platform.system() == 'Windows':
-        # Windows: 线程优先级常量（THREAD_PRIORITY_HIGHEST 比默认高3级）
-        THREAD_PRIORITY_HIGHEST = 2
-        THREAD_PRIORITY_ABOVE_NORMAL = 1
-        priority = THREAD_PRIORITY_HIGHEST if is_high_priority else THREAD_PRIORITY_ABOVE_NORMAL
-        
-        # 获取当前线程ID并设置优先级
-        if thread_id is None:
-            thread_id = ctypes.windll.kernel32.GetCurrentThreadId()
-        handle = ctypes.windll.kernel32.OpenThread(0x0020, False, thread_id)  # 0x0020=THREAD_SET_INFORMATION
-        ctypes.windll.kernel32.SetThreadPriority(handle, priority)
-        ctypes.windll.kernel32.CloseHandle(handle)
-
-    elif platform.system() == 'Linux':
-        # Linux: 实时优先级范围 1-99（越高优先级越高），普通用户需 root 权限
-        priority = 90 if is_high_priority else 50  # 1000Hz→90，100Hz→50
-        policy = SCHED_FIFO if is_high_priority else SCHED_OTHER
-        
-        # 构造调度参数
-        class sched_param(ctypes.Structure):
-            _fields_ = [("sched_priority", ctypes.c_int)]
-        param = sched_param(priority)
-        
-        # 设置当前线程调度策略与优先级
-        if thread_id is None:
-            thread_id = ctypes.c_ulong(ctypes.windll.pthread.pthread_self())
-        libpthread.pthread_setschedparam(thread_id, policy, ctypes.byref(param))
 
 class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 用于图像更新
@@ -106,7 +63,7 @@ class SerialWorker(QThread):
             os.makedirs(self.save_dir)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         # // Deleted: self.npz_path = os.path.join(self.save_dir, f"raw_data_8x8_{timestamp}.npz")
-        self.csv_path = os.path.join(self.save_dir, f"raw_data_8x8_{timestamp}.csv")
+        self.csv_path = os.path.join(self.save_dir, f"self_data_8x8_{timestamp}.csv")
         self.is_saving = True
         self.writer_thread = threading.Thread(target=self.write_raw_data_to_file, daemon=True)
         self.writer_thread.start()
@@ -807,6 +764,8 @@ class MainWindow(QMainWindow):
         """初始化主界面（图像+波形显示）"""
         self.setWindowTitle("图像与波形双视图")
         self.resize(1500, 800)
+        # 添加以下行来使窗口最大化显示
+        self.showMaximized()
 
         self.central_widget = QSplitter()
         self.setCentralWidget(self.central_widget)
