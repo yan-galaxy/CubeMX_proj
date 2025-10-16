@@ -61,13 +61,7 @@ def predict_force_raw(sensor_readings, component='Fx', coefficients=None, degree
     return float(force_value)
 
 # 读取对齐后的原始数据
-try:
-    aligned_data = pd.read_csv('aligned_data.csv', encoding='utf-8')
-except UnicodeDecodeError:
-    try:
-        aligned_data = pd.read_csv('aligned_data.csv', encoding='gbk')
-    except UnicodeDecodeError:
-        aligned_data = pd.read_csv('aligned_data.csv', encoding='latin1')
+aligned_data = pd.read_csv('aligned_data2.csv')
 
 print("已读取对齐后的原始数据")
 print(f"数据形状: {aligned_data.shape}")

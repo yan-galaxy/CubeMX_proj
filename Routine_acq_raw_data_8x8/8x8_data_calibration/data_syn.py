@@ -16,10 +16,10 @@ ALIGNMENT_REFERENCE_COLUMN = 'group6_p3'
 
 try:
     # 尝试不同的编码方式读取第一个CSV文件（力传感器数据）
-    force_data = pd.read_csv('20251015203127.csv') # 20251014222347.csv 20251015203127.csv
+    force_data = pd.read_csv('20251014222347.csv') # 20251014222347.csv 20251015203127.csv
     
     # 尝试不同的编码方式读取第二个CSV文件（8x8传感器原始数据）
-    raw_data = pd.read_csv('raw_data_8x8_20251015_203130.csv')# raw_data_8x8_20251014_222344.csv raw_data_8x8_20251015_203130.csv
+    raw_data = pd.read_csv('raw_data_8x8_20251014_222344.csv')# raw_data_8x8_20251014_222344.csv raw_data_8x8_20251015_203130.csv
         
     force_data['Fz'] = -force_data['Fz']  # 反转Fz轴
     # 提取Fx, Fy, Fz数据
@@ -269,8 +269,8 @@ try:
         for i, col_name in enumerate(group6_data.columns):
             aligned_data_df[col_name] = raw_group6_aligned[:, i]
         
-        aligned_data_df.to_csv('aligned_data2.csv', index=False)
-        print("\n已将对齐后的原始数据保存到 'aligned_data2.csv'")
+        # aligned_data_df.to_csv('aligned_data2.csv', index=False)
+        # print("\n已将对齐后的原始数据保存到 'aligned_data2.csv'")
         
 
 
