@@ -61,7 +61,7 @@ def predict_force_raw(sensor_readings, component='Fx', coefficients=None, degree
     return float(force_value)
 
 # 读取对齐后的原始数据
-aligned_data = pd.read_csv('aligned_data2.csv')
+aligned_data = pd.read_csv('aligned_data3.csv')
 
 print("已读取对齐后的原始数据")
 print(f"数据形状: {aligned_data.shape}")
