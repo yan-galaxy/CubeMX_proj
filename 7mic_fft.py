@@ -25,7 +25,7 @@ def read_7mic_csv_data(csv_path):
         print(f"读取CSV文件失败: {e}")
         return None
 
-def apply_filter(channel_data, filter_type, cutoff_freq, sampling_rate, order=2):
+def apply_filter(channel_data, filter_type, cutoff_freq, sampling_rate, order=4):
     """
     对通道数据应用滤波器
     
@@ -120,8 +120,8 @@ def plot_single_channel_data_and_fft(csv_path, channel_index=0, sampling_rate=10
     # 获取通道数据
     channel_data = data.iloc[:, channel_index].values
 
-    start_index = 10000 * 8
-    valid_length = 10000 * 9
+    start_index = 10000 * 0
+    valid_length = 10000 * 1
     time = time[start_index:valid_length]
     channel_data = channel_data[start_index:valid_length]
     

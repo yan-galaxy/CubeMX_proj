@@ -1,4 +1,4 @@
-target_cutfreq = 750.0 # 目标截至频率 单位Hz
+target_cutfreq = 1000.0 # 目标截至频率 单位Hz
 freq = 170000000.0/2.0
 OUT = int(freq/(target_cutfreq*100.0))-1
 print("计算最接近的Prescaler:",OUT)

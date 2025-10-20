@@ -1,0 +1,15 @@
+g474cet6_7mic\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/event_groups.c
+g474cet6_7mic\event_groups.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdlib.h
+g474cet6_7mic\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+g474cet6_7mic\event_groups.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stddef.h
+g474cet6_7mic\event_groups.o: C:\software\study\keil\ARM\ARMCC\Bin\..\include\stdint.h
+g474cet6_7mic\event_groups.o: ../Core/Inc/FreeRTOSConfig.h
+g474cet6_7mic\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+g474cet6_7mic\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+g474cet6_7mic\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+g474cet6_7mic\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+g474cet6_7mic\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+g474cet6_7mic\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+g474cet6_7mic\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+g474cet6_7mic\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h
+g474cet6_7mic\event_groups.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h
