@@ -99,6 +99,8 @@ int main(void)
 	LL_TIM_SetCounter(TIM7, 0);
 //	LL_TIM_EnableIT_UPDATE(TIM7);//start TIM7 IRQ
 	LL_TIM_EnableCounter(TIM7);//Enable TIM7
+	
+//	while(1);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

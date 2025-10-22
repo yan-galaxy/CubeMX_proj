@@ -98,21 +98,25 @@ void Error_Handler(void);
 #define SEL5_pin_LOW  0x04000000	//PB10
 #define SEL6_pin_LOW  0x00040000	//PB2 
 #define SEL7_pin_LOW  0x80000000	//PB15
-#define SEL8_pin_LOW  0x10000000	//PB12
-#define SEL9_pin_LOW  0x40000000	//PB14
-#define SEL10_pin_LOW 0x20000000	//PB13
+#define SEL8_pin_LOW  0x40000000	//PB14
+#define SEL9_pin_LOW 0x20000000	//PB13
+#define SEL10_pin_LOW  0x10000000	//PB12
+
+
 
 // 1 << SEL1_pin_num
-#define SEL1_pin_HIGH  0x0000400	//PA10
-#define SEL2_pin_HIGH  0x0000200	//PA9 
-#define SEL3_pin_HIGH  0x0000100	//PA8 
-#define SEL4_pin_HIGH  0x0000040	//PC6 
-#define SEL5_pin_HIGH  0x0000400	//PB10
-#define SEL6_pin_HIGH  0x0000004	//PB2 
-#define SEL7_pin_HIGH  0x0008000	//PB15
-#define SEL8_pin_HIGH  0x0001000	//PB12
-#define SEL9_pin_HIGH  0x0004000	//PB14
-#define SEL10_pin_HIGH 0x0002000	//PB13
+#define SEL1_pin_HIGH  0x00000400	//PA10
+#define SEL2_pin_HIGH  0x00000200	//PA9 
+#define SEL3_pin_HIGH  0x00000100	//PA8 
+#define SEL4_pin_HIGH  0x00000040	//PC6 
+#define SEL5_pin_HIGH  0x00000400	//PB10
+#define SEL6_pin_HIGH  0x00000004	//PB2 
+#define SEL7_pin_HIGH  0x00008000	//PB15
+#define SEL8_pin_HIGH  0x00004000	//PB14
+#define SEL9_pin_HIGH 0x00002000	//PB13
+#define SEL10_pin_HIGH  0x00001000	//PB12
+
+
 
 
 /* USER CODE END EFP */
