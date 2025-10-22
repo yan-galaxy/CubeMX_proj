@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QSplitter, QDialog, 
-                             QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QMessageBox, QWidget, QLabel)
+                             QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QMessageBox, QWidget, QLabel, QCheckBox)
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore
 import serial
@@ -16,6 +16,8 @@ import time
 
 # 帧数配置宏定义 - 可以修改这个值来改变每次接收的帧数 (100、150、200等  必须为10的倍数)
 FRAMES_PER_PACKET = 100
+# 数据保存选项的宏定义，默认不保存数据
+SAVE_DATA_DEFAULT = False
 
 # 不准改我的注释！！！不准删！！！
 class SerialSelectionDialog(QDialog):
@@ -23,8 +25,9 @@ class SerialSelectionDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("选择串口")
-        self.setFixedSize(300, 150)  # 固定窗口大小，避免跨平台布局错乱
+        self.setFixedSize(300, 180)  # 扩大窗口高度，容纳新增的勾选框
         self.selected_port = None  # 存储用户选择的串口
+        self.save_data = SAVE_DATA_DEFAULT  # 存储用户是否选择保存数据
 
         # 1. 布局初始化
         self.layout = QVBoxLayout()
@@ -35,10 +38,15 @@ class SerialSelectionDialog(QDialog):
         self.port_combo.setPlaceholderText("请选择可用串口")
         self.layout.addWidget(self.port_combo)
 
-        # 3. 加载可用串口（跨平台）
+        # 3. 新增：保存数据勾选框
+        self.save_data_checkbox = QCheckBox("保存数据到CSV文件")
+        self.save_data_checkbox.setChecked(SAVE_DATA_DEFAULT)  # 按默认值设置勾选状态
+        self.layout.addWidget(self.save_data_checkbox)
+
+        # 4. 加载可用串口（跨平台）
         self.load_available_ports()
 
-        # 4. 按钮布局（确认/取消）
+        # 5. 按钮布局（确认/取消）
         self.button_layout = QVBoxLayout()
         self.confirm_btn = QPushButton("确认选择")
         self.cancel_btn = QPushButton("取消")
@@ -46,7 +54,7 @@ class SerialSelectionDialog(QDialog):
         self.button_layout.addWidget(self.cancel_btn)
         self.layout.addLayout(self.button_layout)
 
-        # 5. 按钮信号连接
+        # 6. 按钮信号连接
         self.confirm_btn.clicked.connect(self.on_confirm)
         self.cancel_btn.clicked.connect(self.reject)
 
@@ -70,8 +78,9 @@ class SerialSelectionDialog(QDialog):
         self.port_combo.setCurrentIndex(0)
 
     def on_confirm(self):
-        """确认选择，保存串口并关闭对话框"""
+        """确认选择，保存串口和保存选项并关闭对话框"""
         self.selected_port = self.port_combo.currentData()  # 获取真实端口名（如COM3 / /dev/ttyUSB0）
+        self.save_data = self.save_data_checkbox.isChecked()  # 获取用户是否勾选保存数据
         self.accept()  # 关闭对话框并返回QDialog.Accepted
 
 class SerialWorker(QThread):
@@ -79,7 +88,7 @@ class SerialWorker(QThread):
     waveform_ready = pyqtSignal(list)  # 用于波形更新
     fps_ready = pyqtSignal(float)  # 用于帧率更新
 
-    def __init__(self, port, normalization_low=0, normalization_high=3.5):
+    def __init__(self, port, save_data=False, normalization_low=0, normalization_high=3.5):
         super().__init__()
         self.port = port  # 外部传入选择的串口（不再硬编码）
         self.baudrate = 460800
@@ -99,79 +108,103 @@ class SerialWorker(QThread):
         self.writer_thread = None
         self.is_saving = False
         self.data_buffer = []
-        # 注释掉初始化npz文件保存的代码
-        # self.init_raw_data_saving()
+        self.csv_file_path = ""  # 存储CSV文件路径，未保存时为空
+        self.save_data = save_data  # 接收外部传入的保存选项
+        
+        # 若选择保存，初始化数据保存相关资源
+        if self.save_data:
+            self.init_raw_data_saving()
         
         # 帧率计算相关变量
         self.frame_count = 0
         self.last_time = time.time()
         self.fps_update_interval = 1.0  # 每秒更新一次FPS
 
-    # 注释掉初始化npz文件保存的方法
-    # def init_raw_data_saving(self):
-    #     if not os.path.exists(self.save_dir):
-    #         os.makedirs(self.save_dir)
-    #     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    #     self.npz_path = os.path.join(self.save_dir, f"mic_{timestamp}.npz")
-    #     self.is_saving = True
-    #     self.writer_thread = threading.Thread(target=self.write_raw_data_to_file, daemon=True)
-    #     self.writer_thread.start()
+    def init_raw_data_saving(self):
+        """仅在选择保存数据时，初始化CSV文件和写入线程"""
+        if not os.path.exists(self.save_dir):
+            os.makedirs(self.save_dir)
+        # 生成唯一的CSV文件名（含时间戳）
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.csv_file_path = os.path.join(self.save_dir, f"mic_{timestamp}.csv")
+        self.is_saving = True
+        
+        # 新增：创建CSV文件并写入表头（7个麦克风通道）
+        with open(self.csv_file_path, 'w', encoding='utf-8') as f:
+            header = ','.join([f'MIC{i+1}' for i in range(7)])  # 表头：MIC1,MIC2,...MIC7
+            f.write(header + '\n')
+        
+        # 启动实时写入线程（守护线程，主程序退出时自动结束）
+        self.writer_thread = threading.Thread(target=self.write_raw_data_to_csv, daemon=True)
+        self.writer_thread.start()
 
-    # 注释掉写入npz文件的方法
-    # def write_raw_data_to_file(self):
-    #     while self.is_saving:
-    #         if not self.raw_data_queue.empty():
-    #             data = self.raw_data_queue.get()
-    #             self.data_buffer.append(data.tolist())
-    #         else:
-    #             self.msleep(100)
+    def write_raw_data_to_csv(self):
+        """仅在选择保存数据时，执行CSV写入逻辑"""
+        while self.is_saving:
+            try:
+                # 阻塞式获取数据，队列空时线程自动挂起（不占CPU）
+                parsed_data = self.raw_data_queue.get(block=True, timeout=None)
+                
+                # 数据格式转换、写入CSV的逻辑
+                points_per_channel = FRAMES_PER_PACKET
+                reshaped_data = np.zeros((points_per_channel, 7), dtype=np.uint16)
+                for channel in range(7):
+                    start_idx = channel * points_per_channel
+                    end_idx = (channel + 1) * points_per_channel
+                    reshaped_data[:, channel] = parsed_data[start_idx:end_idx]
+                
+                # 实时追加写入CSV
+                with open(self.csv_file_path, 'a', encoding='utf-8') as f:
+                    np.savetxt(f, reshaped_data, delimiter=',', fmt='%d')
+                    
+                self.raw_data_queue.task_done()  # 标记任务完成，避免内存泄漏
+                
+            except Exception as e:
+                # 仅在非主动停止时打印异常
+                if self.is_saving:
+                    print(f"实时写入CSV异常: {e}")
+                break
 
     def stop(self):
         self.running = False
-        # 注释掉npz文件保存相关代码
-        # self.is_saving = False
-        # if self.writer_thread and self.writer_thread.is_alive():
-        #     self.writer_thread.join()
-        # print('正在保存缓冲区数据到npz文件')
-        # if len(self.data_buffer) > 0:
-        #     metadata = {
-        #         'description': '7MIC采集 10KHz',
-        #         'format_version': '1.0',
-        #         'normalization_range': [self.normalization_low, self.normalization_high],
-        #         'timestamp': datetime.now().isoformat()
-        #     }
-        #     np.savez_compressed(self.npz_path, data=np.array(self.data_buffer), **metadata)
-        # print('保存完毕')
+        self.is_saving = False  # 停止线程循环
         
-        # 新增：直接保存为CSV文件
-        if len(self.data_buffer) > 0:
-            self.save_to_csv()
+        # 若开启了保存，唤醒阻塞的写入线程并释放资源
+        if self.save_data and self.raw_data_queue.empty():
+            self.raw_data_queue.put(np.array([]))  # 放入空数组触发线程唤醒
+        
+        # 等待写入线程安全结束（超时2秒，防止卡死）
+        if self.save_data and self.writer_thread and self.writer_thread.is_alive():
+            self.writer_thread.join(timeout=2)
+        
+        # 仅在开启保存时，打印保存路径
+        if self.save_data:
+            print(f"实时CSV保存已停止，文件路径：{self.csv_file_path}")
 
     def save_to_csv(self):
-        """将收集的数据保存为CSV格式"""
+        """将收集的数据保存为CSV格式（仅在开启保存时有效）"""
+        if not self.save_data:
+            print("未开启数据保存功能，跳过手动保存")
+            return
+            
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        csv_file_path = os.path.join(self.save_dir, f"mic_{timestamp}.csv")
+        csv_file_path = os.path.join(self.save_dir, f"mic_manual_{timestamp}.csv")
         
         # 获取数据
         raw_data = np.array(self.data_buffer)
         
         # 确保数据是二维数组 (帧数, FRAMES_PER_PACKET*7)
         if raw_data.ndim == 1:
-            # 如果是一维数组，重塑为(1, FRAMES_PER_PACKET*7)
             raw_data = raw_data.reshape(1, -1)
         elif raw_data.ndim > 2:
-            # 如果是更高维的数组，压平除最后一维外的所有维度
             raw_data = raw_data.reshape(-1, raw_data.shape[-1])
         
-        # 将数据重塑为 (帧数*FRAMES_PER_PACKET, 7) 的形式
-        # 每一列代表一个麦克风通道
+        # 数据重塑为 (帧数*FRAMES_PER_PACKET, 7)
         num_frames = raw_data.shape[0]
-        num_points_per_channel = FRAMES_PER_PACKET  # 每帧10个点
+        num_points_per_channel = FRAMES_PER_PACKET
         num_channels = 7
-        
-        # 创建一个新的数组来存储重新排列的数据
         reshaped_data = np.zeros((num_frames * num_points_per_channel, num_channels), dtype=np.uint16)
         
         for frame_idx in range(num_frames):
@@ -182,25 +215,19 @@ class SerialWorker(QThread):
                 reshaped_data[frame_idx*num_points_per_channel:(frame_idx+1)*num_points_per_channel, channel] = \
                     frame_data[start_idx:end_idx]
         
-        # 创建列名（7列）
+        # 创建列名并写入CSV
         column_names = [f'MIC{i+1}' for i in range(7)]
-        
-        # 保存为CSV文件
         header = ','.join(column_names)
         
-        # 写入CSV文件
         with open(csv_file_path, 'w') as f:
             f.write(header + '\n')
-            np.savetxt(f, reshaped_data, delimiter=',', fmt='%d')  # 使用整数格式保存原始数据
+            np.savetxt(f, reshaped_data, delimiter=',', fmt='%d')
         
-        print(f"数据已保存为CSV格式: {csv_file_path}")
-        print(f"数据形状: {reshaped_data.shape} (数据点数, 通道数)")
-        print(f"列数: {len(column_names)}")
-        print(f"帧数: {num_frames}")
+        print(f"手动保存数据完成，文件路径: {csv_file_path}")
 
     def run(self):
         try:
-            # 跨平台串口连接（自动适配Windows COMx / Ubuntu /dev/ttyUSBx）
+            # 跨平台串口连接
             self.ser = serial.Serial(self.port, self.baudrate, timeout=1)
             self.running = True
             while self.running:
@@ -215,37 +242,25 @@ class SerialWorker(QThread):
                             payload = frame[len(self.FRAME_HEADER):-len(self.FRAME_TAIL)]
                             parsed = np.frombuffer(payload, dtype=np.uint16)
                             
-                            # 使用宏定义的帧数来检查数据长度
-                            expected_length = FRAMES_PER_PACKET * 7  # 帧数 * 通道数 * 每通道点数
+                            # 检查数据长度是否符合预期
+                            expected_length = FRAMES_PER_PACKET * 7
                             if len(parsed) == expected_length:
-                                # parsed = parsed[:100]
-                                # parsed = parsed[100:200]
-                                # parsed = parsed[200:300]
-                                # parsed = parsed[300:400]
-                                # parsed = parsed[400:500]
-                                # parsed = parsed[500:600]
-                                # parsed = parsed[600:]
-                                self.raw_data_queue.put(parsed.copy())
-                                # 收集数据到缓冲区用于保存为CSV
+                                # 仅在开启保存时，将数据放入队列
+                                if self.save_data:
+                                    self.raw_data_queue.put(parsed.copy())
+                                # 收集数据到缓冲区（用于手动保存）
                                 self.data_buffer.append(parsed.tolist())
-
-                                # print("接收到数据帧:",parsed)
-                                # parsed = parsed.flatten()
 
                                 if self.matrix_flag == 0:
                                     self.matrix_init = parsed.copy()
                                     self.matrix_flag = 1
                                 else:
-                                    # result = parsed - self.matrix_init
                                     result = parsed
                                     clipped_result = np.clip(result, self.normalization_low, self.normalization_high)
                                     normalized_result = (clipped_result - self.normalization_low) / (self.normalization_high - self.normalization_low)
                                     
-                                    # parsed[42]=4095 # 中心左上 42   中心左下43   中心右上34   中心右下35
                                     self.waveform_ready.emit(parsed.tolist())
-                                    # parsed = parsed/4096.0
-                                    # self.data_ready.emit(parsed.tolist())
-                                    self.data_ready.emit(normalized_result.tolist())# normalized_result.tolist()    average.tolist()
+                                    self.data_ready.emit(normalized_result.tolist())
                                 
                                 # 帧率计算
                                 self.frame_count += 1
@@ -255,14 +270,6 @@ class SerialWorker(QThread):
                                     self.fps_ready.emit(fps)
                                     self.frame_count = 0
                                     self.last_time = current_time
-                                
-                                # # 打印结果（已保留三位小数）
-                                # with np.printoptions(precision=3, suppress=True):
-                                #     print('avg_matrix:\n', average)
-                                #     # 计算均值和标准差
-                                #     avg_mean = np.mean(average)
-                                #     avg_std = np.std(average)
-                                #     print(f'均值: {avg_mean:.3f}, 标准差: {avg_std:.3f}')
 
                             self.buffer = self.buffer[end_index + len(self.FRAME_TAIL):]
                             start_index = self.buffer.find(self.FRAME_HEADER)
@@ -302,7 +309,7 @@ class MultiChannelWaveformVisualizer:
             
             curve = plot.plot(pen=pg.intColor(i))  # 使用不同颜色区分
             # 显示点数根据帧数动态调整
-            show_data = [0] * FRAMES_PER_PACKET * 10  # 显示FRAMES_PER_PACKET*100个点
+            show_data = [0] * FRAMES_PER_PACKET * 10  # 显示FRAMES_PER_PACKET*10个点
             
             self.plots.append(plot)
             self.curves.append(curve)
@@ -313,8 +320,8 @@ class MultiChannelWaveformVisualizer:
             self.layout.addItem(plot, row, col)
 
     def update_plot(self, new_row):
-        # 使用宏定义的帧数来检查数据长度
-        expected_length = FRAMES_PER_PACKET * 7  # 帧数 * 通道数 * 每通道点数
+        # 检查数据长度是否符合预期
+        expected_length = FRAMES_PER_PACKET * 7
         if len(new_row) == expected_length:
             # 每个麦克风的数据点数根据帧数动态计算
             points_per_channel = FRAMES_PER_PACKET
@@ -334,8 +341,9 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.worker = None  # 串口线程（需在选择串口后初始化）
         self.fps_label = None  # 帧率显示标签
+        self.save_data = SAVE_DATA_DEFAULT  # 存储是否保存数据的选项
 
-        # 1. 先显示串口选择对话框（必须先选串口，再初始化主界面）
+        # 1. 先显示串口选择对话框（获取串口和保存选项）
         self.select_serial_port()
         if not self.selected_port:
             # 用户取消选择或无可用串口，直接退出
@@ -345,10 +353,11 @@ class MainWindow(QMainWindow):
         self.init_main_ui()
 
     def select_serial_port(self):
-        """显示串口选择对话框，获取用户选择的端口"""
+        """显示串口选择对话框，获取用户选择的端口和保存选项"""
         dialog = SerialSelectionDialog()
         if dialog.exec_() == QDialog.Accepted:
             self.selected_port = dialog.selected_port
+            self.save_data = dialog.save_data  # 接收对话框的保存选项
         else:
             self.selected_port = None
 
@@ -370,8 +379,9 @@ class MainWindow(QMainWindow):
         self.fps_label.setText("FPS: --", color='green')
         self.waveform_layout.addItem(self.fps_label, row=3, col=0, colspan=3)
 
-        # 初始化串口线程（传入用户选择的端口）
-        self.worker = SerialWorker(port=self.selected_port)
+        # 初始化串口线程（传入用户选择的端口和保存选项）
+        self.worker = SerialWorker(port=self.selected_port, save_data=self.save_data)
+        # 无需再手动调用init_raw_data_saving()，Worker内部已根据save_data自动处理
         self.worker.waveform_ready.connect(self.waveform_visualizer.update_plot)
         self.worker.fps_ready.connect(self.update_fps_display)
         self.worker.start()

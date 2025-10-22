@@ -197,7 +197,7 @@ void StartDefaultTask(void *argument)
   /* USER CODE BEGIN StartDefaultTask */
 
 	HAL_TIM_Base_Start(&htim6);
-//	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
 	
 	
 	mic_data_1[0].byte[0]=0x55;//֡ͷ

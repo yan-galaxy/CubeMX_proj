@@ -1,0 +1,1 @@
+g431_routine_v2_1_mini\startup_stm32g431xx.o: startup_stm32g431xx.s
