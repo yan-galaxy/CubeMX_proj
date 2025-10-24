@@ -3,13 +3,13 @@ import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)  # 忽略弃用警告
 import numpy as np
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QSplitter, QDialog, 
-                             QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QMessageBox, QWidget, QLabel, QCheckBox, QSpacerItem, QSizePolicy, QDoubleSpinBox, QSpinBox)
+                             QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QMessageBox, QWidget, QLabel, QCheckBox, QSpacerItem, QSizePolicy, QDoubleSpinBox, QSpinBox, QFileDialog)
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore
 import serial
 from serial.tools import list_ports
 from queue import Queue
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import QThread, pyqtSignal, QTimer, Qt
 from scipy.ndimage import zoom
 from scipy import signal, ndimage
 import os
@@ -35,7 +35,9 @@ class FilterHandler:
         self.zi_low = None
     
     def initialize_states(self, initial_value):
+        """初始化滤波器状态（修复：返回初始化后的状态值）"""
         self.zi_low = signal.lfilter_zi(self.b_low, self.a_low) * initial_value
+        return self.zi_low  # 关键修复：返回zi_low，用于DataReplayWorker初始化
     
     def apply_low_pass(self, data_point):
         filtered_point, self.zi_low = signal.lfilter(self.b_low, self.a_low, 
@@ -47,10 +49,12 @@ class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 用于图像更新
     waveform_ready = pyqtSignal(list)  # 用于波形更新
     error_signal = pyqtSignal(str)  # 串口错误信号（跨平台错误提示）
+    replay_finished = pyqtSignal()  # 新增：回放完成信号
 
-    def __init__(self, port, save_data=True, normalization_low=0, normalization_high=700):
+    def __init__(self, port=None, save_data=True, normalization_low=0, normalization_high=700, csv_path=None):
         super().__init__()
         self.port = port
+        self.csv_path = csv_path  # 新增：CSV文件路径（回放用）
         self.baudrate = 460800
         self.ser = None
         self.running = False
@@ -84,7 +88,9 @@ class SerialWorker(QThread):
         if self.save_data:
             self.init_raw_data_saving()
 
-    # 3. 数据保存初始化（CSV存储）
+        self.is_stopped = False  # 防止stop重复执行的标记
+
+    # 3. 数据保存初始化
     def init_raw_data_saving(self):
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
@@ -118,15 +124,20 @@ class SerialWorker(QThread):
             self.matrix_init = np.mean(self.recent_frames, axis=0) + self.dead_value
             print("已校准零位")
 
-    # 6. 停止逻辑（适配CSV保存）
+    # 6. 停止逻辑（修改：加标记+按需打印）
     def stop(self):
+        if self.is_stopped:  # 已停止则直接返回，避免重复执行
+            return
+        self.is_stopped = True  # 标记为已停止
+
         self.running = False
-        # 停止保存线程
+        # 停止保存线程（仅当save_data=True时处理）
         if self.save_data:
             self.is_saving = False
             if self.writer_thread and self.writer_thread.is_alive():
                 self.writer_thread.join()
-        print('保存完毕')
+            # 仅当处理了保存线程时，才打印“保存完毕”
+            print('保存完毕')
 
     def run(self):
         try:
@@ -179,7 +190,6 @@ class SerialWorker(QThread):
                                     clipped_result = np.clip(zeroed_results, self.normalization_low, self.normalization_high)
                                     normalized_result = (clipped_result - self.normalization_low) / (self.normalization_high - self.normalization_low)
 
-                                    # print(f"归一化数据范围: 最小值={normalized_result.min():.4f}, 最大值={normalized_result.max():.4f}")
                                     # 发送信号更新界面
                                     self.waveform_ready.emit(filtered_results)  # 滤波后原始数据（用于波形）
                                     self.data_ready.emit(normalized_result.tolist())  # 归一化数据（用于图像）
@@ -196,6 +206,131 @@ class SerialWorker(QThread):
             if self.ser and self.ser.is_open:
                 self.ser.close()
                 print('串口关闭')
+
+
+class DataReplayWorker(SerialWorker):
+    def __init__(self, csv_path, save_data=False, normalization_low=0, normalization_high=1500):
+        super().__init__(port=None, save_data=save_data, 
+                        normalization_low=normalization_low, 
+                        normalization_high=normalization_high, 
+                        csv_path=csv_path)
+        self.frame_index = 0  # 当前播放帧索引
+        self.total_frames = 0  # 总帧数
+        self.raw_data = None  # 存储CSV原始数据
+        self.play_timer = None  # 定时器（在run中初始化）
+        self.is_stopped = False  # 停止标记
+
+    def run(self):
+        try:
+            # 1. 读取CSV数据（批量读取，提升效率）
+            try:
+                self.raw_data = np.loadtxt(self.csv_path, delimiter=',', skiprows=1)
+                if self.raw_data.ndim != 2 or self.raw_data.shape[1] != 100:
+                    raise ValueError(f"CSV格式错误，应为N行100列，实际为{self.raw_data.shape}")
+                self.total_frames = self.raw_data.shape[0]
+                print(f"成功加载CSV文件，共{self.total_frames}帧数据（预计播放{self.total_frames/100:.1f}秒）")
+            except Exception as e:
+                self.error_signal.emit(f"CSV文件读取失败: {str(e)}")
+                return
+
+            # 2. 初始化零位校准（复用前30帧）
+            if self.matrix_init is None:
+                init_count = min(self.max_init_frames, self.total_frames)
+                init_data = self.raw_data[:init_count]
+                self.matrix_init = np.mean(init_data, axis=0) + self.dead_value
+                print(f"回放初始化完成，使用前{init_count}帧计算初始值")
+
+            # 3. 预计算滤波器系数和初始状态（关键修复：正确获取zi值）
+            if not self.filters_initialized:
+                # 提取所有滤波器的系数
+                self.b_lows = []
+                self.a_lows = []
+                self.zi_lows = []
+                first_frame = self.raw_data[0]  # 用第一帧初始化滤波器状态
+                for i in range(100):
+                    fh = self.filter_handlers[i]
+                    self.b_lows.append(fh.b_low)
+                    self.a_lows.append(fh.a_low)
+                    # 修复：调用initialize_states获取返回的zi值，而非使用无返回值的方法
+                    zi = fh.initialize_states(first_frame[i])
+                    self.zi_lows.append(zi)
+                # 转换为numpy数组便于后续处理
+                self.b_lows = np.array(self.b_lows)
+                self.a_lows = np.array(self.a_lows)
+                self.zi_lows = np.array(self.zi_lows)
+                self.filters_initialized = True
+
+            # 4. 在子线程内创建并启动定时器（确保线程亲和性）
+            self.play_timer = QTimer()
+            # self.play_timer.setParent(self)  # 关键：将定时器父对象设为当前线程对象
+            self.play_timer.setInterval(10)  # 10ms = 100FPS
+            self.play_timer.timeout.connect(self.process_frame)
+            self.play_timer.start()
+
+            # 启动子线程事件循环（处理定时器事件）
+            self.exec_()  # 此处会阻塞，直到调用quit()
+
+            # 5. 清理工作（在子线程内完成）
+            if self.play_timer and self.play_timer.isActive():
+                self.play_timer.stop()
+            self.play_timer = None  # 直接置空，避免deleteLater跨线程问题
+            # self.stop()
+            self.replay_finished.emit()
+            print("数据回放完成")
+
+        except Exception as e:
+            self.error_signal.emit(f"回放异常: {str(e)}")
+
+    def process_frame(self):
+        """向量化解码和滤波，提升效率"""
+        if self.is_stopped or self.frame_index >= self.total_frames:
+            self.quit()  # 退出事件循环（关键：手动关闭时也能触发）
+            return
+
+        # 1. 按10帧一组读取（与实时采集逻辑一致）
+        remaining = self.total_frames - self.frame_index
+        take_count = min(10, remaining)
+        current_frames = self.raw_data[self.frame_index : self.frame_index + take_count]
+        self.frame_index += take_count
+
+        # 2. 10帧取平均（批量计算）
+        average = np.mean(current_frames, axis=0)  # 形状(100,)
+
+        # 3. 校准缓冲区更新
+        self.recent_frames.append(average.copy())
+        if len(self.recent_frames) > self.max_recent_frames:
+            self.recent_frames.pop(0)
+
+        # 4. 滤波处理（修复：确保zi参数有效）
+        filtered_results = np.zeros(100)
+        for i in range(100):
+            # 确保b、a、zi都是有效数组
+            b = self.b_lows[i]
+            a = self.a_lows[i]
+            zi = self.zi_lows[i]
+            # 调用lfilter，此时zi有效，返回2个值
+            filtered, self.zi_lows[i] = signal.lfilter(b, a, [average[i]], zi=zi)
+            filtered_results[i] = filtered[0]
+
+        # 5. 批量归一化处理
+        zeroed = filtered_results - self.matrix_init
+        clipped = np.clip(zeroed, self.normalization_low, self.normalization_high)
+        normalized = (clipped - self.normalization_low) / (self.normalization_high - self.normalization_low)
+
+        # 6. 发射信号（使用queued连接确保线程安全）
+        self.waveform_ready.emit(filtered_results.tolist())
+        self.data_ready.emit(normalized.tolist())
+
+    def stop(self):
+        """安全停止回放（关键修复：主动停止定时器和事件循环）"""
+        self.is_stopped = True
+        # 1. 主动停止定时器（避免定时器继续触发process_frame）
+        if self.play_timer and self.play_timer.isActive():
+            self.play_timer.stop()
+        # 2. 主动退出事件循环（确保exec_()阻塞解除）
+        self.quit()
+        # 3. 调用父类停止逻辑（处理保存线程等）
+        # super().stop()
 
 
 # 9. 波形可视化（支持10行选择+校准按钮+界面样式，排除分组）
@@ -241,7 +376,7 @@ class RoutineWaveformVisualizer:
         # 绘图区域
         self.plot_widget = pg.PlotWidget()
         self.plot = self.plot_widget.getPlotItem()
-        self.plot.setTitle(f"第{self.selected_row+1}行波形（10个点）")
+        self.plot.setTitle(f"第{self.selected_row+1}列波形（10个点）")
         self.plot.setLabels(left='数值', bottom='帧编号')
         self.plot.showGrid(x=True, y=True)
         self.plot.setYRange(0, 4096)  # 适配16位数据
@@ -274,8 +409,8 @@ class RoutineWaveformVisualizer:
             'lime',     # 亮绿（比普通绿色更鲜艳）
             'royalblue',# 宝蓝（比普通蓝色更亮）
             'orange',   # 橙色（明快）
-            'purple',   # 紫色（浓郁）
-            'crimson',  # 绯红（比红色更深艳）
+            'hotpink',  # 亮粉色（替换紫色，鲜艳且偏暖调，区别度高）
+            'turquoise',# 青绿色（替换绯红，鲜艳且偏冷调，与现有蓝绿系颜色区分明显）
             'aqua'      # 水蓝（比青色更透亮）
         ]
         for i in range(10):
@@ -434,21 +569,22 @@ class MatrixVisualizer:
             self.runtime_label.setText(f"运行时间: {minutes:02d}:{seconds:02d}")
 
 
-# 11. 串口选择对话框
+# 11. 串口选择对话框（新增数据回放按钮）
 class SerialSelectionDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("选择串口")
-        self.setFixedSize(500, 300)
+        self.setWindowTitle("选择串口或数据回放")
+        self.setFixedSize(500, 350)  # 增加高度容纳新按钮
         self.selected_port = None
         self.save_data = SAVE_DATA_DEFAULT
+        self.is_replay = False  # 新增：标记是否选择回放
+        self.selected_csv = None  # 新增：选中的CSV文件路径
 
         self.setStyleSheet("""
             /* 窗口：圆角+轻微阴影，背景用柔和浅灰 */
             QDialog {
                 background-color: #f5f5f5;
                 border-radius: 12px; /* 大圆角 */
-                /*box-shadow: 0 4px 8px rgba(0,0,0,0.1);*/  /* 柔和阴影增层次感  报警告 */
             }
 
             /* 下拉框：圆角+细边框，hover时边框变色 */
@@ -519,8 +655,14 @@ class SerialSelectionDialog(QDialog):
             QPushButton:disabled {
                 background-color: #cccccc;
             }
+            /* 回放按钮特殊样式（调暗，降低亮度） */
+            QPushButton#ReplayBtn {
+                background-color: #66cc99; /* 较暗的绿色，原#88ffb4的柔和版 */
+            }
+            QPushButton#ReplayBtn:hover {
+                background-color: #55b388; /*  hover时稍深，保持协调 */
+            }
         """)
-        # --------------------------------------------------------------------------
 
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(25, 20, 25, 20)  # 内边距，让控件不贴边
@@ -528,86 +670,111 @@ class SerialSelectionDialog(QDialog):
 
         # 串口选择下拉框
         self.port_combo = QComboBox()
-        self.port_combo.setPlaceholderText("请选择可用串口")
+        self.port_combo.setPlaceholderText("请选择可用串口（实时采集用）")
         self.layout.addWidget(self.port_combo)
 
         # 保存数据复选框
-        self.save_data_checkbox = QCheckBox("保存数据到CSV")
+        self.save_data_checkbox = QCheckBox("保存数据到CSV（仅实时采集）")
         self.save_data_checkbox.setChecked(SAVE_DATA_DEFAULT)
         self.layout.addWidget(self.save_data_checkbox)
 
         # 按钮布局（垂直，按钮占满宽度）
         self.button_layout = QVBoxLayout()
-        self.confirm_btn = QPushButton("确认选择")
+        self.confirm_btn = QPushButton("确认选择（实时采集）")
         self.cancel_btn = QPushButton("取消")
+        # 新增：数据回放按钮（带间距）
+        self.replay_spacer = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Fixed)
+        self.replay_btn = QPushButton("数据回放（选择CSV文件）")
+        self.replay_btn.setObjectName("ReplayBtn")  # 用于样式区分
+
+        # 按钮添加顺序：确认→取消→间距→回放
         self.button_layout.addWidget(self.confirm_btn)
         self.button_layout.addWidget(self.cancel_btn)
+        self.button_layout.addItem(self.replay_spacer)
+        self.button_layout.addWidget(self.replay_btn)
+        
         self.layout.addLayout(self.button_layout)
 
         # 信号绑定
         self.confirm_btn.clicked.connect(self.on_confirm)
         self.cancel_btn.clicked.connect(self.reject)
+        self.replay_btn.clicked.connect(self.on_replay)  # 回放按钮绑定
 
-        # 加载可用串口（按COM号降序）
+        # 加载可用串口（即使无串口也显示对话框）
         self.load_available_ports()
 
     def load_available_ports(self):
         self.port_combo.clear()
         available_ports = list(list_ports.comports())
+        
         if not available_ports:
-            QMessageBox.warning(self, "警告", "未检测到可用串口！\n请检查设备连接后重试")
-            self.confirm_btn.setEnabled(False)
-            return
-
-        # 按照系统类型进行不同的排序
-        if sys.platform.startswith('linux') or sys.platform.startswith('darwin'):
-            # Linux 或 macOS 系统
-            ttyacm_ports = []       # ttyACM 设备 (Arduino等)
-            ttyusb_ports = []       # ttyUSB 设备 (USB转串口等)
-            other_ports = []        # 其他设备
-            
-            for port in available_ports:
-                if "ttyACM" in port.device:
-                    ttyacm_ports.append(port)
-                elif "ttyUSB" in port.device:
-                    ttyusb_ports.append(port)
-                else:
-                    other_ports.append(port)
-            
-            # 对 ttyACM 和 ttyUSB 设备按数字顺序排序
-            def extract_port_number(port):
-                import re
-                match = re.search(r'\d+$', port.device)
-                return int(match.group()) if match else 0
-                
-            ttyacm_ports_sorted = sorted(ttyacm_ports, key=extract_port_number)
-            ttyusb_ports_sorted = sorted(ttyusb_ports, key=extract_port_number)
-            sorted_ports = ttyacm_ports_sorted + ttyusb_ports_sorted + other_ports
+            self.port_combo.addItem("未检测到可用串口", None)
+            self.confirm_btn.setEnabled(False)  # 无串口时禁用实时采集
         else:
-            # Windows 系统按原来的方式排序
-            com_ports = []
-            other_ports = []
-            for port in available_ports:
-                if "COM" in port.device:
-                    com_ports.append(port)
-                else:
-                    other_ports.append(port)
+            # 按照系统类型进行不同的排序
+            if sys.platform.startswith('linux') or sys.platform.startswith('darwin'):
+                # Linux 或 macOS 系统
+                ttyacm_ports = []       # ttyACM 设备 (Arduino等)
+                ttyusb_ports = []       # ttyUSB 设备 (USB转串口等)
+                other_ports = []        # 其他设备
+                
+                for port in available_ports:
+                    if "ttyACM" in port.device:
+                        ttyacm_ports.append(port)
+                    elif "ttyUSB" in port.device:
+                        ttyusb_ports.append(port)
+                    else:
+                        other_ports.append(port)
+                
+                # 对 ttyACM 和 ttyUSB 设备按数字顺序排序
+                def extract_port_number(port):
+                    import re
+                    match = re.search(r'\d+$', port.device)
+                    return int(match.group()) if match else 0
+                    
+                ttyacm_ports_sorted = sorted(ttyacm_ports, key=extract_port_number)
+                ttyusb_ports_sorted = sorted(ttyusb_ports, key=extract_port_number)
+                sorted_ports = ttyacm_ports_sorted + ttyusb_ports_sorted + other_ports
+            else:
+                # Windows 系统按原来的方式排序
+                com_ports = []
+                other_ports = []
+                for port in available_ports:
+                    if "COM" in port.device:
+                        com_ports.append(port)
+                    else:
+                        other_ports.append(port)
 
-            def extract_com_number(port):
-                return int(port.device.replace("COM", ""))
-            com_ports_sorted = sorted(com_ports, key=extract_com_number, reverse=True)
-            sorted_ports = com_ports_sorted + other_ports
+                def extract_com_number(port):
+                    return int(port.device.replace("COM", ""))
+                com_ports_sorted = sorted(com_ports, key=extract_com_number, reverse=True)
+                sorted_ports = com_ports_sorted + other_ports
 
-        # 添加到下拉框
-        for port in sorted_ports:
-            port_info = f"{port.device} - {port.description}"
-            self.port_combo.addItem(port_info, port.device)
-        self.port_combo.setCurrentIndex(0)
+            # 添加到下拉框
+            for port in sorted_ports:
+                port_info = f"{port.device} - {port.description}"
+                self.port_combo.addItem(port_info, port.device)
+            self.port_combo.setCurrentIndex(0)
+            self.confirm_btn.setEnabled(True)
 
     def on_confirm(self):
+        """实时采集确认"""
         self.selected_port = self.port_combo.currentData()
         self.save_data = self.save_data_checkbox.isChecked()
+        self.is_replay = False
         self.accept()
+
+    def on_replay(self):
+        """数据回放：打开文件选择对话框"""
+        csv_path, _ = QFileDialog.getOpenFileName(
+            self, "选择CSV数据文件", "", "CSV Files (*.csv);;All Files (*)"
+        )
+        if csv_path and os.path.exists(csv_path):
+            self.selected_csv = csv_path
+            self.is_replay = True
+            self.accept()
+        else:
+            QMessageBox.warning(self, "警告", "请选择有效的CSV文件")
 
 
 class MainWindow(QMainWindow):
@@ -616,26 +783,33 @@ class MainWindow(QMainWindow):
         self.worker = None
         self.selected_port = None
         self.save_data = SAVE_DATA_DEFAULT
+        self.is_replay_mode = False  # 标记是否为回放模式
 
-        self.select_serial_port()
-        if not self.selected_port:
+        # 先显示选择对话框（无论有无串口都会显示）
+        if not self.select_serial_or_replay():
             sys.exit(0)
 
         self.init_main_ui()
 
-    def select_serial_port(self):
+    def select_serial_or_replay(self):
+        """选择实时采集或数据回放"""
         dialog = SerialSelectionDialog()
         if dialog.exec_() == QDialog.Accepted:
-            self.selected_port = dialog.selected_port
-            self.save_data = dialog.save_data
+            self.is_replay_mode = dialog.is_replay
+            if self.is_replay_mode:
+                self.selected_csv = dialog.selected_csv  # 回放模式：保存CSV路径
+                return True
+            else:
+                self.selected_port = dialog.selected_port  # 实时模式：保存串口
+                self.save_data = dialog.save_data
+                return self.selected_port is not None
         else:
-            self.selected_port = None
+            return False
 
     def init_main_ui(self):
         self.setWindowTitle("10x10传感器 - 图像与波形双视图")
         self.resize(1500, 800)
-        # 添加以下行来使窗口最大化显示
-        self.showMaximized()
+        self.showMaximized()  # 窗口最大化
 
         self.central_widget = QSplitter()
         self.setCentralWidget(self.central_widget)
@@ -824,18 +998,37 @@ class MainWindow(QMainWindow):
         self.waveform_visualizer.set_reset_callback(self.reset_initial_value)
         self.central_widget.addWidget(self.waveform_widget)
 
-        # 串口线程
-        self.worker = SerialWorker(
-            port=self.selected_port,
-            save_data=self.save_data,
-            normalization_low=0,
-            normalization_high=1500
-        )
-        self.worker.data_ready.connect(self.image_visualizer.receive_data)
-        self.worker.waveform_ready.connect(self.waveform_visualizer.update_plot)
+        # 根据模式创建Worker（实时采集/数据回放）
+        if self.is_replay_mode:
+            # 回放模式：使用DataReplayWorker（继承SerialWorker）
+            self.worker = DataReplayWorker(
+                csv_path=self.selected_csv,
+                save_data=False,  # 回放不保存数据
+                normalization_low=0,
+                normalization_high=1500
+            )
+            # 回放完成后自动关闭程序
+            self.worker.replay_finished.connect(self.close)
+            # 修复：仅绑定一次带QueuedConnection的信号
+            self.worker.data_ready.connect(self.image_visualizer.receive_data, Qt.QueuedConnection)
+            self.worker.waveform_ready.connect(self.waveform_visualizer.update_plot, Qt.QueuedConnection)
+        else:
+            # 实时模式：原有SerialWorker
+            self.worker = SerialWorker(
+                port=self.selected_port,
+                save_data=self.save_data,
+                normalization_low=0,
+                normalization_high=1500
+            )
+            # 实时模式绑定默认信号
+            self.worker.data_ready.connect(self.image_visualizer.receive_data)
+            self.worker.waveform_ready.connect(self.waveform_visualizer.update_plot)
+
+        # 错误信号绑定（通用）
         self.worker.error_signal.connect(self.show_serial_error)
         self.worker.start()
 
+        # FPS更新定时器（复用原有逻辑）
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.image_visualizer.update_fps)
         self.timer.start(200)
@@ -845,15 +1038,20 @@ class MainWindow(QMainWindow):
             self.worker.reset_initialization()
 
     def show_serial_error(self, error_msg):
-        QMessageBox.critical(self, "串口错误", error_msg)
+        QMessageBox.critical(self, "错误", error_msg)
         self.close()
 
     def closeEvent(self, event):
-        self.hide()
+        self.hide()  # 先隐藏界面，提升用户体验
         if self.worker:
+            # 1. 停止worker（触发定时器停止和事件循环退出）
             self.worker.stop()
-            self.worker.wait()
-        event.accept()
+            # 2. 等待线程完全终止（最多等待2秒，避免无限阻塞）
+            if not self.worker.wait(2000):
+                # 若超时，强制终止线程（极端情况兜底）
+                self.worker.terminate()
+                print("线程超时，已强制终止")
+        event.accept()  # 确认关闭事件
 
 
 if __name__ == "__main__":
