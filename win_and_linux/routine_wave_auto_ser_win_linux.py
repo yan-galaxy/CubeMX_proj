@@ -77,7 +77,7 @@ class SerialWorker(QThread):
         self.is_saving = False
 
         # 滤波器功能
-        self.filter_handlers = {i: FilterHandler(fs=100.0, low_cutoff=10.0, order=8) for i in range(100)}
+        self.filter_handlers = {i: FilterHandler(fs=100.0, low_cutoff=40.0, order=8) for i in range(100)}
         self.filters_initialized = False
 
         # 初始化保存线程（仅当需要保存时）
@@ -279,7 +279,8 @@ class RoutineWaveformVisualizer:
             'aqua'      # 水蓝（比青色更透亮）
         ]
         for i in range(10):
-            curve = self.plot.plot(pen=colors[i], name=f'点{i+1}')
+            pen = pg.mkPen(color=colors[i], width=2) 
+            curve = self.plot.plot(pen=pen, name=f'点{i+1}')
             self.curves.append(curve)
 
         # 波形数据缓冲区（每个点300帧历史）
@@ -335,7 +336,7 @@ class MatrixVisualizer:
         self.plot = pg.PlotItem(title="10x10传感器数据矩阵")
         self.plot.addItem(self.image_item)
         self.plot.setLabels(left='Y轴', bottom='X轴')
-        self.layout.addItem(self.plot, 0, 0)
+        self.layout.addItem(self.plot, 0, 0, 1, 2)
 
         self.color_map = pg.colormap.get('viridis')
         self.image_item.setColorMap(self.color_map)
@@ -458,6 +459,7 @@ class SerialSelectionDialog(QDialog):
                 padding: 6px 10px;
                 margin: 8px 0;
                 min-width: 250px;
+                color: black; /* 文本颜色 */
             }
             QComboBox:hover {
                 border-color: #88c9ff; /* 浅蓝 hover色 */
@@ -468,12 +470,25 @@ class SerialSelectionDialog(QDialog):
                 border-radius: 8px;
                 border: 2px solid #dddddd;
                 padding: 4px;
+                selection-background-color: #88c9ff; /* 选中项背景色 */
+                selection-color: black; /* 选中项文字颜色 */
+            }
+            
+            /* 下拉列表项样式 */
+            QComboBox QAbstractItemView::item {
+                color: black; /* 默认文字颜色 */
+                padding: 4px;
+            }
+            QComboBox QAbstractItemView::item:hover {
+                background-color: #e6f0ff; /* 悬停背景色 */
+                color: black; /* 悬停文字颜色 */
             }
 
             /* 复选框：圆角勾选框，颜色柔和 */
             QCheckBox {
                 margin: 8px 0;
                 spacing: 8px; /* 文字与框间距 */
+                color: black; /* 文本颜色 */
             }
             QCheckBox::indicator {
                 width: 18px;
@@ -544,19 +559,44 @@ class SerialSelectionDialog(QDialog):
             self.confirm_btn.setEnabled(False)
             return
 
-        # 按COM号降序排序（原有逻辑不变）
-        com_ports = []
-        other_ports = []
-        for port in available_ports:
-            if "COM" in port.device:
-                com_ports.append(port)
-            else:
-                other_ports.append(port)
+        # 按照系统类型进行不同的排序
+        if sys.platform.startswith('linux') or sys.platform.startswith('darwin'):
+            # Linux 或 macOS 系统
+            ttyacm_ports = []       # ttyACM 设备 (Arduino等)
+            ttyusb_ports = []       # ttyUSB 设备 (USB转串口等)
+            other_ports = []        # 其他设备
+            
+            for port in available_ports:
+                if "ttyACM" in port.device:
+                    ttyacm_ports.append(port)
+                elif "ttyUSB" in port.device:
+                    ttyusb_ports.append(port)
+                else:
+                    other_ports.append(port)
+            
+            # 对 ttyACM 和 ttyUSB 设备按数字顺序排序
+            def extract_port_number(port):
+                import re
+                match = re.search(r'\d+$', port.device)
+                return int(match.group()) if match else 0
+                
+            ttyacm_ports_sorted = sorted(ttyacm_ports, key=extract_port_number)
+            ttyusb_ports_sorted = sorted(ttyusb_ports, key=extract_port_number)
+            sorted_ports = ttyacm_ports_sorted + ttyusb_ports_sorted + other_ports
+        else:
+            # Windows 系统按原来的方式排序
+            com_ports = []
+            other_ports = []
+            for port in available_ports:
+                if "COM" in port.device:
+                    com_ports.append(port)
+                else:
+                    other_ports.append(port)
 
-        def extract_com_number(port):
-            return int(port.device.replace("COM", ""))
-        com_ports_sorted = sorted(com_ports, key=extract_com_number, reverse=True)
-        sorted_ports = com_ports_sorted + other_ports
+            def extract_com_number(port):
+                return int(port.device.replace("COM", ""))
+            com_ports_sorted = sorted(com_ports, key=extract_com_number, reverse=True)
+            sorted_ports = com_ports_sorted + other_ports
 
         # 添加到下拉框
         for port in sorted_ports:
@@ -629,7 +669,12 @@ class MainWindow(QMainWindow):
 
         # （1）插值显示复选框
         self.interp_checkbox = QCheckBox("插值显示")
-        self.interp_checkbox.setStyleSheet("color: white;")
+        self.interp_checkbox.setStyleSheet("""
+            color: white;
+            background-color: #222222;
+            border: 1px solid #555555;
+            padding: 5px;
+        """)
         self.interp_checkbox.setChecked(self.image_visualizer.interplotation)
         self.interp_checkbox.stateChanged.connect(
             lambda state: self.image_visualizer.set_interpolation(state == QtCore.Qt.Checked)
@@ -643,7 +688,25 @@ class MainWindow(QMainWindow):
         self.zoom_spin.setRange(1, 15)  # 范围1-15（原默认7）
         self.zoom_spin.setValue(self.image_visualizer.zoom_factor)
         self.zoom_spin.setStyleSheet("""
-            QSpinBox { color: white; background-color: #222222; border: 1px solid #555555; padding: 2px; }
+            QSpinBox { 
+                color: white; 
+                background-color: #222222; 
+                border: 1px solid #555555; 
+                padding: 2px; 
+            }
+            QSpinBox::up-button {
+                background-color: #444444;
+                border: 1px solid #666666;
+                width: 16px;
+            }
+            QSpinBox::down-button {
+                background-color: #444444;
+                border: 1px solid #666666;
+                width: 16px;
+            }
+            QSpinBox::up-button:hover, QSpinBox::down-button:hover {
+                background-color: #555555;
+            }
         """)
         self.zoom_spin.valueChanged.connect(self.image_visualizer.set_zoom_factor)
         self.image_control_layout.addWidget(self.zoom_label)
@@ -657,7 +720,25 @@ class MainWindow(QMainWindow):
         self.sigma_spin.setSingleStep(0.5)
         self.sigma_spin.setValue(self.image_visualizer.gaussian_sigma)
         self.sigma_spin.setStyleSheet("""
-            QDoubleSpinBox { color: white; background-color: #222222; border: 1px solid #555555; padding: 2px; }
+            QDoubleSpinBox { 
+                color: white; 
+                background-color: #222222; 
+                border: 1px solid #555555; 
+                padding: 2px; 
+            }
+            QDoubleSpinBox::up-button {
+                background-color: #444444;
+                border: 1px solid #666666;
+                width: 16px;
+            }
+            QDoubleSpinBox::down-button {
+                background-color: #444444;
+                border: 1px solid #666666;
+                width: 16px;
+            }
+            QDoubleSpinBox::up-button:hover, QDoubleSpinBox::down-button:hover {
+                background-color: #555555;
+            }
         """)
         self.sigma_spin.valueChanged.connect(self.image_visualizer.set_gaussian_sigma)
         self.image_control_layout.addWidget(self.sigma_label)
@@ -669,8 +750,32 @@ class MainWindow(QMainWindow):
         self.rotation_combo = QComboBox()
         self.rotation_combo.addItems(["0度", "90度", "180度", "270度"])
         self.rotation_combo.setStyleSheet("""
-            QComboBox { color: white; background-color: #222222; border: 1px solid #555555; }
-            QComboBox QAbstractItemView { background-color: #222222; color: white; }
+            QComboBox { 
+                color: white; 
+                background-color: #222222; 
+                border: 1px solid #555555;
+                padding: 2px 5px;
+            }
+            QComboBox::drop-down {
+                background-color: #444444;
+                border: 1px solid #666666;
+                width: 20px;
+            }
+            QComboBox::down-arrow {
+                image: none;
+                border-left: 4px solid transparent;
+                border-right: 4px solid transparent;
+                border-top: 4px solid white;
+                width: 0;
+                height: 0;
+                margin: 6px;
+            }
+            QComboBox QAbstractItemView { 
+                background-color: #222222; 
+                color: white; 
+                border: 1px solid #555555;
+                selection-background-color: #444444;
+            }
         """)
         rotation_map = {0:0, 90:1, 180:2, 270:3}
         self.rotation_combo.setCurrentIndex(rotation_map[self.image_visualizer.rotation_angle])
@@ -682,7 +787,12 @@ class MainWindow(QMainWindow):
 
         # （5）垂直翻转复选框
         self.flip_h_checkbox = QCheckBox("垂直翻转")
-        self.flip_h_checkbox.setStyleSheet("color: white;")
+        self.flip_h_checkbox.setStyleSheet("""
+            color: white;
+            background-color: #222222;
+            border: 1px solid #555555;
+            padding: 5px;
+        """)
         self.flip_h_checkbox.setChecked(self.image_visualizer.flip_horizontal)
         self.flip_h_checkbox.stateChanged.connect(
             lambda state: self.image_visualizer.set_flip_horizontal(state == QtCore.Qt.Checked)
@@ -691,7 +801,12 @@ class MainWindow(QMainWindow):
 
         # （6）水平翻转复选框
         self.flip_v_checkbox = QCheckBox("水平翻转")
-        self.flip_v_checkbox.setStyleSheet("color: white;")
+        self.flip_v_checkbox.setStyleSheet("""
+            color: white;
+            background-color: #222222;
+            border: 1px solid #555555;
+            padding: 5px;
+        """)
         self.flip_v_checkbox.setChecked(self.image_visualizer.flip_vertical)
         self.flip_v_checkbox.stateChanged.connect(
             lambda state: self.image_visualizer.set_flip_vertical(state == QtCore.Qt.Checked)
@@ -714,7 +829,7 @@ class MainWindow(QMainWindow):
             port=self.selected_port,
             save_data=self.save_data,
             normalization_low=0,
-            normalization_high=3000
+            normalization_high=1500
         )
         self.worker.data_ready.connect(self.image_visualizer.receive_data)
         self.worker.waveform_ready.connect(self.waveform_visualizer.update_plot)
