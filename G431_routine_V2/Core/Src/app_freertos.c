@@ -133,8 +133,8 @@ void StartDefaultTask(void const * argument)
 	HAL_GPIO_WritePin(SEL10_GPIO_Port,SEL10_Pin,1);
 	
 	//灵敏配置：35 200 
-	//灵敏极限：50 255 （测到最小电阻为9.8kΩ）
-	//量程大配置：5 50
+	//灵敏极限：50 255 （测到最小电阻为9.8kΩ） 150 255
+	//量程大配置：5 50  （8x8标定用的这个，量程大）
 	
 	AD5206_SetResistance(1,4,5);//Rref  5-0.360V   10-0.576V   25-1.097V    35-1.357V   45-1.552V   50-1.633   55-1.710V   65-1.845V   75-1.957V
 	

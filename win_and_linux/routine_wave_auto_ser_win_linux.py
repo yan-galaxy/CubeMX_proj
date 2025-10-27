@@ -16,12 +16,21 @@ import os
 import threading
 from datetime import datetime
 import csv
-
+# 不准改我的注释！！！不准删！！！
 
 # 数据保存选项的宏定义（同步）
 SAVE_DATA_DEFAULT = False  # 默认保存数据 True False
-# 不准改我的注释！！！不准删！！！
-
+# 归一化默认最高值
+NORMALIZATION_HIGH_VALUE = 1500
+# 插值密度默认值 (2-15)
+DEFAULT_ZOOM_FACTOR = 8
+# 高斯核默认值
+DEFAULT_GAUSSIAN_SIGMA = 0.0
+# 旋转角度默认值 (0, 90, 180, 270对应索引)
+DEFAULT_ROTATION_INDEX = 0  # 0度
+# 翻转默认值
+DEFAULT_FLIP_HORIZONTAL = True
+DEFAULT_FLIP_VERTICAL = False
 
 class FilterHandler:
     """滤波器处理类，封装低通滤波的相关方法"""
@@ -71,7 +80,7 @@ class SerialWorker(QThread):
         self.max_recent_frames = 50  # 最多存储50帧
         self.init_frames = []  # 初始帧收集（用于首次初始化）
         self.init_frame_count = 0
-        self.max_init_frames = 30  # 收集x帧用于初始化
+        self.max_init_frames = 20  # 收集x帧用于初始化
 
         # 2. 数据保存配置（支持选择是否保存、CSV存储）
         self.save_data = save_data
@@ -89,6 +98,10 @@ class SerialWorker(QThread):
             self.init_raw_data_saving()
 
         self.is_stopped = False  # 防止stop重复执行的标记
+
+    # 添加设置 normalization_high 的方法
+    def set_normalization_high(self, value):
+        self.normalization_high = value
 
     # 3. 数据保存初始化
     def init_raw_data_saving(self):
@@ -337,7 +350,8 @@ class DataReplayWorker(SerialWorker):
 class RoutineWaveformVisualizer:
     def __init__(self, parent_widget):
         self.parent_widget = parent_widget
-        self.selected_row = 0  # 默认选择第1行（10x10的行索引0-9）
+        self.selected_row = 0  # 修改默认选择为平均值（索引0）
+        self.show_all_average = True  # 默认显示所有点的平均值
         self.reset_callback = None
 
         # 界面样式（黑色背景+控件样式）
@@ -376,19 +390,19 @@ class RoutineWaveformVisualizer:
         # 绘图区域
         self.plot_widget = pg.PlotWidget()
         self.plot = self.plot_widget.getPlotItem()
-        self.plot.setTitle(f"第{self.selected_row+1}列波形（10个点）")
+        self.plot.setTitle("所有点位平均值")  # 修改默认标题
         self.plot.setLabels(left='数值', bottom='帧编号')
         self.plot.showGrid(x=True, y=True)
-        self.plot.setYRange(0, 4096)  # 适配16位数据
+        self.plot.setYRange(0, 4095)  # 适配16位数据  4095  700
         self.main_layout.addWidget(self.plot_widget)
 
         # 控件布局（水平：行选择+校准按钮）
         self.control_layout = QHBoxLayout()
         # 行选择下拉框（10行：第1行~第10行）
         self.row_selector = QComboBox()
-        row_names = [f"第{i+1}列" for i in range(10)]
+        row_names = ["平均值"] + [f"第{i+1}列" for i in range(10)]
         self.row_selector.addItems(row_names)
-        self.row_selector.setCurrentIndex(self.selected_row)
+        self.row_selector.setCurrentIndex(self.selected_row)  # 设置默认选择为平均值
         self.row_selector.currentIndexChanged.connect(self.change_row)
         self.control_layout.addWidget(self.row_selector)
 
@@ -402,8 +416,8 @@ class RoutineWaveformVisualizer:
         # 10行波形曲线（每行10个点，10种颜色）
         self.curves = []
         colors = [
-            'y',        # 黄色（明亮）
             'c',        # 青色（鲜明）
+            'y',        # 黄色（明亮）
             'm',        # 品红（艳丽）
             'r',        # 红色（醒目）
             'lime',     # 亮绿（比普通绿色更鲜艳）
@@ -432,23 +446,45 @@ class RoutineWaveformVisualizer:
     # 切换显示的行（10x10的行，无分组）
     def change_row(self, index):
         self.selected_row = index
-        self.plot.setTitle(f"第{self.selected_row+1}行波形（10个点）")
+        # 检查是否选择的是平均值选项（索引0）
+        if self.selected_row == 0:
+            self.show_all_average = True
+            self.plot.setTitle("所有点位平均值")
+        else:
+            self.show_all_average = False
+            self.plot.setTitle(f"第{self.selected_row}列波形（10个点）")
         # 重置当前行的波形数据显示
         self.show_data = [[0] * 300 for _ in range(10)]
 
     # 更新波形（显示选中行的10个点）
     def update_plot(self, new_row):
         if len(new_row) == 100:
-            # 提取选中行的10个点数据（行优先：第selected_row行的索引为selected_row*10 ~ (selected_row+1)*10 -1）
-            row_start_idx = self.selected_row * 10
-            row_data = new_row[row_start_idx : row_start_idx + 10]
+            if self.show_all_average:
+                # 计算所有100个点的平均值
+                avg_value = sum(new_row) / len(new_row) #-3400
+                # # 计算所有100个点的最大值
+                # max_value = max(new_row)
+                
+                # 只更新第一条曲线的数据，其余曲线清空（不显示）
+                self.show_data[0] = self.show_data[0][1:] + [avg_value]
+                x_data = np.arange(len(self.show_data[0]))
+                y_data = np.array(self.show_data[0])
+                self.curves[0].setData(x_data, y_data)
+                
+                # 清空其余9条曲线的数据，使其不显示
+                for i in range(1, 10):
+                    self.curves[i].setData([], [])
+            else:
+                # 提取选中行的10个点数据（行优先：第selected_row行的索引为selected_row*10 ~ (selected_row+1)*10 -1）
+                row_start_idx = ( self.selected_row - 1 ) * 10
+                row_data = new_row[row_start_idx : row_start_idx + 10]
 
-            # 更新每个点的历史数据并刷新曲线
-            for i in range(10):
-                self.show_data[i] = self.show_data[i][1:] + [row_data[i]]
-                x_data = np.arange(len(self.show_data[i]))
-                y_data = np.array(self.show_data[i])
-                self.curves[i].setData(x_data, y_data)
+                # 更新每个点的历史数据并刷新曲线
+                for i in range(10):
+                    self.show_data[i] = self.show_data[i][1:] + [row_data[i]]
+                    x_data = np.arange(len(self.show_data[i]))
+                    y_data = np.array(self.show_data[i])
+                    self.curves[i].setData(x_data, y_data)
 
 
 # 10. 图像可视化（添加运行时间标签 + 参数调节功能）
@@ -826,11 +862,11 @@ class MainWindow(QMainWindow):
         self.image_visualizer = MatrixVisualizer(
             self.image_layout, 
             interplotation=False, 
-            rotation_angle=0, 
-            flip_horizontal=True, 
-            flip_vertical=False,
-            zoom_factor=7,  # 默认插值密度
-            gaussian_sigma=0.5  # 默认高斯核
+            rotation_angle=[0, 90, 180, 270][DEFAULT_ROTATION_INDEX], 
+            flip_horizontal=DEFAULT_FLIP_HORIZONTAL, 
+            flip_vertical=DEFAULT_FLIP_VERTICAL,
+            zoom_factor=DEFAULT_ZOOM_FACTOR,  # 默认插值密度
+            gaussian_sigma=DEFAULT_GAUSSIAN_SIGMA  # 默认高斯核
         )
         self.image_container_layout.addWidget(self.image_layout)
 
@@ -987,6 +1023,38 @@ class MainWindow(QMainWindow):
         )
         self.image_control_layout.addWidget(self.flip_v_checkbox)
 
+        # （7）Normalization High 参数输入框
+        self.norm_high_label = QLabel("最大值:")
+        self.norm_high_label.setStyleSheet("color: white;")
+        self.norm_high_input = QSpinBox()
+        self.norm_high_input.setRange(1, 5000)  # 设置合理范围
+        self.norm_high_input.setSingleStep(100)
+        self.norm_high_input.setValue(NORMALIZATION_HIGH_VALUE)  # 默认值
+        self.norm_high_input.setStyleSheet("""
+            QSpinBox { 
+                color: white; 
+                background-color: #222222; 
+                border: 1px solid #555555; 
+                padding: 2px; 
+            }
+            QSpinBox::up-button {
+                background-color: #444444;
+                border: 1px solid #666666;
+                width: 16px;
+            }
+            QSpinBox::down-button {
+                background-color: #444444;
+                border: 1px solid #666666;
+                width: 16px;
+            }
+            QSpinBox::up-button:hover, QSpinBox::down-button:hover {
+                background-color: #555555;
+            }
+        """)
+        self.norm_high_input.valueChanged.connect(self.set_normalization_high)
+        self.image_control_layout.addWidget(self.norm_high_label)
+        self.image_control_layout.addWidget(self.norm_high_input)
+
         self.image_control_layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
         self.image_container_layout.addWidget(self.image_control_panel)
 
@@ -1005,7 +1073,7 @@ class MainWindow(QMainWindow):
                 csv_path=self.selected_csv,
                 save_data=False,  # 回放不保存数据
                 normalization_low=0,
-                normalization_high=1500
+                normalization_high=self.norm_high_input.value()  # 使用界面设置的值
             )
             # 回放完成后自动关闭程序
             self.worker.replay_finished.connect(self.close)
@@ -1018,7 +1086,7 @@ class MainWindow(QMainWindow):
                 port=self.selected_port,
                 save_data=self.save_data,
                 normalization_low=0,
-                normalization_high=1500
+                normalization_high=self.norm_high_input.value()  # 使用界面设置的值
             )
             # 实时模式绑定默认信号
             self.worker.data_ready.connect(self.image_visualizer.receive_data)
@@ -1032,6 +1100,11 @@ class MainWindow(QMainWindow):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.image_visualizer.update_fps)
         self.timer.start(200)
+
+    def set_normalization_high(self, value):
+        """设置 normalization_high 值"""
+        if self.worker:
+            self.worker.set_normalization_high(value)
 
     def reset_initial_value(self):
         if self.worker:
