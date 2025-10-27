@@ -39,7 +39,7 @@ class SerialWorker(QThread):
         # 添加初始化帧相关变量
         self.init_frames = []  # 用于存储初始化帧
         self.init_frame_count = 0  # 初始化帧计数器
-        self.max_init_frames = 50  # 最大初始化帧数
+        self.max_init_frames = 20  # 最大初始化帧数
         self.matrix_init = None  # 初始化矩阵
         self.dead_value = 20.0  # 死点值
         # 用于存储最近帧数据的缓冲区
@@ -137,93 +137,102 @@ class SerialWorker(QThread):
             self.ser = serial.Serial(self.port, self.baudrate, timeout=1)
             self.running = True
             while self.running:
-                if self.ser.in_waiting > 0:
-                    data = self.ser.read(self.ser.in_waiting)
-                    self.buffer.extend(data)
-                    start_index = self.buffer.find(self.FRAME_HEADER)
-                    while start_index != -1:
-                        end_index = self.buffer.find(self.FRAME_TAIL, start_index + len(self.FRAME_HEADER))
-                        if end_index != -1:
-                            frame = self.buffer[start_index:end_index + len(self.FRAME_TAIL)]
-                            payload = frame[len(self.FRAME_HEADER):-len(self.FRAME_TAIL)]
-                            parsed = np.frombuffer(payload, dtype=np.uint16)
+                try:
+                    if self.ser.in_waiting > 0:
+                        data = self.ser.read(self.ser.in_waiting)
+                        self.buffer.extend(data)
+                        start_index = self.buffer.find(self.FRAME_HEADER)
+                        while start_index != -1:
+                            end_index = self.buffer.find(self.FRAME_TAIL, start_index + len(self.FRAME_HEADER))
+                            if end_index != -1:
+                                frame = self.buffer[start_index:end_index + len(self.FRAME_TAIL)]
+                                payload = frame[len(self.FRAME_HEADER):-len(self.FRAME_TAIL)]
+                                parsed = np.frombuffer(payload, dtype=np.uint16)
 
-                            if len(parsed) == 1000:
-                                
-                                frames = parsed.reshape(10, 100)
-                                
-                                # 更新的映射表，之前的每个小圆的左右反了
-                                mapping = [
-                                    [(0,1), (0,0), (0,5), (0,4), (1,1), (1,0), (1,5), (1,4)],
-                                    [(0,2), (0,3), (0,6), (0,7), (1,2), (1,3), (1,6), (1,7)],
-                                    [(2,1), (2,0), (2,5), (2,4), (3,1), (3,0), (3,5), (3,4)],
-                                    [(2,2), (2,3), (2,6), (2,7), (3,2), (3,3), (3,6), (3,7)],
-                                    [(4,1), (4,0), (4,5), (4,4), (5,1), (5,0), (5,5), (5,4)],
-                                    [(4,2), (4,3), (4,6), (4,7), (5,2), (5,3), (5,6), (5,7)],
-                                    [(6,1), (6,0), (6,5), (6,4), (7,1), (7,0), (7,5), (7,4)],
-                                    [(6,2), (6,3), (6,6), (6,7), (7,2), (7,3), (7,6), (7,7)],
-                                ]
-
-                                # 创建目标8x8矩阵 (使用向量化操作替代循环)
-                                # 提取映射坐标
-                                src_coords = [(x, y) for row in mapping for x, y in row]
-                                src_x_coords = [coord[0] for coord in src_coords]
-                                src_y_coords = [coord[1] for coord in src_coords]
-                                
-                                # 对所有10帧数据进行映射处理（不使用循环）
-                                frames_data = frames.reshape(10, 10, 10)
-                                frames_data = frames_data[:, 2:, 2:]  # 裁剪为8x8
-                                
-                                # 使用高级索引一次性处理所有帧的映射
-                                mapped_frames = frames_data[:, src_x_coords, src_y_coords].reshape(10, 8, 8)
-                                
-                                # 将完整的10帧映射数据发送给CSV线程
-                                if self.save_data:
-                                    self.data_queue.put(mapped_frames.copy())
-                                
-                                # 计算平均值用于显示
-                                target_matrix = np.mean(mapped_frames, axis=0)
-                                average = target_matrix.flatten()
-
-                                # 将当前帧添加到recent_frames缓冲区用于校准
-                                self.recent_frames.append(average.copy())
-                                # 如果recent_frames超过最大长度，则移除最旧的帧
-                                if len(self.recent_frames) > self.max_recent_frames:
-                                    self.recent_frames.pop(0)
-
-                                # 收集前max_init_frames帧用于初始化
-                                if self.init_frame_count < self.max_init_frames:
-                                    self.init_frames.append(average.copy())
-                                    self.init_frame_count += 1
+                                if len(parsed) == 1000:
                                     
-                                    # 当收集到足够的帧时，计算平均值作为matrix_init
-                                    if self.init_frame_count == self.max_init_frames:
-                                        self.matrix_init = np.mean(self.init_frames, axis=0)
-                                        print(f"初始化完成，使用{self.max_init_frames}帧计算初始值")
+                                    frames = parsed.reshape(10, 100)
+                                    
+                                    # 更新的映射表，之前的每个小圆的左右反了
+                                    mapping = [
+                                        [(0,1), (0,0), (0,5), (0,4), (1,1), (1,0), (1,5), (1,4)],
+                                        [(0,2), (0,3), (0,6), (0,7), (1,2), (1,3), (1,6), (1,7)],
+                                        [(2,1), (2,0), (2,5), (2,4), (3,1), (3,0), (3,5), (3,4)],
+                                        [(2,2), (2,3), (2,6), (2,7), (3,2), (3,3), (3,6), (3,7)],
+                                        [(4,1), (4,0), (4,5), (4,4), (5,1), (5,0), (5,5), (5,4)],
+                                        [(4,2), (4,3), (4,6), (4,7), (5,2), (5,3), (5,6), (5,7)],
+                                        [(6,1), (6,0), (6,5), (6,4), (7,1), (7,0), (7,5), (7,4)],
+                                        [(6,2), (6,3), (6,6), (6,7), (7,2), (7,3), (7,6), (7,7)],
+                                    ]
+
+                                    # 创建目标8x8矩阵 (使用向量化操作替代循环)
+                                    # 提取映射坐标
+                                    src_coords = [(x, y) for row in mapping for x, y in row]
+                                    src_x_coords = [coord[0] for coord in src_coords]
+                                    src_y_coords = [coord[1] for coord in src_coords]
+                                    
+                                    # 对所有10帧数据进行映射处理（不使用循环）
+                                    frames_data = frames.reshape(10, 10, 10)
+                                    frames_data = frames_data[:, 2:, 2:]  # 裁剪为8x8
+                                    
+                                    # 使用高级索引一次性处理所有帧的映射
+                                    mapped_frames = frames_data[:, src_x_coords, src_y_coords].reshape(10, 8, 8)
+                                    
+                                    # 将完整的10帧映射数据发送给CSV线程
+                                    if self.save_data:
+                                        self.data_queue.put(mapped_frames.copy())
+                                    
+                                    # 计算平均值用于显示
+                                    target_matrix = np.mean(mapped_frames, axis=0)
+                                    average = target_matrix.flatten()
+
+                                    # 将当前帧添加到recent_frames缓冲区用于校准
+                                    self.recent_frames.append(average.copy())
+                                    # 如果recent_frames超过最大长度，则移除最旧的帧
+                                    if len(self.recent_frames) > self.max_recent_frames:
+                                        self.recent_frames.pop(0)
+
+                                    # 收集前max_init_frames帧用于初始化
+                                    if self.init_frame_count < self.max_init_frames:
+                                        self.init_frames.append(average.copy())
+                                        self.init_frame_count += 1
                                         
-                                # 如果已经完成初始化，进行数据处理
-                                elif self.matrix_init is not None:
-                                    # 使用matrix_init进行归零处理
-                                    zeroed_results = np.array(average) - self.matrix_init
-                                    deaded_results = zeroed_results - self.dead_value
-                                    clipped_result = np.clip(deaded_results, self.normalization_low, self.normalization_high)
-                                    normalized_result = (clipped_result - self.normalization_low) / (self.normalization_high - self.normalization_low)
-                                    
-                                    self.waveform_ready.emit(average.tolist())  # 发送原始波形数据
-                                    self.data_ready.emit(normalized_result.tolist())  # 发送归一化后的图像数据
+                                        # 当收集到足够的帧时，计算平均值作为matrix_init
+                                        if self.init_frame_count == self.max_init_frames:
+                                            self.matrix_init = np.mean(self.init_frames, axis=0)
+                                            print(f"初始化完成，使用{self.max_init_frames}帧计算初始值")
+                                            
+                                    # 如果已经完成初始化，进行数据处理
+                                    elif self.matrix_init is not None:
+                                        # 使用matrix_init进行归零处理
+                                        zeroed_results = np.array(average) - self.matrix_init
+                                        deaded_results = zeroed_results - self.dead_value
+                                        clipped_result = np.clip(deaded_results, self.normalization_low, self.normalization_high)
+                                        normalized_result = (clipped_result - self.normalization_low) / (self.normalization_high - self.normalization_low)
+                                        
+                                        self.waveform_ready.emit(average.tolist())  # 发送原始波形数据
+                                        self.data_ready.emit(normalized_result.tolist())  # 发送归一化后的图像数据
 
-                            self.buffer = self.buffer[end_index + len(self.FRAME_TAIL):]
-                            start_index = self.buffer.find(self.FRAME_HEADER)
-                        else:
-                            break
+                                self.buffer = self.buffer[end_index + len(self.FRAME_TAIL):]
+                                start_index = self.buffer.find(self.FRAME_HEADER)
+                            else:
+                                break
+                except Exception as e:
+                    # 捕获读取数据时的异常，但不终止线程
+                    print(f"读取传感器数据时出错: {str(e)}")
+                    self.msleep(100)  # 等待一段时间再继续
         except Exception as e:
             # 发送错误信号到主线程，弹出可视化提示
             error_msg = f"串口通信异常: {str(e)}\nUbuntu用户请检查是否加入dialout组"
             self.error_signal.emit(error_msg)
         finally:
             if self.ser and self.ser.is_open:
-                self.ser.close()
-                print('串口关闭')
+                try:
+                    self.ser.close()
+                    print('串口关闭')
+                except OSError as e:
+                    print(f"关闭串口时出错: {str(e)}")
+            self.running = False
 
 
 class KunweiSerialWorker(QThread):
@@ -253,9 +262,12 @@ class KunweiSerialWorker(QThread):
         """停止数据读取"""
         self.running = False
         if self.ser and self.ser.is_open:
-            self.ser.close()
-            print('坤维传感器串口已关闭')
-            
+            try:
+                self.ser.close()
+                print('坤维传感器串口已关闭')
+            except OSError as e:
+                print(f"关闭坤维传感器串口时出错: {str(e)}")
+
     def parse_frame(self, frame):
         """解析单帧数据为浮点数"""
         try:
@@ -305,54 +317,61 @@ class KunweiSerialWorker(QThread):
             
             self.running = True
             while self.running:
-                if self.ser.in_waiting > 0:
-                    # 读取所有可用数据
-                    data = self.ser.read(self.ser.in_waiting)
-                    self.buffer += data
-                    
-                    # 在缓冲区中查找帧头
-                    start_index = self.buffer.find(self.FRAME_HEADER)
-                    while start_index != -1:
-                        # 查找帧尾
-                        end_index = self.buffer.find(self.FRAME_TAIL, start_index + len(self.FRAME_HEADER))
+                try:
+                    if self.ser.in_waiting > 0:
+                        # 读取所有可用数据
+                        data = self.ser.read(self.ser.in_waiting)
+                        self.buffer += data
                         
-                        if end_index != -1:
-                            # 提取完整帧
-                            frame = self.buffer[start_index:end_index + len(self.FRAME_TAIL)]
+                        # 在缓冲区中查找帧头
+                        start_index = self.buffer.find(self.FRAME_HEADER)
+                        while start_index != -1:
+                            # 查找帧尾
+                            end_index = self.buffer.find(self.FRAME_TAIL, start_index + len(self.FRAME_HEADER))
                             
-                            # 解析帧数据
-                            components, msg = self.parse_frame(frame)
-                            if components:
-                                # 获取ns级时间戳（使用perf_counter_ns，系统级高精度时间）
-                                ns_timestamp = time.perf_counter_ns()
-                                # 写入CSV文件 - 拼接"时间戳+6个分量"，时间戳作为首列
-                                if self.save_data and self.csv_writer:
-                                    self.csv_writer.writerow([ns_timestamp] + components)
+                            if end_index != -1:
+                                # 提取完整帧
+                                frame = self.buffer[start_index:end_index + len(self.FRAME_TAIL)]
                                 
-                                # 发送数据到主线程（用于波形显示）
-                                self.kunwei_data_ready.emit(components)
+                                # 解析帧数据
+                                components, msg = self.parse_frame(frame)
+                                if components:
+                                    # 获取ns级时间戳（使用perf_counter_ns，系统级高精度时间）
+                                    ns_timestamp = time.perf_counter_ns()
+                                    # 写入CSV文件 - 拼接"时间戳+6个分量"，时间戳作为首列
+                                    if self.save_data and self.csv_writer:
+                                        self.csv_writer.writerow([ns_timestamp] + components)
+                                    
+                                    # 发送数据到主线程（用于波形显示）
+                                    self.kunwei_data_ready.emit(components)
+                                else:
+                                    pass
+                                
+                                # 移除已处理的帧
+                                self.buffer = self.buffer[end_index + len(self.FRAME_TAIL):]
+                                start_index = self.buffer.find(self.FRAME_HEADER)
                             else:
-                                pass
-                            
-                            # 移除已处理的帧
-                            self.buffer = self.buffer[end_index + len(self.FRAME_TAIL):]
-                            start_index = self.buffer.find(self.FRAME_HEADER)
-                        else:
-                            # 未找到帧尾，保留剩余缓冲区内容
-                            self.buffer = self.buffer[start_index:]
-                            break
-                            
+                                # 未找到帧尾，保留剩余缓冲区内容
+                                self.buffer = self.buffer[start_index:]
+                                break
+                except Exception as e:
+                    # 捕获读取数据时的异常，但不终止线程
+                    print(f"读取坤维传感器数据时出错: {str(e)}")
+                    # self.msleep(100)  # 等待一段时间再继续
         except Exception as e:
             error_msg = f"坤维传感器串口通信异常: {str(e)}\nUbuntu用户请检查是否加入dialout组"
-            # self.error_signal.emit(error_msg)
+            self.error_signal.emit(error_msg)
         finally:
             # 关闭CSV文件
             if self.csv_file:
-                self.csv_file.close()
-                print(f"坤维传感器CSV文件 {self.csv_filename} 已成功关闭，数据已保存")
-            self.stop()
+                try:
+                    self.csv_file.close()
+                    print(f"坤维传感器CSV文件 {self.csv_filename} 已成功关闭，数据已保存")
+                except Exception as e:
+                    print(f"关闭坤维传感器CSV文件时出错: {str(e)}")
+            self.running = False
 
-# ---------------------- 新增：坤维传感器波形可视化类 ----------------------
+# ---------------------- 坤维传感器波形可视化类 ----------------------
 class KunweiWaveformVisualizer:
     def __init__(self, parent_widget):
         self.parent_widget = parent_widget
@@ -434,7 +453,7 @@ class KunweiWaveformVisualizer:
             # 5. 清空缓冲区，准备下一批数据
             self.frame_buffer = []
 
-# ---------------------- 原有：传感器点位波形可视化类 ----------------------
+# ---------------------- 传感器点位波形可视化类 ----------------------
 class RoutineWaveformVisualizer:
     def __init__(self, parent_widget):
         self.parent_widget = parent_widget
@@ -649,7 +668,7 @@ class SerialSelectionDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("选择串口")
-        self.setFixedSize(400, 300)  # 调整窗口大小以容纳新控件
+        self.setFixedSize(400, 350)  # 调整窗口大小以容纳新控件
         self.selected_sensor_port = None  # 存储用户选择的传感器串口
         self.selected_kunwei_port = None   # 存储用户选择的坤维串口
         self.save_data = SAVE_DATA_DEFAULT  # 存储用户是否选择保存数据
@@ -706,6 +725,10 @@ class SerialSelectionDialog(QDialog):
             self.confirm_btn.setEnabled(False)  # 禁用确认按钮
             return
         
+        # 添加"不使用"选项
+        self.sensor_port_combo.addItem("None", None)
+        self.kunwei_port_combo.addItem("None", None)
+        
         # 添加可用串口到下拉框（显示端口名+描述，方便用户识别）
         for port in available_ports:
             port_info = f"{port.device} - {port.description}"  # 例：COM3 - USB Serial Port
@@ -714,7 +737,7 @@ class SerialSelectionDialog(QDialog):
 
         # 默认选择第一个串口
         if self.sensor_port_combo.count() > 0:
-            self.sensor_port_combo.setCurrentIndex(0)
+            self.sensor_port_combo.setCurrentIndex(1 if self.sensor_port_combo.count() >= 1 else 0)
         if self.kunwei_port_combo.count() > 1:
             self.kunwei_port_combo.setCurrentIndex(1)
         elif self.kunwei_port_combo.count() > 0:
@@ -727,7 +750,7 @@ class SerialSelectionDialog(QDialog):
         self.save_data = self.save_data_checkbox.isChecked()  # 获取是否保存数据的选项
         
         # 检查是否选择了相同的串口
-        if self.selected_sensor_port == self.selected_kunwei_port:
+        if self.selected_sensor_port and self.selected_kunwei_port and self.selected_sensor_port == self.selected_kunwei_port:
             QMessageBox.warning(self, "警告", "不能选择相同的串口用于两个设备！")
             return
             
@@ -742,8 +765,8 @@ class MainWindow(QMainWindow):
 
         # 1. 先显示串口选择对话框（必须先选串口，再初始化主界面）
         self.select_serial_port()
-        if not self.selected_sensor_port or not self.selected_kunwei_port:
-            # 用户取消选择或无可用串口，直接退出
+        # 用户取消选择或无可用串口，直接退出
+        if self.selected_sensor_port is None and self.selected_kunwei_port is None:
             sys.exit(0)
 
         # 2. 初始化主界面（选择串口成功后才执行）
@@ -773,8 +796,7 @@ class MainWindow(QMainWindow):
         # ---------------------- 左侧：8x8传感器矩阵图像（不变） ----------------------
         self.image_layout = pg.GraphicsLayoutWidget()
         self.image_visualizer = MatrixVisualizer(self.image_layout, interplotation=False, rotation_angle=90, flip_horizontal=False, flip_vertical=False)
-        self.central_widget.addWidget(self.image_layout)
-
+        
         # ---------------------- 右侧：垂直布局（上=坤维波形，下=原有点位波形） ----------------------
         # 右侧总容器（统一黑色背景和边框）
         self.right_container = QWidget()
@@ -791,33 +813,41 @@ class MainWindow(QMainWindow):
         # 1. 右侧上方：坤维传感器波形
         self.kunwei_waveform_widget = QWidget()
         self.kunwei_waveform_visualizer = KunweiWaveformVisualizer(self.kunwei_waveform_widget)
-        self.right_layout.addWidget(self.kunwei_waveform_widget, stretch=1)  # 占1份高度
-
+        
         # 2. 右侧下方：原有传感器点位波形
         self.original_waveform_widget = QWidget()
         self.waveform_visualizer = RoutineWaveformVisualizer(self.original_waveform_widget)
         self.waveform_visualizer.set_reset_callback(self.reset_initial_value)  # 保留校准功能
-        self.right_layout.addWidget(self.original_waveform_widget, stretch=1)  # 占1份高度（与上方等高）
-
+        
+        # 根据选择的传感器决定显示哪些组件
+        if self.selected_sensor_port:
+            self.central_widget.addWidget(self.image_layout)
+            self.right_layout.addWidget(self.original_waveform_widget, stretch=1)
+            
+        if self.selected_kunwei_port:
+            self.right_layout.addWidget(self.kunwei_waveform_widget, stretch=1)
+            
         # 将右侧总容器加入中央分割器
         self.central_widget.addWidget(self.right_container)
 
         # ---------------------- 线程初始化与信号连接 ----------------------
-        # 1. 原有传感器线程（不变）
-        self.worker = SerialWorker(port=self.selected_sensor_port, save_data=self.save_data)
-        self.worker.data_ready.connect(self.image_visualizer.receive_data)
-        self.worker.waveform_ready.connect(self.waveform_visualizer.update_plot)
-        self.worker.error_signal.connect(self.show_serial_error)
-        self.worker.start()
+        # 1. 原有传感器线程
+        if self.selected_sensor_port:
+            self.worker = SerialWorker(port=self.selected_sensor_port, save_data=self.save_data)
+            self.worker.data_ready.connect(self.image_visualizer.receive_data)
+            self.worker.waveform_ready.connect(self.waveform_visualizer.update_plot)
+            self.worker.error_signal.connect(self.show_serial_error)
+            self.worker.start()
         
-        # 2. 坤维传感器线程（新增波形信号连接）
-        self.kunwei_worker = KunweiSerialWorker(port=self.selected_kunwei_port, save_data=self.save_data)
-        self.kunwei_worker.kunwei_data_ready.connect(self.handle_kunwei_data)  # 原有数据处理
-        self.kunwei_worker.kunwei_data_ready.connect(self.kunwei_waveform_visualizer.update_plot)  # 新增波形更新
-        self.kunwei_worker.error_signal.connect(self.show_kunwei_serial_error)
-        self.kunwei_worker.start()
+        # 2. 坤维传感器线程（波形信号连接）
+        if self.selected_kunwei_port:
+            self.kunwei_worker = KunweiSerialWorker(port=self.selected_kunwei_port, save_data=self.save_data)
+            self.kunwei_worker.kunwei_data_ready.connect(self.handle_kunwei_data)  # 原有数据处理
+            self.kunwei_worker.kunwei_data_ready.connect(self.kunwei_waveform_visualizer.update_plot)  # 波形更新
+            self.kunwei_worker.error_signal.connect(self.show_kunwei_serial_error)
+            self.kunwei_worker.start()
 
-        # 设置定时器更新FPS（不变）
+        # 设置定时器更新FPS
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.image_visualizer.update_fps)
         self.timer.start(200)
@@ -832,17 +862,25 @@ class MainWindow(QMainWindow):
             self.worker.reset_initialization()
 
     def show_serial_error(self, error_msg):
-        """显示传感器串口错误提示（可视化弹窗）（不变）"""
+        """显示传感器串口错误提示（可视化弹窗）"""
         QMessageBox.critical(self, "传感器串口错误", error_msg)
-        self.close()  # 错误后关闭主窗口
-        
+        # 不再关闭整个程序，只停止对应的worker
+        if self.worker:
+            self.worker.stop()
+            self.worker.wait()
+            self.worker = None
+
     def show_kunwei_serial_error(self, error_msg):
-        """显示坤维传感器串口错误提示（可视化弹窗）（不变）"""
+        """显示坤维传感器串口错误提示（可视化弹窗）"""
         QMessageBox.critical(self, "坤维传感器串口错误", error_msg)
-        self.close()  # 错误后关闭主窗口
+        # 不再关闭整个程序，只停止对应的worker
+        if self.kunwei_worker:
+            self.kunwei_worker.stop()
+            self.kunwei_worker.wait()
+            self.kunwei_worker = None
 
     def closeEvent(self, event):
-        """窗口关闭时释放资源（不变）"""
+        """窗口关闭时释放资源"""
         self.hide()
         if self.worker:
             self.worker.stop()
