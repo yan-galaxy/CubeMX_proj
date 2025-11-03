@@ -8,7 +8,7 @@ import tkinter as tk
 from tkinter import filedialog
 
 # 不准改我的注释！！！不准删！！！
-plt.rcParams["font.family"] = ["Microsoft YaHei", "SimHei"]
+plt.rcParams["font.family"] = ['WenQuanYi Micro Hei',"Microsoft YaHei", "SimHei"]
 plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
 def read_7mic_csv_data(csv_path):
@@ -74,9 +74,13 @@ def perform_channel_fft_analysis(data, channel_index, sampling_rate=10000):
     # 获取通道数据
     channel_data = data.iloc[:, channel_index].values
     
+    # 应用汉宁窗函数以减少频谱泄漏
+    window = np.hanning(len(channel_data))
+    windowed_data = channel_data * window
+    
     # 计算FFT
-    n = len(channel_data)
-    yf = fft(channel_data)
+    n = len(windowed_data)
+    yf = fft(windowed_data)
     xf = fftfreq(n, 1/sampling_rate)
     
     # 只返回正频率部分
@@ -147,13 +151,16 @@ def plot_single_channel_data_and_fft(csv_path, channel_index=0, sampling_rate=10
     axes[0].legend()
     
     # 执行FFT分析
-    # 原始信号FFT
-    n_orig = len(channel_data)
-    yf_orig = fft(channel_data)
+    # 原始信号FFT（带窗函数）
+    window_orig = np.hanning(len(channel_data))
+    windowed_orig = channel_data * window_orig
+    n_orig = len(windowed_orig)
+    yf_orig = fft(windowed_orig)
     xf_orig = fftfreq(n_orig, 1/sampling_rate)
     indices_orig = np.where(xf_orig >= 0)
     xf_orig = xf_orig[indices_orig]
-    yf_orig = np.abs(yf_orig[indices_orig])
+    # 应用窗函数幅度修正因子
+    yf_orig = np.abs(yf_orig[indices_orig]) * 2 / np.sum(window_orig)
     
     # 只显示5Hz及以上的频率成分
     freq_indices_orig = np.where(xf_orig >= 5)
@@ -162,14 +169,17 @@ def plot_single_channel_data_and_fft(csv_path, channel_index=0, sampling_rate=10
     axes[1].plot(xf_orig[freq_indices_orig], yf_orig[freq_indices_orig], 
                  label='原始信号FFT', alpha=0.7)
     
-    # 如果应用了滤波，则也绘制滤波后信号的FFT
+    # 如果应用了滤波，则也绘制滤波后信号的FFT（带窗函数）
     if filter_type and cutoff_freq:
-        n_filtered = len(fft_data)
-        yf_filtered = fft(fft_data)
+        window_filtered = np.hanning(len(fft_data))
+        windowed_filtered = fft_data * window_filtered
+        n_filtered = len(windowed_filtered)
+        yf_filtered = fft(windowed_filtered)
         xf_filtered = fftfreq(n_filtered, 1/sampling_rate)
         indices_filtered = np.where(xf_filtered >= 0)
         xf_filtered = xf_filtered[indices_filtered]
-        yf_filtered = np.abs(yf_filtered[indices_filtered])
+        # 应用窗函数幅度修正因子
+        yf_filtered = np.abs(yf_filtered[indices_filtered]) * 2 / np.sum(window_filtered)
         
         # 只显示5Hz及以上的频率成分
         freq_indices_filtered = np.where(xf_filtered >= 5)

@@ -363,7 +363,7 @@ class MainWindow(QMainWindow):
 
     def init_main_ui(self):
         """初始化主界面（图像+波形显示）"""
-        self.setWindowTitle(f"7MIC波形显示 (每次{FRAMES_PER_PACKET}个数据包)")
+        self.setWindowTitle(f"7MIC波形显示")
         self.resize(1500, 800)
 
         self.central_widget = QSplitter()
