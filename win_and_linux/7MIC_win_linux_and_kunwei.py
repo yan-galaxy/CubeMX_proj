@@ -302,7 +302,7 @@ class KunweiSerialWorker(QThread):
         
         # CSV数据保存相关
         self.save_data = save_data
-        self.csv_filename = f"Routine_acq_raw_data_8x8/kunwei_data_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        self.csv_filename = f"7MIC_raw_data/kunwei_data_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
         self.csv_file = None
         self.csv_writer = None
         
