@@ -133,22 +133,22 @@ void StartDefaultTask(void const * argument)
 	HAL_GPIO_WritePin(SEL10_GPIO_Port,SEL10_Pin,1);
 	
 	//灵敏配置：35 200 
-	//灵敏极限：50 255 （测到最小电阻为9.8kΩ）
-	//量程大配置：5 50
+	//灵敏极限：50 255 （测到最小电阻为9.8kΩ） 150 255
+	//量程大配置：5 50  （8x8标定用的这个，量程大）
 	
-	AD5206_SetResistance(1,4,5);//Rref  5-0.360V   10-0.576V   25-1.097V    35-1.357V   45-1.552V   50-1.633   55-1.710V   65-1.845V   75-1.957V
+	AD5206_SetResistance(1,4,35);//Rref  5-0.360V   10-0.576V   25-1.097V    35-1.357V   45-1.552V   50-1.633   55-1.710V   65-1.845V   75-1.957V
 	
 	//50 200
-	AD5206_SetResistance(1,5,50);//OUT1
-	AD5206_SetResistance(0,4,50);//OUT2
-	AD5206_SetResistance(1,2,50);//OUT3 50-1.95kΩ 100-3.85kΩ
-	AD5206_SetResistance(1,0,50);//OUT4
-	AD5206_SetResistance(1,3,50);//OUT5
-	AD5206_SetResistance(1,1,50);//OUT6
-	AD5206_SetResistance(0,0,50);//OUT7
-	AD5206_SetResistance(0,2,50);//OUT8
-	AD5206_SetResistance(0,1,50);//OUT9
-	AD5206_SetResistance(0,3,50);//OUT10
+	AD5206_SetResistance(1,5,200);//OUT1
+	AD5206_SetResistance(0,4,200);//OUT2
+	AD5206_SetResistance(1,2,200);//OUT3 50-1.95kΩ 100-3.85kΩ
+	AD5206_SetResistance(1,0,200);//OUT4
+	AD5206_SetResistance(1,3,200);//OUT5
+	AD5206_SetResistance(1,1,200);//OUT6
+	AD5206_SetResistance(0,0,200);//OUT7
+	AD5206_SetResistance(0,2,200);//OUT8
+	AD5206_SetResistance(0,1,200);//OUT9
+	AD5206_SetResistance(0,3,200);//OUT10
 	
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)(&(adc_value_struct.IN2)), 5);
 	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)(&(adc_value_struct.IN1)), 5);
