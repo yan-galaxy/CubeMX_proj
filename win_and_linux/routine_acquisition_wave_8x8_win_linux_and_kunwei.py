@@ -26,7 +26,7 @@ class SerialWorker(QThread):
     waveform_ready = pyqtSignal(list)  # 用于波形更新
     error_signal = pyqtSignal(str)  # 串口错误信号（跨平台错误提示）
 
-    def __init__(self, port, save_data=True, normalization_low=0, normalization_high=2000):
+    def __init__(self, port, save_data=True, normalization_low=0, normalization_high=700):
         super().__init__()
         self.port = port  # 外部传入选择的串口（不再硬编码）
         self.baudrate = 460800
