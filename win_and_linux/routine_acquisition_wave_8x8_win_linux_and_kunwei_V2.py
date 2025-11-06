@@ -22,10 +22,10 @@ import time
 # 数据保存选项的宏定义
 SAVE_DATA_DEFAULT = False  # 默认保存数据
 
-# 滤波参数默认值（新增）
+# 滤波参数默认值
 DEFAULT_FS = 100.0  # 默认采样率100Hz
 DEFAULT_LOW_CUTOFF = 40.0  # 默认低通截止频率10Hz
-DEFAULT_FILTER_ORDER = 2  # 默认滤波器阶数
+DEFAULT_FILTER_ORDER = 4  # 默认滤波器阶数
 
 
 
@@ -281,6 +281,8 @@ class SerialWorker(QThread):
                                         normalized_result = (clipped_result - self.normalization_low) / (self.normalization_high - self.normalization_low)
                                         
                                         self.waveform_ready.emit(filtered_average.tolist())  # 发送滤波后的波形数据
+                                        # self.waveform_ready.emit(zeroed_results.tolist())  # 发送
+                                        
                                         self.data_ready.emit(normalized_result.tolist())  # 发送归一化后的图像数据
 
                                 self.buffer = self.buffer[end_index + len(self.FRAME_TAIL):]
@@ -613,7 +615,7 @@ class KunweiWaveformVisualizer:
         self.plot_widget = pg.PlotWidget()
         self.plot = self.plot_widget.getPlotItem()
         # 根据默认模式设置标题
-        self.plot.setTitle("坤维传感器 - Fx/Fy/Fz/Mx/My/Mz (滤波后)")  # 新增：标注滤波后
+        self.plot.setTitle("坤维传感器 - Fx/Fy/Fz/Mx/My/Mz")  # 新增：标注滤波后
         self.plot.setLabels(left='力/力矩值', bottom='帧编号')
         self.plot.showGrid(x=True, y=True)
         self.plot.setYRange(-20, 20)  # 可根据实际硬件调整
@@ -698,7 +700,7 @@ class RoutineWaveformVisualizer:
         # 创建绘图区域
         self.plot_widget = pg.PlotWidget()
         self.plot = self.plot_widget.getPlotItem()
-        self.plot.setTitle(f"组 {self.selected_group+1} (Row {(self.selected_group//4)+1} Col {(self.selected_group%4)+1}) (滤波后)")  # 新增：标注滤波后
+        self.plot.setTitle(f"组 {self.selected_group+1} (Row {(self.selected_group//4)+1} Col {(self.selected_group%4)+1})")  # 新增：标注滤波后
         self.plot.setLabels(left='数值', bottom='帧编号')
         self.plot.showGrid(x=True, y=True)
         self.plot.setYRange(-1.0, 4095.0)
@@ -776,7 +778,7 @@ class RoutineWaveformVisualizer:
         self.selected_group = index
         row = (self.selected_group // 4) + 1
         col = (self.selected_group % 4) + 1
-        self.plot.setTitle(f"组 {self.selected_group+1} (Row {row} Col {col}) (滤波后)")  # 新增：标注滤波后
+        self.plot.setTitle(f"组 {self.selected_group+1} (Row {row} Col {col})")  # 新增：标注滤波后
 
     def update_plot(self, new_row):
         if len(new_row) == 64:
@@ -808,7 +810,7 @@ class RoutineWaveformVisualizer:
             
             row = (self.selected_group // 4) + 1
             col = (self.selected_group % 4) + 1
-            self.plot.setTitle(f"组 {self.selected_group+1} (Row {row} Col {col}) (滤波后)")
+            self.plot.setTitle(f"组 {self.selected_group+1} (Row {row} Col {col})")
 
 
 class MatrixVisualizer:
@@ -824,7 +826,7 @@ class MatrixVisualizer:
         self.current_data = np.zeros((8, 8))
 
         self.image_item = pg.ImageItem()
-        self.plot = pg.PlotItem(title="8x8传感器数据矩阵 (滤波后)")  # 新增：标注滤波后
+        self.plot = pg.PlotItem(title="8x8传感器数据矩阵")
         self.plot.addItem(self.image_item)
         self.plot.setLabels(left='Y轴', bottom='X轴')
         self.layout.addItem(self.plot, 0, 0, 1, 2)
