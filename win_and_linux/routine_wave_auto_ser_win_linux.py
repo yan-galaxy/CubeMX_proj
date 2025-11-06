@@ -58,12 +58,12 @@ class SerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 用于图像更新
     waveform_ready = pyqtSignal(list)  # 用于波形更新
     error_signal = pyqtSignal(str)  # 串口错误信号（跨平台错误提示）
-    replay_finished = pyqtSignal()  # 新增：回放完成信号
+    replay_finished = pyqtSignal()  # 回放完成信号
 
     def __init__(self, port=None, save_data=True, normalization_low=0, normalization_high=700, csv_path=None):
         super().__init__()
         self.port = port
-        self.csv_path = csv_path  # 新增：CSV文件路径（回放用）
+        self.csv_path = csv_path  # CSV文件路径（回放用）
         self.baudrate = 460800
         self.ser = None
         self.running = False
@@ -605,7 +605,7 @@ class MatrixVisualizer:
             self.runtime_label.setText(f"运行时间: {minutes:02d}:{seconds:02d}")
 
 
-# 11. 串口选择对话框（新增数据回放按钮）
+# 11. 串口选择对话框
 class SerialSelectionDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -613,8 +613,8 @@ class SerialSelectionDialog(QDialog):
         self.setFixedSize(500, 350)  # 增加高度容纳新按钮
         self.selected_port = None
         self.save_data = SAVE_DATA_DEFAULT
-        self.is_replay = False  # 新增：标记是否选择回放
-        self.selected_csv = None  # 新增：选中的CSV文件路径
+        self.is_replay = False  # 标记是否选择回放
+        self.selected_csv = None  # 选中的CSV文件路径
 
         self.setStyleSheet("""
             /* 窗口：圆角+轻微阴影，背景用柔和浅灰 */
@@ -718,7 +718,7 @@ class SerialSelectionDialog(QDialog):
         self.button_layout = QVBoxLayout()
         self.confirm_btn = QPushButton("确认选择（实时采集）")
         self.cancel_btn = QPushButton("取消")
-        # 新增：数据回放按钮（带间距）
+        # 数据回放按钮（带间距）
         self.replay_spacer = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.replay_btn = QPushButton("数据回放（选择CSV文件）")
         self.replay_btn.setObjectName("ReplayBtn")  # 用于样式区分
