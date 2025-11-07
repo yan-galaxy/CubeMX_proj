@@ -2,6 +2,7 @@ import sys
 import numpy as np
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QSplitter, QDialog, 
                              QVBoxLayout, QHBoxLayout, QComboBox, QPushButton, QMessageBox, QWidget, QLabel, QCheckBox)
+from PyQt5.QtCore import QTimer  # 添加QTimer导入
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore
 import serial
@@ -61,7 +62,12 @@ class SerialSelectionDialog(QDialog):
         # 6. 加载可用串口（跨平台）
         self.load_available_ports()
 
-        # 7. 按钮布局（确认/取消）
+        # 7. 添加定时器用于实时检测串口变化
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.check_for_port_changes)
+        self.timer.start(200)  # 每200ms检查一次串口变化
+
+        # 8. 按钮布局（确认/取消）
         self.button_layout = QHBoxLayout()
         self.confirm_btn = QPushButton("确认选择")
         self.cancel_btn = QPushButton("取消")
@@ -69,7 +75,7 @@ class SerialSelectionDialog(QDialog):
         self.button_layout.addWidget(self.cancel_btn)
         self.layout.addLayout(self.button_layout)
 
-        # 8. 按钮信号连接
+        # 9. 按钮信号连接
         self.confirm_btn.clicked.connect(self.on_confirm)
         self.cancel_btn.clicked.connect(self.reject)
 
@@ -95,12 +101,94 @@ class SerialSelectionDialog(QDialog):
             self.mic_port_combo.addItem(port_info, port.device)  # 存储真实端口名（如COM3）作为用户数据
             self.kunwei_port_combo.addItem(port_info, port.device)
 
-        # 默认选择第一个串口
+        # 默认选择第一个串口作为7MIC
         if self.mic_port_combo.count() > 0:
             self.mic_port_combo.setCurrentIndex(1 if self.mic_port_combo.count() >= 1 else 0)
-        if self.kunwei_port_combo.count() > 1:
-            self.kunwei_port_combo.setCurrentIndex(1)
-        elif self.kunwei_port_combo.count() > 0:
+            
+        # 默认选择坤维传感器的端口为与7MIC不同的第一个可用端口，如果没有则选择"None"
+        self.update_kunwei_selection()
+
+        # 连接信号以在7MIC端口更改时更新坤维端口的选择
+        self.mic_port_combo.currentIndexChanged.connect(self.update_kunwei_selection)
+
+    
+    def check_for_port_changes(self):
+        """检查串口变化并更新下拉列表"""
+        current_ports = list(list_ports.comports())
+        current_mic_port = self.mic_port_combo.currentData()
+        current_kunwei_port = self.kunwei_port_combo.currentData()
+        
+        # 获取当前系统中的所有端口名称
+        current_port_names = [port.device for port in current_ports]
+        
+        # 检查是否有端口被移除
+        ports_removed = False
+        ports_added = False
+        
+        # 检查7MIC端口是否被移除
+        if current_mic_port and current_mic_port != "None" and current_mic_port not in current_port_names:
+            ports_removed = True
+            
+        # 检查坤维端口是否被移除
+        if current_kunwei_port and current_kunwei_port != "None" and current_kunwei_port not in current_port_names:
+            ports_removed = True
+            
+        # 检查是否有新端口加入
+        mic_items = []
+        kunwei_items = []
+        for i in range(1, self.mic_port_combo.count()):  # 跳过"None"选项
+            mic_items.append(self.mic_port_combo.itemData(i))
+        for i in range(1, self.kunwei_port_combo.count()):  # 跳过"None"选项
+            kunwei_items.append(self.kunwei_port_combo.itemData(i))
+            
+        for port in current_ports:
+            if port.device not in mic_items:
+                ports_added = True
+                break
+        
+        # 如果有端口被移除或添加，更新下拉列表
+        if ports_removed or ports_added:
+            # 保存当前选择
+            saved_mic_port = current_mic_port
+            saved_kunwei_port = current_kunwei_port
+            
+            # 重新加载端口列表
+            self.load_available_ports()
+            
+            # 尝试恢复之前的选择
+            self.restore_port_selection(saved_mic_port, saved_kunwei_port)
+
+    def restore_port_selection(self, mic_port, kunwei_port):
+        """恢复之前的端口选择"""
+        # 恢复7MIC端口选择
+        for i in range(self.mic_port_combo.count()):
+            if self.mic_port_combo.itemData(i) == mic_port:
+                self.mic_port_combo.setCurrentIndex(i)
+                break
+        
+        # 恢复坤维端口选择
+        for i in range(self.kunwei_port_combo.count()):
+            if self.kunwei_port_combo.itemData(i) == kunwei_port:
+                self.kunwei_port_combo.setCurrentIndex(i)
+                break
+
+        # 确保两个设备不选择相同端口
+        self.update_kunwei_selection()
+
+    def update_kunwei_selection(self):
+        """根据7MIC的选择更新坤维传感器的默认选择"""
+        selected_7mic_port = self.mic_port_combo.currentData()
+        
+        # 查找第一个与7MIC端口不同的端口作为默认选择
+        kunwei_found = False
+        for i in range(1, self.kunwei_port_combo.count()):  # 从索引1开始，跳过"None"选项
+            if self.kunwei_port_combo.itemData(i) != selected_7mic_port:
+                self.kunwei_port_combo.setCurrentIndex(i)
+                kunwei_found = True
+                break
+        
+        # 如果没有找到不同的端口，则选择"None"
+        if not kunwei_found:
             self.kunwei_port_combo.setCurrentIndex(0)
 
     def on_confirm(self):
@@ -115,6 +203,11 @@ class SerialSelectionDialog(QDialog):
             return
             
         self.accept()  # 关闭对话框并返回QDialog.Accepted
+
+    def closeEvent(self, event):
+        """窗口关闭事件，停止定时器"""
+        self.timer.stop()
+        super().closeEvent(event)
 
 class MICSerialWorker(QThread):
     data_ready = pyqtSignal(list)  # 用于图像更新
@@ -141,7 +234,6 @@ class MICSerialWorker(QThread):
         self.raw_data_queue = Queue()
         self.writer_thread = None
         self.is_saving = False
-        self.data_buffer = []
         self.csv_file_path = ""  # 存储CSV文件路径，未保存时为空
         self.save_data = save_data  # 接收外部传入的保存选项
         
@@ -239,8 +331,6 @@ class MICSerialWorker(QThread):
                                     # 仅在开启保存时，将数据放入队列
                                     if self.save_data:
                                         self.raw_data_queue.put(parsed.copy())
-                                    # 收集数据到缓冲区（用于手动保存）
-                                    self.data_buffer.append(parsed.tolist())
 
                                     if self.matrix_flag == 0:
                                         self.matrix_init = parsed.copy()
@@ -439,18 +529,18 @@ class KunweiWaveformVisualizer:
         self.plot_widget = pg.PlotWidget()
         self.plot = self.plot_widget.getPlotItem()
         # 根据默认模式设置标题
-        self.plot.setTitle("坤维传感器 - Fx/Fy/Fz/Mx/My/Mz")
+        self.plot.setTitle("坤维传感器 - Fx/Fy/Fz")
         self.plot.setLabels(left='力/力矩值', bottom='帧编号')
         self.plot.showGrid(x=True, y=True)
         self.plot.setYRange(-20, 20)  # 可根据实际硬件调整
         self.main_layout.addWidget(self.plot_widget)
 
-        # 2. 为6个通道创建曲线
+        # 2. 为3个通道创建曲线（只显示Fx, Fy, Fz）
         self.curves = []
-        colors = ['r', 'g', 'c', 'y', 'b', 'm']  # 6通道颜色区分
-        channel_names = ['Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz']
-        for i in range(6):
-            curve = self.plot.plot(pen=colors[i], name=channel_names[i])
+        colors = ['r', 'g', 'c']  # 3通道颜色区分
+        channel_names = ['Fx', 'Fy', 'Fz']
+        for i in range(3):  # 只循环3次
+            curve = self.plot.plot(pen=pg.mkPen(colors[i], width=2), name=channel_names[i])
             self.curves.append(curve)
         
         # 批量更新配置（核心模式控制变量）
@@ -464,36 +554,39 @@ class KunweiWaveformVisualizer:
             self.buffer_length = self.buffer_time_100ms*10  # 总显示帧数（固定）
         else:
             self.buffer_length = self.buffer_time_100ms*100  # 总显示帧数（固定）
-        self.show_data = [[0.0] * self.buffer_length for _ in range(6)]  # 6通道数据
+        self.show_data = [[0.0] * self.buffer_length for _ in range(3)]  # 3通道数据（原来是6）
 
     def update_plot(self, new_data):
         """更新逻辑：通过use_average变量控制两种模式"""
         if len(new_data) != 6:
             return  # 数据格式错误直接返回
         
+        # 只使用前3个数据（Fx, Fy, Fz），忽略后3个（Mx, My, Mz）
+        fx_fy_fz_data = new_data[:3]
+        
         # 1. 积累原始帧数据
-        self.frame_buffer.append(new_data)
+        self.frame_buffer.append(fx_fy_fz_data)
         
         # 2. 当积累满10帧时处理
         if len(self.frame_buffer) == self.update_batch_size:
-            frame_array = np.array(self.frame_buffer, dtype=np.float32)  # 形状：(10,6)
+            frame_array = np.array(self.frame_buffer, dtype=np.float32)  # 形状：(10,3)
             
             # 3. 根据模式处理数据
             if self.use_average:
                 # 模式1：10帧→1个平均值，更新1帧（无阶梯）
-                avg_values = np.mean(frame_array, axis=0)  # 形状：(6,)
+                avg_values = np.mean(frame_array, axis=0)  # 形状：(3,)
                 # 每个通道移除1帧旧数据，添加1帧平均值
-                for i in range(6):
+                for i in range(3):  # 只处理3个通道
                     self.show_data[i] = self.show_data[i][1:] + [avg_values[i]]
             else:
                 # 模式2：直接使用10帧真实数据，更新10帧（保留细节）
-                batch_data = frame_array.T  # 转置为(6,10)
+                batch_data = frame_array.T  # 转置为(3,10)
                 # 每个通道移除10帧旧数据，添加10帧新数据
-                for i in range(6):
+                for i in range(3):  # 只处理3个通道
                     self.show_data[i] = self.show_data[i][self.update_batch_size:] + batch_data[i].tolist()
             
             # 4. 刷新所有通道曲线
-            for i in range(6):
+            for i in range(3):  # 只更新3个曲线
                 x_data = np.arange(len(self.show_data[i]))
                 y_data = np.array(self.show_data[i])
                 self.curves[i].setData(x_data, y_data)
@@ -501,7 +594,63 @@ class KunweiWaveformVisualizer:
             # 5. 清空缓冲区，准备下一批数据
             self.frame_buffer = []
 
-# ---------------------- 7MIC波形可视化类 ----------------------
+# # ---------------------- 7MIC波形可视化类 ----------------------
+# class MultiChannelWaveformVisualizer:
+#     def __init__(self, widget):
+#         self.layout = widget.addLayout()
+#         self.plots = []
+#         self.curves = []
+#         self.show_data = []
+        
+#         # 定义每个麦克风的位置 (行, 列)
+#         positions = [
+#             (0, 0),  # MIC 1
+#             (1, 0),  # MIC 2
+#             (2, 0),  # MIC 3
+#             (1, 1),  # MIC 4
+#             (2, 2),  # MIC 5
+#             (1, 2),  # MIC 6
+#             (0, 2),  # MIC 7
+#         ]
+    
+#         # 为7个麦克风创建独立的波形显示
+#         for i in range(7):
+#             plot = pg.PlotItem(title=f"MIC {i+1}")
+#             plot.setLabels(left='数值', bottom='帧编号')
+#             plot.showGrid(x=True, y=True)
+#             plot.setYRange(0, 4095)
+            
+#             # 使用更粗的线条，宽度为2
+#             curve = plot.plot(pen=pg.mkPen(pg.intColor(i), width=1.0))  # 使用不同颜色区分，线条更粗
+#             # 显示点数根据帧数动态调整
+#             show_data = [0] * FRAMES_PER_PACKET * 10  # 显示FRAMES_PER_PACKET*10个点
+            
+#             self.plots.append(plot)
+#             self.curves.append(curve)
+#             self.show_data.append(show_data)
+            
+#             # 使用预定义的位置
+#             row, col = positions[i]
+#             self.layout.addItem(plot, row, col)
+
+#     def update_plot(self, new_row):
+#         # 检查数据长度是否符合预期
+#         expected_length = FRAMES_PER_PACKET * 7
+#         if len(new_row) == expected_length:
+#             # 每个麦克风的数据点数根据帧数动态计算
+#             points_per_channel = FRAMES_PER_PACKET
+#             for mic in range(7):
+#                 mic_data = new_row[mic*points_per_channel:(mic+1)*points_per_channel]
+                
+#                 # 更新显示数据
+#                 self.show_data[mic] = self.show_data[mic][len(mic_data):] + mic_data
+                
+#                 # 更新图形
+#                 x_data = np.arange(len(self.show_data[mic]))
+#                 y_data = np.array(self.show_data[mic])
+#                 self.curves[mic].setData(x_data, y_data)
+
+# ---------------------- 暂时只显示MIC4波形可视化类 ----------------------
 class MultiChannelWaveformVisualizer:
     def __init__(self, widget):
         self.layout = widget.addLayout()
@@ -511,50 +660,53 @@ class MultiChannelWaveformVisualizer:
         
         # 定义每个麦克风的位置 (行, 列)
         positions = [
-            (0, 0),  # MIC 1
-            (1, 0),  # MIC 2
-            (2, 0),  # MIC 3
+            # (0, 0),  # MIC 1
+            # (1, 0),  # MIC 2
+            # (2, 0),  # MIC 3
             (1, 1),  # MIC 4
-            (2, 2),  # MIC 5
-            (1, 2),  # MIC 6
-            (0, 2),  # MIC 7
+            # (2, 2),  # MIC 5
+            # (1, 2),  # MIC 6
+            # (0, 2),  # MIC 7
         ]
     
         # 为7个麦克风创建独立的波形显示
-        for i in range(7):
-            plot = pg.PlotItem(title=f"MIC {i+1}")
-            plot.setLabels(left='数值', bottom='帧编号')
-            plot.showGrid(x=True, y=True)
-            plot.setYRange(0, 4095)
-            
-            curve = plot.plot(pen=pg.intColor(i))  # 使用不同颜色区分
-            # 显示点数根据帧数动态调整
-            show_data = [0] * FRAMES_PER_PACKET * 10  # 显示FRAMES_PER_PACKET*10个点
-            
-            self.plots.append(plot)
-            self.curves.append(curve)
-            self.show_data.append(show_data)
-            
-            # 使用预定义的位置
-            row, col = positions[i]
-            self.layout.addItem(plot, row, col)
+        # 只显示MIC4
+        i = 3  # MIC4的索引是3 (0-based)
+        plot = pg.PlotItem(title=f"MIC {i+1}")
+        plot.setLabels(left='数值', bottom='帧编号')
+        plot.showGrid(x=True, y=True)
+        plot.setYRange(0, 4095)
+        
+        # 使用更粗的线条，宽度为2
+        curve = plot.plot(pen=pg.mkPen(pg.intColor(i), width=1.0))  # 使用不同颜色区分，线条更粗
+        # 显示点数根据帧数动态调整
+        show_data = [0] * FRAMES_PER_PACKET * 10*5  # 显示FRAMES_PER_PACKET*10个点
+        
+        self.plots.append(plot)
+        self.curves.append(curve)
+        self.show_data.append(show_data)
+        
+        # 使用预定义的位置
+        row, col = positions[0]  # MIC4的位置
+        self.layout.addItem(plot, row, col)
 
     def update_plot(self, new_row):
         # 检查数据长度是否符合预期
         expected_length = FRAMES_PER_PACKET * 7
         if len(new_row) == expected_length:
-            # 每个麦克风的数据点数根据帧数动态计算
+            # 只更新MIC4的数据
+            i = 3  # MIC4的索引是3 (0-based)
             points_per_channel = FRAMES_PER_PACKET
-            for mic in range(7):
-                mic_data = new_row[mic*points_per_channel:(mic+1)*points_per_channel]
-                
-                # 更新显示数据
-                self.show_data[mic] = self.show_data[mic][len(mic_data):] + mic_data
-                
-                # 更新图形
-                x_data = np.arange(len(self.show_data[mic]))
-                y_data = np.array(self.show_data[mic])
-                self.curves[mic].setData(x_data, y_data)
+            mic_data = new_row[i*points_per_channel:(i+1)*points_per_channel]
+            
+            # 更新显示数据
+            self.show_data[0] = self.show_data[0][len(mic_data):] + mic_data  # 只有一个元素在show_data中
+            
+            # 更新图形
+            x_data = np.arange(len(self.show_data[0]))
+            y_data = np.array(self.show_data[0])
+            self.curves[0].setData(x_data, y_data)  # 只更新第一个曲线
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
