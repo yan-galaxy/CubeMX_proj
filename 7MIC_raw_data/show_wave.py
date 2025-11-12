@@ -66,7 +66,7 @@ mic4_data = np.concatenate(mic4_data_list).astype(np.float32)  # 转换为float3
 # 对MIC4数据进行高通滤波
 # 采样率: 10kHz，截止频率: 1Hz
 fs_mic = 10000  # 采样率
-cutoff_mic = 1  # 截止频率
+cutoff_mic = 5  # 截止频率
 nyquist_mic = 0.5 * fs_mic
 normal_cutoff_mic = cutoff_mic / nyquist_mic
 # 设计4阶贝塞尔高通滤波器
