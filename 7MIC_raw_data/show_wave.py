@@ -4,12 +4,15 @@ import pandas as pd
 from scipy import signal
 
 # 读取数据文件
-kunwei_data_file = r"c:\Users\galaxy\Desktop\CubeMX_proj\7MIC_raw_data\large_file\kunwei_data_20251107_173727_标定循环压_速度10000_一次性_z轴步进10_200-10_增加间隔激励.csv"
-mic_data_file = r"c:\Users\galaxy\Desktop\CubeMX_proj\7MIC_raw_data\large_file\mic_20251107_173727_标定循环压_速度10000_一次性_z轴步进10_200-10_增加间隔激励.csv"
+kunwei_data_file = "7MIC_raw_data/large_file/kunwei_data_20251107_173727_标定循环压_速度10000_一次性_z轴步进10_200-10_增加间隔激励.csv"
+mic_data_file = "7MIC_raw_data/large_file/mic_20251107_173727_标定循环压_速度10000_一次性_z轴步进10_200-10_增加间隔激励.csv"
 
-# 读取坤维传感器数据 (Fz是第三列，索引为2)
-kunwei_df = pd.read_csv(kunwei_data_file)
-fz_data = kunwei_df['Fz'].values
+# 分块读取坤维传感器数据并提取Fz列 (Fz是第三列，索引为2)
+chunk_size = 10000  # 每次读取10000行
+fz_data_list = []
+for chunk in pd.read_csv(kunwei_data_file, chunksize=chunk_size):
+    fz_data_list.append(chunk['Fz'].values)
+fz_data = np.concatenate(fz_data_list)
 
 # 对kunwei数据进行高通滤波
 # 采样率: 1000Hz，截止频率: 1Hz
@@ -22,9 +25,11 @@ b_kunwei, a_kunwei = signal.bessel(4, normal_cutoff_kunwei, btype='high', analog
 # 应用滤波器
 fz_filtered = signal.filtfilt(b_kunwei, a_kunwei, fz_data)
 
-# 读取MIC数据 (MIC4是第四列，索引为3)
-mic_df = pd.read_csv(mic_data_file)
-mic4_data = mic_df['MIC4'].values.astype(np.float32)  # 转换为float32
+# 分块读取MIC数据并提取MIC4列 (MIC4是第四列，索引为3)
+mic4_data_list = []
+for chunk in pd.read_csv(mic_data_file, chunksize=chunk_size):
+    mic4_data_list.append(chunk['MIC4'].values)
+mic4_data = np.concatenate(mic4_data_list).astype(np.float32)  # 转换为float32
 
 # 对MIC4数据进行高通滤波
 # 采样率: 10kHz，截止频率: 1Hz

@@ -59,9 +59,6 @@ class SerialSelectionDialog(QDialog):
         self.save_data_checkbox.setChecked(SAVE_DATA_DEFAULT)
         self.layout.addWidget(self.save_data_checkbox)
 
-        # 6. 加载可用串口（跨平台）
-        self.load_available_ports()
-
         # 7. 添加定时器用于实时检测串口变化
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.check_for_port_changes)
@@ -78,6 +75,9 @@ class SerialSelectionDialog(QDialog):
         # 9. 按钮信号连接
         self.confirm_btn.clicked.connect(self.on_confirm)
         self.cancel_btn.clicked.connect(self.reject)
+
+        # 6. 加载可用串口（跨平台）
+        self.load_available_ports()
 
     def load_available_ports(self):
         """加载当前系统所有可用串口（Windows: COMx / Ubuntu: /dev/ttyUSBx）"""
@@ -110,6 +110,10 @@ class SerialSelectionDialog(QDialog):
 
         # 连接信号以在7MIC端口更改时更新坤维端口的选择
         self.mic_port_combo.currentIndexChanged.connect(self.update_kunwei_selection)
+
+        # # 当有可用端口时，启用确认按钮
+        # self.confirm_btn.setEnabled(True)
+        self.confirm_btn.setEnabled(True)  # 禁用确认按钮
 
     
     def check_for_port_changes(self):
