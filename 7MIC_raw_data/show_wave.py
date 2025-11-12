@@ -78,48 +78,48 @@ mic4_filtered_high = signal.filtfilt(b_mic, a_mic, mic4_data)
 cutoff_mic_low = 750  # 低通截止频率
 nyquist_mic_low = 0.5 * fs_mic
 normal_cutoff_mic_low = cutoff_mic_low / nyquist_mic_low
-# 设计4阶贝塞尔低通滤波器
-b_mic_low, a_mic_low = signal.bessel(8, normal_cutoff_mic_low, btype='low', analog=False)
+# 设计8阶贝塞尔低通滤波器 (使用SOS格式提高数值稳定性)
+sos_mic_low = signal.bessel(8, normal_cutoff_mic_low, btype='low', analog=False, output='sos')
 # 应用滤波器
-mic4_filtered_low = signal.filtfilt(b_mic_low, a_mic_low, mic4_filtered_high)
+mic4_filtered_low = signal.sosfiltfilt(sos_mic_low, mic4_filtered_high)
 
 # 创建时间轴（以秒为单位）
 fz_time = np.arange(len(fz_data)) / fs_kunwei  # 转换为秒
 mic4_time = np.arange(len(mic4_data)) / fs_mic  # 转换为秒
 
-# 为了减少内存使用，对时间轴进行下采样
-downsample_factor = 100
-fz_time_ds = fz_time[::downsample_factor]
-mic4_time_ds = mic4_time[::downsample_factor]
+# # 为了减少内存使用，对时间轴进行下采样
+# downsample_factor = 100
+# fz_time_ds = fz_time[::downsample_factor]
+# mic4_time_ds = mic4_time[::downsample_factor]
 
 # 创建图形和子图
 fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(13, 7))
 fig.suptitle('Fz Force and MIC4 Data Waveform (Original and High-pass Filtered)', fontsize=16)
 
 # 绘制高通滤波后的Fz力数据波形
-line1, = ax1.plot(fz_time_ds, fz_filtered[::downsample_factor], 'b-', linewidth=0.8)
+line1, = ax1.plot(fz_time, fz_filtered, 'b-', linewidth=0.8)
 ax1.set_title('High-pass Filtered Fz Force Data')
 ax1.set_xlabel('Time (s)')
 ax1.set_ylabel('Fz (N)')
 ax1.grid(True)
 
 # 绘制原始MIC4数据波形
-line2, = ax2.plot(mic4_time_ds, mic4_data[::downsample_factor], 'r-', linewidth=0.8)
+line2, = ax2.plot(mic4_time, mic4_data, 'r-', linewidth=0.8)
 ax2.set_title('Original MIC4 Data')
 ax2.set_xlabel('Time (s)')
 ax2.set_ylabel('Amplitude')
 ax2.grid(True)
 
 # 绘制高通、低通滤波后的MIC4数据波形
-line3, = ax3.plot(mic4_time_ds, mic4_filtered_high[::downsample_factor], 'g-', linewidth=0.8)
+line3, = ax3.plot(mic4_time, mic4_filtered_high, 'g-', linewidth=0.8)
 ax3.set_title('High-pass Filtered MIC4 Data')
 ax3.set_xlabel('Time (s)')
 ax3.set_ylabel('Amplitude')
 ax3.grid(True)
 
 # 绘制高通、低通滤波后的MIC4数据波形
-# line5, = ax4.plot(mic4_time_ds, mic4_filtered_high[::downsample_factor], 'r-', linewidth=0.8) #低通滤波前对比
-line4, = ax4.plot(mic4_time_ds, mic4_filtered_low[::downsample_factor], 'c-', linewidth=0.8)
+# line5, = ax4.plot(mic4_time, mic4_filtered_high, 'r-', linewidth=0.8) #低通滤波前对比
+line4, = ax4.plot(mic4_time, mic4_filtered_low, 'c-', linewidth=0.8)
 ax4.set_title('High-pass and Low-pass Filtered MIC4 Data')
 ax4.set_xlabel('Time (s)')
 ax4.set_ylabel('Amplitude')
