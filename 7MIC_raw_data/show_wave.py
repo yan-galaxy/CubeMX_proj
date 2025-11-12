@@ -2,10 +2,42 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import signal
+import tkinter as tk
+from tkinter import filedialog
+import sys
 
-# 读取数据文件
-kunwei_data_file = "7MIC_raw_data/large_file/kunwei_data_20251107_173727_标定循环压_速度10000_一次性_z轴步进10_200-10_增加间隔激励.csv"
-mic_data_file = "7MIC_raw_data/large_file/mic_20251107_173727_标定循环压_速度10000_一次性_z轴步进10_200-10_增加间隔激励.csv"
+def select_files():
+    """通过可视化界面选择数据文件"""
+    # 创建一个隐藏的根窗口
+    root = tk.Tk()
+    root.withdraw()  # 隐藏主窗口
+    root.attributes('-topmost', True)  # 确保对话框在最前面
+
+    print("请选择坤维传感器数据文件 (kunwei_data_*.csv):")
+    kunwei_data_file = filedialog.askopenfilename(
+        title="选择坤维传感器数据文件",
+        filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
+    )
+    
+    if not kunwei_data_file:
+        print("未选择坤维传感器数据文件，程序退出。")
+        sys.exit()
+
+    print("请选择MIC数据文件 (mic_*.csv):")
+    mic_data_file = filedialog.askopenfilename(
+        title="选择MIC数据文件",
+        filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
+    )
+    
+    if not mic_data_file:
+        print("未选择MIC数据文件，程序退出。")
+        sys.exit()
+    
+    root.destroy()
+    return kunwei_data_file, mic_data_file
+
+# 通过可视化界面选择数据文件
+kunwei_data_file, mic_data_file = select_files()
 
 # 分块读取坤维传感器数据并提取Fz列 (Fz是第三列，索引为2)
 chunk_size = 10000  # 每次读取10000行
@@ -51,7 +83,6 @@ b_mic_low, a_mic_low = signal.bessel(8, normal_cutoff_mic_low, btype='low', anal
 # 应用滤波器
 mic4_filtered_low = signal.filtfilt(b_mic_low, a_mic_low, mic4_filtered_high)
 
-
 # 创建时间轴（以秒为单位）
 fz_time = np.arange(len(fz_data)) / fs_kunwei  # 转换为秒
 mic4_time = np.arange(len(mic4_data)) / fs_mic  # 转换为秒
@@ -64,13 +95,6 @@ mic4_time_ds = mic4_time[::downsample_factor]
 # 创建图形和子图
 fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(13, 7))
 fig.suptitle('Fz Force and MIC4 Data Waveform (Original and High-pass Filtered)', fontsize=16)
-
-# # 绘制原始Fz力数据波形
-# line1, = ax1.plot(fz_time_ds, fz_data[::downsample_factor], 'b-', linewidth=0.8)
-# ax1.set_title('Original Fz Force Data')
-# ax1.set_xlabel('Time (s)')
-# ax1.set_ylabel('Fz (N)')
-# ax1.grid(True)
 
 # 绘制高通滤波后的Fz力数据波形
 line1, = ax1.plot(fz_time_ds, fz_filtered[::downsample_factor], 'b-', linewidth=0.8)
