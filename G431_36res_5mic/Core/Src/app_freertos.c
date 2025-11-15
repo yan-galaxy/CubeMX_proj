@@ -75,6 +75,11 @@ const osThreadAttr_t micTask_attributes = {
   .priority = (osPriority_t) osPriorityAboveNormal1,
   .stack_size = 128 * 4
 };
+/* Definitions for usb_tx_BinarySem */
+osSemaphoreId_t usb_tx_BinarySemHandle;
+const osSemaphoreAttr_t usb_tx_BinarySem_attributes = {
+  .name = "usb_tx_BinarySem"
+};
 /* Definitions for adc_dma_Event */
 osEventFlagsId_t adc_dma_EventHandle;
 const osEventFlagsAttr_t adc_dma_Event_attributes = {
@@ -107,7 +112,14 @@ void MX_FREERTOS_Init(void) {
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
+  /* Create the semaphores(s) */
+  /* creation of usb_tx_BinarySem */
+  usb_tx_BinarySemHandle = osSemaphoreNew(1, 1, &usb_tx_BinarySem_attributes);
+
   /* USER CODE BEGIN RTOS_SEMAPHORES */
+	if (usb_tx_BinarySemHandle != NULL) {
+    osSemaphoreAcquire(usb_tx_BinarySemHandle, 0);  // 超时0，立即尝试获取
+  }
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
 
@@ -164,40 +176,19 @@ void MX_FREERTOS_Init(void) {
 
 Sample_total_Data_Union sample_buf[2];
 
-#define PACK_FRAME 100
-uint16_t mic_value[PACK_FRAME * 10];
+//#define PACK_FRAME 100
+uint16_t mic_value[1000];//500 * 2
 
-//volatile Word_union mic_data_1[PACK_FRAME*7+4];
-//volatile Word_union mic_data_2[PACK_FRAME*7+4];
 volatile Word_union* mic_send_p= sample_buf[0].mic_data;
 volatile Word_union* mic_store_p= sample_buf[1].mic_data;
 
 uint16_t res_value[36];
-//volatile Word_union res_data_1[364];
-//volatile Word_union res_data_2[364];
 volatile Word_union* res_send_p= sample_buf[0].res_data;
 volatile Word_union* res_store_p= sample_buf[1].res_data;
 
+uint8_t frame_head[4]={0x55,0xAA,0xBB,0xCC};
+uint8_t frame_tail[4]={0xAA,0x55,0x66,0x77};
 
-
-
-//电压采集完成之后需要进行缓存切换
-void exchange_mic_p(void)
-{
-	static uint8_t state=1;//第一次运行该函数前 采集的数据存到mic_data_2   第一次运行该函数后状态变为0，发送的指针指向mic_data_1  之后循环往复
-	state=!state;
-	
-	if(state)
-	{
-		mic_send_p=sample_buf[0].mic_data;
-		mic_store_p=sample_buf[1].mic_data;
-	}
-	else
-	{
-		mic_send_p=sample_buf[1].mic_data;
-		mic_store_p=sample_buf[0].mic_data;
-	}
-}
 //电压采集完成之后需要进行缓存切换
 void exchange_res_p(void)
 {
@@ -272,41 +263,24 @@ void ResTask(void *argument)
 	AD5206_SetResistance(0, 50);
 	AD5206_SetResistance(1, 50);
 	AD5206_SetResistance(2, 50);
-	AD5206_SetResistance(4, 50);//
+	AD5206_SetResistance(4, 50);//参考电压
 	AD5206_SetResistance(5, 50);
 	
 	
-	
-	sample_buf[0].res_data[0].byte[0] = 0x55;
-	sample_buf[0].res_data[0].byte[1] = 0xAA;
-	sample_buf[0].res_data[1].byte[0] = 0xBB;
-	sample_buf[0].res_data[1].byte[1] = 0xCC;
 	for(uint16_t i=0; i<360; i++) {
-		sample_buf[0].res_data[2+i].word16 = i*1 + 1;
+		sample_buf[0].res_data[i].word16 = i*1 + 1;
 	}
-	sample_buf[0].res_data[362].byte[0] = 0xAA;
-	sample_buf[0].res_data[362].byte[1] = 0x55;
-	sample_buf[0].res_data[363].byte[0] = 0x66;
-	sample_buf[0].res_data[363].byte[1] = 0x77;
-
-	// 初始化双缓存的压阻数据帧头/帧尾（缓存1）
-	sample_buf[1].res_data[0].byte[0] = 0x55;
-	sample_buf[1].res_data[0].byte[1] = 0xAA;
-	sample_buf[1].res_data[1].byte[0] = 0xBB;
-	sample_buf[1].res_data[1].byte[1] = 0xCC;
 	for(uint16_t i=0; i<360; i++) {
-		sample_buf[1].res_data[2+i].word16 = i*2 + 2;
+		sample_buf[1].res_data[i].word16 = i*2 + 2;
 	}
-	sample_buf[1].res_data[362].byte[0] = 0xAA;
-	sample_buf[1].res_data[362].byte[1] = 0x55;
-	sample_buf[1].res_data[363].byte[0] = 0x66;
-	sample_buf[1].res_data[363].byte[1] = 0x77;
 	
 	HAL_ADCEx_Calibration_Start(&hadc1,ADC_SINGLE_ENDED);
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)res_value, 4);
 	
 	TickType_t xLastWakeTime;
 	xLastWakeTime = xTaskGetTickCount();
+	
+	uint8_t USB_result = USBD_OK;
   /* Infinite loop */
 	for(;;)
 	{
@@ -315,18 +289,32 @@ void ResTask(void *argument)
 			for(uint8_t i=1;i<10;i++)
 			{
 				Select_switcher(i);
-				user_delaynus_tim(100);
-				res_store_p[j*36+(i-1)*4+0+2].word16=res_value[0];
-				res_store_p[j*36+(i-1)*4+1+2].word16=res_value[1];
-				res_store_p[j*36+(i-1)*4+2+2].word16=res_value[2];
-				res_store_p[j*36+(i-1)*4+3+2].word16=res_value[3];
-//				}
+				user_delaynus_tim(70);
+				res_store_p[j*36+(i-1)*4+0].word16=res_value[0];
+				res_store_p[j*36+(i-1)*4+1].word16=res_value[1];
+				res_store_p[j*36+(i-1)*4+2].word16=res_value[2];
+				res_store_p[j*36+(i-1)*4+3].word16=res_value[3];
 			}
-				vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(5));//osDelay(1);
+				vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(1));
 		}
-//		osDelay(100);
 		exchange_res_p();//切换缓存区
-		CDC_Transmit_FS(res_send_p->byte, 728);
+		
+		if (CDC_Transmit_FS(frame_head, 4) == USBD_OK)
+		{
+			// 等待发送完成（超时时间可根据需求设置）
+			osSemaphoreAcquire(usb_tx_BinarySemHandle, osWaitForever);  // 阻塞等待，CPU可调度其他任务
+		}
+		if (CDC_Transmit_FS(res_send_p->byte, 720) == USBD_OK)
+		{
+			// 等待发送完成（超时时间可根据需求设置）
+			osSemaphoreAcquire(usb_tx_BinarySemHandle, osWaitForever);  // 阻塞等待，CPU可调度其他任务
+		}
+		if (CDC_Transmit_FS(frame_tail, 4) == USBD_OK)
+		{
+			// 等待发送完成（超时时间可根据需求设置）
+			osSemaphoreAcquire(usb_tx_BinarySemHandle, osWaitForever);  // 阻塞等待，CPU可调度其他任务
+		}
+		
 	}
   /* USER CODE END ResTask */
 }
@@ -340,41 +328,17 @@ void ResTask(void *argument)
 /* USER CODE END Header_MicTask */
 void MicTask(void *argument)
 {
-  /* USER CODE BEGIN MicTask */
-	sample_buf[0].mic_data[0].byte[0] = 0x55;
-	sample_buf[0].mic_data[0].byte[1] = 0xAA;
-	sample_buf[0].mic_data[1].byte[0] = 0xBB;
-	sample_buf[0].mic_data[1].byte[1] = 0xCC;
-	for(uint16_t i=0; i<PACK_FRAME*7; i++) {
-		sample_buf[0].mic_data[2+i].word16 = i*1 + 1;
-	}
-	sample_buf[0].mic_data[PACK_FRAME*7 + 2].byte[0] = 0xAA;
-	sample_buf[0].mic_data[PACK_FRAME*7 + 2].byte[1] = 0x55;
-	sample_buf[0].mic_data[PACK_FRAME*7 + 3].byte[0] = 0x66;
-	sample_buf[0].mic_data[PACK_FRAME*7 + 3].byte[1] = 0x77;
-
-	// 初始化双缓存的mic数据帧头/帧尾（缓存1）
-	sample_buf[1].mic_data[0].byte[0] = 0x55;
-	sample_buf[1].mic_data[0].byte[1] = 0xAA;
-	sample_buf[1].mic_data[1].byte[0] = 0xBB;
-	sample_buf[1].mic_data[1].byte[1] = 0xCC;
-	for(uint16_t i=0; i<PACK_FRAME*7; i++) {
-		sample_buf[1].mic_data[2+i].word16 = i*2 + 2;
-	}
-	sample_buf[1].mic_data[PACK_FRAME*7 + 2].byte[0] = 0xAA;
-	sample_buf[1].mic_data[PACK_FRAME*7 + 2].byte[1] = 0x55;
-	sample_buf[1].mic_data[PACK_FRAME*7 + 3].byte[0] = 0x66;
-	sample_buf[1].mic_data[PACK_FRAME*7 + 3].byte[1] = 0x77;
-	
-	
-	
+  /* USER CODE BEGIN MicTask */	
 	HAL_TIM_Base_Start(&htim6);
 	HAL_ADCEx_Calibration_Start(&hadc2,ADC_SINGLE_ENDED);
-	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)mic_value, PACK_FRAME * 10);
+	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)mic_value, 1000);
 	
 	TickType_t xLastWakeTime;
 	xLastWakeTime = xTaskGetTickCount();
 	uint32_t ulReceivedEvents;          // 接收的事件标志
+	
+	uint8_t USB_result = USBD_OK;
+	uint16_t* send_mic_p=mic_value;
   /* Infinite loop */
 	for(;;)
 	{
@@ -388,33 +352,33 @@ void MicTask(void *argument)
 		
 		if (ulReceivedEvents & EVENT_MIC_DMA_HALF)//EVENT_ADC5_DMA_HALF  EVENT_ALL_HALF
 		{
-//			// 复制半满数据（0~99）
-//			  for(uint16_t i=0; i<PACK_FRAME; i++) {
-//				mic_store_p[FRAME_HEAD_CNT + i].word16 = mic_value[i*5];
-//				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*1 + i].word16 = mic_value[1+i*5];
-//				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*2 + i].word16 = mic_value[2+i*5];
-//				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*3 + i].word16 = mic_value[3+i*5];
-//				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*4 + i].word16 = mic_value[4+i*5];
-//			  }
+			  send_mic_p = mic_value;
 			  // 清除所有半满事件标志（避免重复处理）
 			osEventFlagsClear(adc_dma_EventHandle, EVENT_MIC_DMA_HALF);
 		}
 		else if (ulReceivedEvents & EVENT_MIC_DMA_FULL)//EVENT_ADC5_DMA_FULL  EVENT_ALL_FULL
 		{
-//			// 复制全满数据（100~199）
-//			  for(uint16_t i=0; i<PACK_FRAME; i++) {
-//				mic_store_p[FRAME_HEAD_CNT + i].word16 = mic_value[i*5+PACK_FRAME*5];
-//				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*1 + i].word16 = mic_value[1+i*5+PACK_FRAME*5];
-//				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*2 + i].word16 = mic_value[2+i*5+PACK_FRAME*5];
-//				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*3 + i].word16 = mic_value[3+i*5+PACK_FRAME*5];
-//				mic_store_p[FRAME_HEAD_CNT + PACK_FRAME*4 + i].word16 = mic_value[4+i*5+PACK_FRAME*5];
-//			  }
+			send_mic_p = mic_value+500;
 			  // 清除所有全满事件标志
 			osEventFlagsClear(adc_dma_EventHandle, EVENT_MIC_DMA_FULL);
-		}//PACK_FRAME为100时测试得整个赋值过程80us
+		}
 		
-		exchange_mic_p();//切换缓存区
-//		CDC_Transmit_FS((uint8_t *)mic_send_p->byte,(PACK_FRAME*7+4)*2);
+//		if (CDC_Transmit_FS(frame_head, 4) == USBD_OK)
+//		{
+//			// 等待发送完成（超时时间可根据需求设置）
+//			osSemaphoreAcquire(usb_tx_BinarySemHandle, osWaitForever);  // 阻塞等待，CPU可调度其他任务
+//		}
+//		if (CDC_Transmit_FS((uint8_t *)send_mic_p, 1000) == USBD_OK)
+//		{
+//			// 等待发送完成（超时时间可根据需求设置）
+//			osSemaphoreAcquire(usb_tx_BinarySemHandle, osWaitForever);  // 阻塞等待，CPU可调度其他任务
+//		}
+//		if (CDC_Transmit_FS(frame_tail, 4) == USBD_OK)
+//		{
+//			// 等待发送完成（超时时间可根据需求设置）
+//			osSemaphoreAcquire(usb_tx_BinarySemHandle, osWaitForever);  // 阻塞等待，CPU可调度其他任务
+//		}
+		
 	}
   /* USER CODE END MicTask */
 }

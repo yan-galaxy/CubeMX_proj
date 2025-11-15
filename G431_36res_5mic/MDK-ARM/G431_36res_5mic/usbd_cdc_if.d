@@ -48,3 +48,14 @@ g431_36res_5mic\usbd_cdc_if.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal
 g431_36res_5mic\usbd_cdc_if.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 g431_36res_5mic\usbd_cdc_if.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 g431_36res_5mic\usbd_cdc_if.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
+g431_36res_5mic\usbd_cdc_if.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+g431_36res_5mic\usbd_cdc_if.o: ../Core/Inc/FreeRTOSConfig.h
+g431_36res_5mic\usbd_cdc_if.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+g431_36res_5mic\usbd_cdc_if.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+g431_36res_5mic\usbd_cdc_if.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+g431_36res_5mic\usbd_cdc_if.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
+g431_36res_5mic\usbd_cdc_if.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+g431_36res_5mic\usbd_cdc_if.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+g431_36res_5mic\usbd_cdc_if.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+g431_36res_5mic\usbd_cdc_if.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
+g431_36res_5mic\usbd_cdc_if.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h

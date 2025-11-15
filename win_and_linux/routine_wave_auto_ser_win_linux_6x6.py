@@ -199,8 +199,8 @@ class SerialWorker(QThread):
                                 # 数据处理（归零、裁剪、归一化）
                                 if self.matrix_init is not None and self.filters_initialized:
                                     filtered_results = [self.filter_handlers[i].apply_low_pass(average[i]) for i in range(36)]
-                                    # zeroed_results = np.array(filtered_results) - self.matrix_init
-                                    zeroed_results = np.array(filtered_results)-2000
+                                    zeroed_results = np.array(filtered_results) - self.matrix_init
+                                    # zeroed_results = np.array(filtered_results)-2000
                                     clipped_result = np.clip(zeroed_results, self.normalization_low, self.normalization_high)
                                     normalized_result = (clipped_result - self.normalization_low) / (self.normalization_high - self.normalization_low)
 
@@ -586,11 +586,11 @@ class MatrixVisualizer:
             # 定义映射关系，将36个点重新排列成6x6矩阵
             mapping = [
                 [0,  1,  4,  5,  8,  9 ],
-                [2,  3,  6,  7,  10, 11],
+                [3,  2,  7,  6,  11, 10],
                 [12, 13, 16, 17, 20, 21],
-                [14, 15, 18, 19, 22, 23],
+                [15, 14, 19, 18, 23, 22],
                 [24, 25, 28, 29, 32, 33],
-                [26, 27, 30, 31, 34, 35]
+                [27, 26, 31, 30, 35, 34]
             ]
             
             # 根据映射关系创建6x6矩阵

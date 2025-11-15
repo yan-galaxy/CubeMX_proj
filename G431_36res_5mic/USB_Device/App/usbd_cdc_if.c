@@ -22,7 +22,9 @@
 #include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN INCLUDE */
-
+#include "FreeRTOS.h"
+#include "task.h"
+#include "cmsis_os.h"
 /* USER CODE END INCLUDE */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -31,7 +33,7 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+extern osSemaphoreId_t usb_tx_BinarySemHandle;
 /* USER CODE END PV */
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
@@ -311,6 +313,12 @@ static int8_t CDC_TransmitCplt_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum)
   UNUSED(Buf);
   UNUSED(Len);
   UNUSED(epnum);
+	
+	// 释放二值信号量，通知发送任务可以继续发送
+  if (usb_tx_BinarySemHandle != NULL)  // 检查信号量句柄有效性
+  {
+    osSemaphoreRelease(usb_tx_BinarySemHandle);  // 释放信号量
+  }
   /* USER CODE END 13 */
   return result;
 }

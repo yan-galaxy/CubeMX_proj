@@ -67,8 +67,8 @@ typedef union  {
 		uint8_t byte[2];       // 8bit   byte[0]:low_8bit   byte[1]:high_8bit     example:  word16=0x5678  byte[0]=0x78 byte[1]=0x56
 }Word_union;
 typedef struct {
-    Word_union mic_data[704];   // mic数据：704个uint16 → 704×2=1408字节
-    Word_union res_data[364];   // 压阻阵列数据：364个uint16 → 364×2=728字节
+    Word_union mic_data[500];   // mic数据：704个uint16 → 704×2=1408字节
+    Word_union res_data[360];   // 压阻阵列数据：364个uint16 → 364×2=728字节
 } Sample_total_Data_Union;
 /* USER CODE END EM */
 
