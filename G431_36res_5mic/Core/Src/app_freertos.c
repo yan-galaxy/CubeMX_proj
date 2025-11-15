@@ -189,6 +189,22 @@ volatile Word_union* res_store_p= sample_buf[1].res_data;
 uint8_t frame_head[4]={0x55,0xAA,0xBB,0xCC};
 uint8_t frame_tail[4]={0xAA,0x55,0x66,0x77};
 
+// 模拟开关控制值表（对应index 1~9，最后补0xFFFB循环触发）
+const uint16_t switch_odr_table[] = {
+  0xFFFB, // index 1：PB2=0
+  0xFFFD, // index 2：PB1=0
+  0xFFFE, // index 3：PB0=0
+  0xFFDF, // index 4：PB5=0
+  0xFFEF, // index 5：PB4=0
+  0xFFF7, // index 6：PB3=0
+  0xFDFF, // index 7：PB9=0
+  0xFF7F, // index 8：PB7=0
+  0xFFBF  // index 9：PB6=0
+};
+#define SWITCH_CNT 9 // 模拟开关数量
+#define SWITCH_TABLE_LEN (SWITCH_CNT)
+
+
 //电压采集完成之后需要进行缓存切换
 void exchange_res_p(void)
 {
@@ -286,7 +302,7 @@ void ResTask(void *argument)
 	{
 		for(uint8_t j=0;j<10;j++)//10帧发送一次
 		{
-			for(uint8_t i=1;i<10;i++)
+			for(uint8_t i=1;i<10;i++)//修改为定时器PWM模式 计数频率100kHz，周期10KHz，CNT与CC1=0相等时DMA控制GPIO_ODR控制模拟开关，然后CNT与CC2=1相等时(相当于延时10us)开启ADC-DMA转换
 			{
 				Select_switcher(i);
 				user_delaynus_tim(70);
@@ -328,7 +344,7 @@ void ResTask(void *argument)
 /* USER CODE END Header_MicTask */
 void MicTask(void *argument)
 {
-  /* USER CODE BEGIN MicTask */	
+  /* USER CODE BEGIN MicTask */
 	HAL_TIM_Base_Start(&htim6);
 	HAL_ADCEx_Calibration_Start(&hadc2,ADC_SINGLE_ENDED);
 	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)mic_value, 1000);

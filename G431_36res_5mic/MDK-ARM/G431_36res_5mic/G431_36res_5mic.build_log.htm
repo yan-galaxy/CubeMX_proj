@@ -27,26 +27,13 @@ Project File Date:  11/15/2025
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\software\study\keil\ARM\ARMCC\Bin'
 Build target 'G431_36res_5mic'
-compiling app_freertos.c...
-../Core/Src/app_freertos.c(324): warning:  #167-D: argument of type "volatile uint8_t *" is incompatible with parameter of type "uint8_t *"
-  		if (CDC_Transmit_FS(res_send_p->byte, 720) == USBD_OK)
-../Core/Src/app_freertos.c(300): warning:  #177-D: variable "USB_result"  was declared but never referenced
-  	uint8_t USB_result = USBD_OK;
-../Core/Src/app_freertos.c(353): warning:  #550-D: variable "xLastWakeTime"  was set but never used
-  	TickType_t xLastWakeTime;
-../Core/Src/app_freertos.c(357): warning:  #177-D: variable "USB_result"  was declared but never referenced
-  	uint8_t USB_result = USBD_OK;
-../Core/Src/app_freertos.c(358): warning:  #550-D: variable "send_mic_p"  was set but never used
-  	uint16_t* send_mic_p=mic_value;
-../Core/Src/app_freertos.c(426): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(CS_GPIO_Port,CS_Pin,0);
-../Core/Src/app_freertos.c(433): warning:  #188-D: enumerated type mixed with another type
-  	HAL_GPIO_WritePin(CS_GPIO_Port,CS_Pin,1);
-../Core/Src/app_freertos.c: 7 warnings, 0 errors
+assembling startup_stm32g431xx.s...
+compiling tim.c...
+compiling adc.c...
 linking...
-Program Size: Code=31608 RO-data=776 RW-data=580 ZI-data=23308  
+Program Size: Code=33220 RO-data=776 RW-data=572 ZI-data=23500  
 FromELF: creating hex file...
-"G431_36res_5mic\G431_36res_5mic.axf" - 0 Error(s), 7 Warning(s).
+"G431_36res_5mic\G431_36res_5mic.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -70,7 +57,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:06
+Build Time Elapsed:  00:00:11
 </pre>
 </body>
 </html>
