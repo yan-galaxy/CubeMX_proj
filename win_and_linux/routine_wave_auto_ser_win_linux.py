@@ -71,7 +71,7 @@ class SerialWorker(QThread):
         self.FRAME_HEADER = b'\x55\xAA\xBB\xCC'
         self.FRAME_TAIL = b'\xAA\x55\x66\x77'
         self.matrix_init = None  # 初始化矩阵（用于归零）
-        self.dead_value = 0  # 死点值
+        self.dead_value = 50  # 死点值
         self.normalization_low = normalization_low
         self.normalization_high = normalization_high
 
