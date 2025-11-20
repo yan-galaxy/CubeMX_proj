@@ -1,0 +1,72 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.36.0.0
+Copyright (C) 2021 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: 123 galaxy, 1231, LIC=CZLZX-HD6PP-KPQZY-ILCE5-JNC03-QWAMZ
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.36.0.0
+Toolchain Path:  C:\software\study\keil\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.36.0.0
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      CMSIS_AGDI.dll V1.33.0.0
+Dialog DLL:      TCM.DLL V1.53.0.0
+ 
+<h2>Project:</h2>
+C:\Users\galaxy\Desktop\CubeMX_proj\G431_36res_5mic_V2\MDK-ARM\G431_36res_5mic_V2.uvprojx
+Project File Date:  11/20/2025
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\software\study\keil\ARM\ARMCC\Bin'
+Build target 'G431_36res_5mic_V2'
+compiling app_freertos.c...
+../Core/Src/app_freertos.c(317): warning:  #550-D: variable "xLastWakeTime"  was set but never used
+  	TickType_t xLastWakeTime;
+../Core/Src/app_freertos.c(321): warning:  #177-D: variable "send_mic_p"  was declared but never referenced
+  	uint16_t* send_mic_p=mic_value;
+../Core/Src/app_freertos.c(323): warning:  #177-D: variable "USB_result"  was declared but never referenced
+  	uint8_t USB_result = USBD_OK;
+../Core/Src/app_freertos.c(485): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(CS_GPIO_Port,CS_Pin,0);
+../Core/Src/app_freertos.c(492): warning:  #188-D: enumerated type mixed with another type
+  	HAL_GPIO_WritePin(CS_GPIO_Port,CS_Pin,1);
+../Core/Src/app_freertos.c: 5 warnings, 0 errors
+linking...
+Program Size: Code=33224 RO-data=796 RW-data=572 ZI-data=25028  
+FromELF: creating hex file...
+"G431_36res_5mic_V2\G431_36res_5mic_V2.axf" - 0 Error(s), 5 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.8.0.pack
+                ARM.CMSIS.5.8.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.5.0
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32G4xx_DFP.1.6.0.pack
+                Keil.STM32G4xx_DFP.1.6.0
+                STMicroelectronics STM32G4 Series Device Support, Drivers and Examples
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_G431_36res_5mic_V2
+  C:\Users\galaxy\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include
+  C:\Users\galaxy\AppData\Local\Arm\Packs\Keil\STM32G4xx_DFP\1.6.0\Drivers\CMSIS\Device\ST\STM32G4xx\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:5.5.0
+      Include file:  CMSIS\Core\Include\tz_context.h
+Build Time Elapsed:  00:00:05
+</pre>
+</body>
+</html>

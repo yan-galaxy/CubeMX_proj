@@ -21,11 +21,11 @@ import csv
 # 数据保存选项的宏定义（同步）
 SAVE_DATA_DEFAULT = False  # 默认保存数据 True False
 # 归一化默认最高值
-NORMALIZATION_HIGH_VALUE = 1500
+NORMALIZATION_HIGH_VALUE = 1000
 # 插值密度默认值 (2-15)
 DEFAULT_ZOOM_FACTOR = 8
 # 高斯核默认值
-DEFAULT_GAUSSIAN_SIGMA = 0.0
+DEFAULT_GAUSSIAN_SIGMA = 3.0
 # 旋转角度默认值 (0, 90, 180, 270对应索引)
 DEFAULT_ROTATION_INDEX = 0  # 0度
 # 翻转默认值
@@ -90,7 +90,7 @@ class SerialWorker(QThread):
         self.is_saving = False
 
         # 滤波器功能
-        self.filter_handlers = {i: FilterHandler(fs=100.0, low_cutoff=40.0, order=8) for i in range(100)}
+        self.filter_handlers = {i: FilterHandler(fs=100.0, low_cutoff=10.0, order=8) for i in range(100)}
         self.filters_initialized = False
 
         # 初始化保存线程（仅当需要保存时）
@@ -861,7 +861,7 @@ class MainWindow(QMainWindow):
         # 初始化时传入插值密度和高斯核默认参数
         self.image_visualizer = MatrixVisualizer(
             self.image_layout, 
-            interplotation=False, 
+            interplotation=True, 
             rotation_angle=[0, 90, 180, 270][DEFAULT_ROTATION_INDEX], 
             flip_horizontal=DEFAULT_FLIP_HORIZONTAL, 
             flip_vertical=DEFAULT_FLIP_VERTICAL,
