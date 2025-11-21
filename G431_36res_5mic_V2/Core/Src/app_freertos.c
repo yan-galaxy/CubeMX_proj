@@ -61,18 +61,11 @@ const osThreadAttr_t ledTask_attributes = {
   .priority = (osPriority_t) osPriorityLow,
   .stack_size = 128 * 4
 };
-/* Definitions for resTask */
-osThreadId_t resTaskHandle;
-const osThreadAttr_t resTask_attributes = {
-  .name = "resTask",
+/* Definitions for res_mic_Task */
+osThreadId_t res_mic_TaskHandle;
+const osThreadAttr_t res_mic_Task_attributes = {
+  .name = "res_mic_Task",
   .priority = (osPriority_t) osPriorityAboveNormal,
-  .stack_size = 128 * 4
-};
-/* Definitions for micTask */
-osThreadId_t micTaskHandle;
-const osThreadAttr_t micTask_attributes = {
-  .name = "micTask",
-  .priority = (osPriority_t) osPriorityAboveNormal1,
   .stack_size = 128 * 4
 };
 /* Definitions for usb_tx_BinarySem */
@@ -93,8 +86,7 @@ const osEventFlagsAttr_t adc_dma_Event_attributes = {
 
 void StartDefaultTask(void *argument);
 void LEDTask(void *argument);
-void ResTask(void *argument);
-void MicTask(void *argument);
+void Res_Mic_Task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -138,11 +130,8 @@ void MX_FREERTOS_Init(void) {
   /* creation of ledTask */
   ledTaskHandle = osThreadNew(LEDTask, NULL, &ledTask_attributes);
 
-  /* creation of resTask */
-  resTaskHandle = osThreadNew(ResTask, NULL, &resTask_attributes);
-
-  /* creation of micTask */
-  micTaskHandle = osThreadNew(MicTask, NULL, &micTask_attributes);
+  /* creation of res_mic_Task */
+  res_mic_TaskHandle = osThreadNew(Res_Mic_Task, NULL, &res_mic_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -180,14 +169,7 @@ Sample_total_Data_Union sample_buf[2];
 
 //#define PACK_FRAME 100
 uint16_t mic_value[1000];//500 * 2
-
-volatile Word_union* mic_send_p= sample_buf[0].mic_data;
-volatile Word_union* mic_store_p= sample_buf[1].mic_data;
-
-uint16_t res_value_dma[800];//360 * 2 -> 400 * 2
-uint16_t res_value[36];
-volatile Word_union* res_send_p= sample_buf[0].res_data;
-volatile Word_union* res_store_p= sample_buf[1].res_data;
+uint16_t res_value[800];//360 * 2 -> 400 * 2
 
 uint8_t frame_head[4]={0x55,0xAA,0xBB,0xCC};
 uint8_t frame_tail[4]={0xAA,0x55,0x66,0x77};
@@ -209,23 +191,6 @@ const uint16_t switch_odr_table[] = {
 #define SWITCH_TABLE_LEN (SWITCH_CNT)
 
 
-//电压采集完成之后需要进行缓存切换
-void exchange_res_p(void)
-{
-	static uint8_t state=1;//第一次运行该函数前 采集的数据存到res_data_2   第一次运行该函数后状态变为0，发送的指针指向res_data_1  之后循环往复
-	state=!state;
-	
-	if(state)
-	{
-		res_send_p=sample_buf[0].res_data;
-		res_store_p=sample_buf[1].res_data;
-	}
-	else
-	{
-		res_send_p=sample_buf[1].res_data;
-		res_store_p=sample_buf[0].res_data;
-	}
-}
 char usb_buff[128]={0};
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void *argument)
@@ -270,29 +235,31 @@ void LEDTask(void *argument)
   /* USER CODE END LEDTask */
 }
 
-/* USER CODE BEGIN Header_ResTask */
+/* USER CODE BEGIN Header_Res_Mic_Task */
 /**
-* @brief Function implementing the resTask thread.
+* @brief Function implementing the res_mic_Task thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_ResTask */
-void ResTask(void *argument)
+/* USER CODE END Header_Res_Mic_Task */
+void Res_Mic_Task(void *argument)
 {
-  /* USER CODE BEGIN ResTask */
+  /* USER CODE BEGIN Res_Mic_Task */
 	AD5206_SetResistance(0, 50);
 	AD5206_SetResistance(1, 50);
 	AD5206_SetResistance(2, 50);
 	AD5206_SetResistance(4, 50);//参考电压
 	AD5206_SetResistance(5, 50);
 	
+	osDelay(100);
+	
 	
 	HAL_ADCEx_Calibration_Start(&hadc2,ADC_SINGLE_ENDED);
 	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)mic_value, 1000);
 	HAL_ADCEx_Calibration_Start(&hadc1,ADC_SINGLE_ENDED);
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)res_value_dma, 800);//adc触发源需要选择下降沿
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t *)res_value, 800);//adc触发源需要选择下降沿
 	// 第一步：初始化DMA传输（指定源地址、目标地址、传输数量，仅CH1需要DMA）
-	// 源：开关控制数组（switch_odr_table），目标：GPIOB->ODR，传输次数：SWITCH_CNT（9次）
+	// 源：开关控制数组（switch_odr_table），目标：GPIOB->ODR，传输次数：SWITCH_CNT（9次->10次）
 	HAL_DMA_Start(
 	  &hdma_tim1_ch1,                // TIM1_CH1对应的DMA通道句柄
 	  (uint32_t)switch_odr_table,    // DMA源地址：开关控制值数组
@@ -314,35 +281,56 @@ void ResTask(void *argument)
 	
 	
 	
-	TickType_t xLastWakeTime;
-	xLastWakeTime = xTaskGetTickCount();
-	uint32_t ulReceivedEvents;          // 接收的事件标志
-	uint16_t* send_res_p=res_value_dma;
+	
+	uint32_t ulReceivedEvents;// 接收的事件标志
+	uint16_t* send_res_p=res_value;
 	uint16_t* send_mic_p=mic_value;
 	
 	uint8_t USB_result = USBD_OK;
+	
+	TickType_t xLastWakeTime;
+	xLastWakeTime = xTaskGetTickCount();
   /* Infinite loop */
 	for(;;)
 	{
-		// 等待：ADC半满 或 ADC全满（任意一组满足即响应）
+		// 等待RES采样：ADC半满 或 ADC全满（任意一组满足即响应）
 		ulReceivedEvents = osEventFlagsWait(
-		  adc_dma_EventHandle,            // 事件组句柄（你的原有定义）
-		  EVENT_RES_DMA_HALF | EVENT_RES_DMA_FULL, // 等待的事件组合      EVENT_ALL_HALF | EVENT_ALL_FULL  EVENT_ADC5_DMA_HALF | EVENT_ADC5_DMA_FULL
+		  adc_dma_EventHandle,            // 事件组句柄
+		  EVENT_RES_DMA_HALF | EVENT_RES_DMA_FULL, // 等待的事件组合 
 		  osFlagsWaitAny,                 // 任意事件满足即返回
-		  osWaitForever                    // 永久等待（直到事件触发）
+		  15                    // 永久等待（直到事件触发）  osWaitForever
 		);
 		
-		if (ulReceivedEvents & EVENT_RES_DMA_HALF)//EVENT_ADC5_DMA_HALF  EVENT_ALL_HALF
+		if (ulReceivedEvents & EVENT_RES_DMA_HALF)
 		{
-			  send_res_p = res_value_dma;
+			  send_res_p = res_value;
 			  // 清除所有半满事件标志（避免重复处理）
 			osEventFlagsClear(adc_dma_EventHandle, EVENT_RES_DMA_HALF);
 		}
-		else if (ulReceivedEvents & EVENT_RES_DMA_FULL)//EVENT_ADC5_DMA_FULL  EVENT_ALL_FULL
+		else if (ulReceivedEvents & EVENT_RES_DMA_FULL)
 		{
-			send_res_p = res_value_dma+400;
+			send_res_p = res_value+400;
 			  // 清除所有全满事件标志
 			osEventFlagsClear(adc_dma_EventHandle, EVENT_RES_DMA_FULL);
+		}
+		
+		// 等待MIC采样：ADC半满 或 ADC全满（任意一组满足即响应）
+		ulReceivedEvents = osEventFlagsWait(
+		  adc_dma_EventHandle,            // 事件组句柄
+		  EVENT_MIC_DMA_HALF | EVENT_MIC_DMA_FULL, // 等待的事件组合
+		  osFlagsWaitAny,                 // 任意事件满足即返回
+		  15                    // 永久等待（直到事件触发）  osWaitForever
+		);
+		
+		if (ulReceivedEvents & EVENT_MIC_DMA_HALF)
+		{
+			send_mic_p = mic_value;
+			osEventFlagsClear(adc_dma_EventHandle, EVENT_MIC_DMA_HALF);// 清除半满事件标志（避免重复处理）
+		}
+		else if (ulReceivedEvents & EVENT_MIC_DMA_FULL)
+		{
+			send_mic_p = mic_value+500;
+			osEventFlagsClear(adc_dma_EventHandle, EVENT_MIC_DMA_FULL);// 清除全满事件标志
 		}
 		
 		
@@ -354,109 +342,22 @@ void ResTask(void *argument)
 		}
 		if (CDC_Transmit_FS((uint8_t *)send_res_p, 800) == USBD_OK)
 		{
-			// 等待发送完成（超时时间可根据需求设置）
-			osSemaphoreAcquire(usb_tx_BinarySemHandle, osWaitForever);  // 阻塞等待，CPU可调度其他任务
+			osSemaphoreAcquire(usb_tx_BinarySemHandle, osWaitForever);
+		}
+		if (CDC_Transmit_FS((uint8_t *)send_mic_p, 1000) == USBD_OK)
+		{
+			osSemaphoreAcquire(usb_tx_BinarySemHandle, osWaitForever);
 		}
 		if (CDC_Transmit_FS(frame_tail, 4) == USBD_OK)
 		{
-			// 等待发送完成（超时时间可根据需求设置）
-			osSemaphoreAcquire(usb_tx_BinarySemHandle, osWaitForever);  // 阻塞等待，CPU可调度其他任务
+			osSemaphoreAcquire(usb_tx_BinarySemHandle, osWaitForever);
 		}
 		
 		
 		
 		
 	}
-  /* USER CODE END ResTask */
-}
-
-/* USER CODE BEGIN Header_MicTask */
-/**
-* @brief Function implementing the micTask thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_MicTask */
-void MicTask(void *argument)
-{
-  /* USER CODE BEGIN MicTask */
-	HAL_TIM_Base_Start(&htim6);
-//	HAL_ADCEx_Calibration_Start(&hadc2,ADC_SINGLE_ENDED);
-//	HAL_ADC_Start_DMA(&hadc2, (uint32_t *)mic_value, 1000);
-	
-////	// 第一步：初始化DMA传输（指定源地址、目标地址、传输数量，仅CH1需要DMA）
-////	// 源：开关控制数组（switch_odr_table），目标：GPIOB->ODR，传输次数：SWITCH_CNT（9次）
-////	HAL_DMA_Start(
-////	  &hdma_tim1_ch1,                // TIM1_CH1对应的DMA通道句柄
-////	  (uint32_t)switch_odr_table,    // DMA源地址：开关控制值数组
-////	  (uint32_t)&GPIOB->ODR,         // DMA目标地址：GPIO输出寄存器（控制模拟开关）
-////	  SWITCH_CNT                     // 传输数量：9个开关，循环传输
-////	);
-
-////	// 第二步：启用TIM1_CH1的DMA请求（关键！必须在通道启用前开启，确保DMA就绪）
-////	__HAL_TIM_ENABLE_DMA(&htim1, TIM_DMA_CC1);  // 使能CH1的比较事件触发DMA请求
-//	
-//	
-////	// 确认TIM1_CH3和计数器已启动（防止初始化时遗漏）
-//	TIM_CCxChannelCmd(htim1.Instance, TIM_CHANNEL_3, TIM_CCx_ENABLE);
-//	
-//	__HAL_TIM_MOE_ENABLE(&htim1);
-//	__HAL_TIM_ENABLE(&htim1);
-	
-	
-	
-	TickType_t xLastWakeTime;
-	xLastWakeTime = xTaskGetTickCount();
-//	uint32_t ulReceivedEvents;          // 接收的事件标志
-//	
-//	uint8_t USB_result = USBD_OK;
-//	uint16_t* send_mic_p=mic_value;
-  /* Infinite loop */
-	for(;;)
-	{
-//		// 等待：ADC半满 或 ADC全满（任意一组满足即响应）
-//		ulReceivedEvents = osEventFlagsWait(
-//		  adc_dma_EventHandle,            // 事件组句柄（你的原有定义）
-//		  EVENT_MIC_DMA_HALF | EVENT_MIC_DMA_FULL, // 等待的事件组合      EVENT_ALL_HALF | EVENT_ALL_FULL  EVENT_ADC5_DMA_HALF | EVENT_ADC5_DMA_FULL
-//		  osFlagsWaitAny,                 // 任意事件满足即返回
-//		  osWaitForever                    // 永久等待（直到事件触发）
-//		);
-//		
-//		if (ulReceivedEvents & EVENT_MIC_DMA_HALF)//EVENT_ADC5_DMA_HALF  EVENT_ALL_HALF
-//		{
-//			  send_mic_p = mic_value;
-//			  // 清除所有半满事件标志（避免重复处理）
-//			osEventFlagsClear(adc_dma_EventHandle, EVENT_MIC_DMA_HALF);
-//		}
-//		else if (ulReceivedEvents & EVENT_MIC_DMA_FULL)//EVENT_ADC5_DMA_FULL  EVENT_ALL_FULL
-//		{
-//			send_mic_p = mic_value+500;
-//			  // 清除所有全满事件标志
-//			osEventFlagsClear(adc_dma_EventHandle, EVENT_MIC_DMA_FULL);
-//		}
-		
-		
-		
-//		if (CDC_Transmit_FS(frame_head, 4) == USBD_OK)
-//		{
-//			// 等待发送完成（超时时间可根据需求设置）
-//			osSemaphoreAcquire(usb_tx_BinarySemHandle, osWaitForever);  // 阻塞等待，CPU可调度其他任务
-//		}
-//		if (CDC_Transmit_FS((uint8_t *)send_mic_p, 1000) == USBD_OK)
-//		{
-//			// 等待发送完成（超时时间可根据需求设置）
-//			osSemaphoreAcquire(usb_tx_BinarySemHandle, osWaitForever);  // 阻塞等待，CPU可调度其他任务
-//		}
-//		if (CDC_Transmit_FS(frame_tail, 4) == USBD_OK)
-//		{
-//			// 等待发送完成（超时时间可根据需求设置）
-//			osSemaphoreAcquire(usb_tx_BinarySemHandle, osWaitForever);  // 阻塞等待，CPU可调度其他任务
-//		}
-		
-		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(100));
-		
-	}
-  /* USER CODE END MicTask */
+  /* USER CODE END Res_Mic_Task */
 }
 
 /* Private application code --------------------------------------------------*/

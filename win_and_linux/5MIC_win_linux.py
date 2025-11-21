@@ -274,7 +274,9 @@ class MICSerialWorker(QThread):
                                 
                                 # 检查数据长度是否符合预期
                                 expected_length = FRAMES_PER_PACKET * 5
-                                if len(parsed) == expected_length:
+                                if len(parsed) == expected_length or len(parsed) == 900:
+                                    if len(parsed) == 900:
+                                        parsed = parsed[400:]
                                     # 仅在开启保存时，将数据放入队列
                                     if self.save_data:
                                         self.raw_data_queue.put(parsed.copy())

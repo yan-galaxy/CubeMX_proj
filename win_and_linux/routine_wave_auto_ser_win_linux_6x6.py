@@ -169,13 +169,20 @@ class SerialWorker(QThread):
                             parsed = np.frombuffer(payload, dtype=np.uint16)
 
                             # 当数据长度为360或400时都进行处理
-                            if len(parsed) == 360 or len(parsed) == 400:
+                            if len(parsed) == 360 or len(parsed) == 400 or len(parsed) == 900:
                                 # 根据数据长度确定reshape参数和有效数据处理
                                 if len(parsed) == 360:
                                     # 6x6=36个点，10帧数据=360个点
                                     frames = parsed.reshape(10, 36)
                                     average = np.mean(frames, axis=0)  # 单帧平均值（36）
                                 elif len(parsed) == 400:
+                                    # 每帧40个数据点，其中最后4个无效，实际有效点数为36个
+                                    frames = parsed.reshape(10, 40)
+                                    # 只取每帧前36个有效数据点
+                                    valid_frames = frames[:, :36]
+                                    average = np.mean(valid_frames, axis=0)  # 单帧平均值（36）
+                                elif len(parsed) == 900:
+                                    parsed = parsed[:400]  # 截取前400个点
                                     # 每帧40个数据点，其中最后4个无效，实际有效点数为36个
                                     frames = parsed.reshape(10, 40)
                                     # 只取每帧前36个有效数据点

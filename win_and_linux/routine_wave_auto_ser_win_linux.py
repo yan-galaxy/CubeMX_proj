@@ -90,7 +90,7 @@ class SerialWorker(QThread):
         self.is_saving = False
 
         # 滤波器功能
-        self.filter_handlers = {i: FilterHandler(fs=100.0, low_cutoff=10.0, order=8) for i in range(100)}
+        self.filter_handlers = {i: FilterHandler(fs=100.0, low_cutoff=20.0, order=8) for i in range(100)}
         self.filters_initialized = False
 
         # 初始化保存线程（仅当需要保存时）
